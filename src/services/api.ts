@@ -1345,10 +1345,11 @@ export const api = {
 
     console.log('[API] Message queued for sending');
 
-    // Trigger whatsapp-sender in background (non-blocking for fast UI response)
-    supabase.functions.invoke('whatsapp-sender').catch(err => {
-      console.error('[API] Failed to trigger whatsapp-sender:', err);
-    });
+    // Trigger whatsapp-sender in background via no-auth trigger (non-blocking)
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trigger-whatsapp-sender`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }).catch(err => console.error('[API] Failed to trigger whatsapp-sender:', err));
 
     return msgData.id;
   },
