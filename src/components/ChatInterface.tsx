@@ -546,7 +546,8 @@ const ChatInterface: React.FC = () => {
                   </Button>
                 </div>
                 
-                <div className="flex-1 bg-background rounded-2xl border border-border focus-within:ring-ring                  <textarea
+                <div className="flex-1 bg-background rounded-2xl border border-border focus-within:ring-1 focus-within:ring-ring">
+                  <textarea
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={(e) => {

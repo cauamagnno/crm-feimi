@@ -595,7 +595,8 @@ const Kanban: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="bg-card border border-border rounded-xl overflow-hidden focus-within:ring-ring                            <input 
+                        <div className="bg-card border border-border rounded-xl overflow-hidden focus-within:ring-1 focus-within:ring-ring">
+                            <input
                                 type="text"
                                 className="w-full bg-transparent p-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border-b border-border"
                                 placeholder="Título da atividade"
