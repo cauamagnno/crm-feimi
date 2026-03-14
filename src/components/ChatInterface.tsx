@@ -274,7 +274,7 @@ const ChatInterface: React.FC = () => {
             >
               <div 
                 className={`h-full rounded-full transition-all ${
-                  msg.direction === MessageDirection.OUTGOING ? 'bg-white' : 'bg-cyan-400'
+                  msg.direction === MessageDirection.OUTGOING ? 'bg-white' : 'bg-red-400'
                 }`}
                 style={{ width: `${duration ? (progress / duration) * 100 : 0}%` }}
               />
@@ -338,7 +338,7 @@ const ChatInterface: React.FC = () => {
                 onClick={() => setSelectedChatId(chat.id)}
                 className={`flex items-center p-4 cursor-pointer transition-all duration-200 border-b border-border/30 hover:bg-muted/50 ${
                   selectedChatId === chat.id 
-                    ? 'bg-muted/80 border-l-2 border-l-cyan-500' 
+                    ? 'bg-muted/80 border-l-2 border-l-red-500'
                     : 'border-l-2 border-l-transparent'
                 }`}
               >

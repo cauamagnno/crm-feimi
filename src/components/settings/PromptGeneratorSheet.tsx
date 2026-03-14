@@ -229,7 +229,7 @@ const PromptGeneratorSheet: React.FC<PromptGeneratorSheetProps> = ({
 
           {/* Filosofia de Vendas */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-indigo-400 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-red-400 flex items-center gap-2">
               📊 Filosofia de Vendas
             </h3>
             <div className="space-y-2">
@@ -255,7 +255,7 @@ const PromptGeneratorSheet: React.FC<PromptGeneratorSheetProps> = ({
                   step="5"
                   value={formData.lead_talk_percentage}
                   onChange={(e) => setFormData({ ...formData, lead_talk_percentage: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                 />
               </div>
               <div className="space-y-2">
@@ -270,7 +270,7 @@ const PromptGeneratorSheet: React.FC<PromptGeneratorSheetProps> = ({
                   step="1"
                   value={formData.max_lines}
                   onChange={(e) => setFormData({ ...formData, max_lines: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                 />
               </div>
             </div>

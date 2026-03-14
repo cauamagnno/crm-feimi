@@ -606,7 +606,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 onChange={(e) => setSettings({ ...settings, elevenlabs_api_key: e.target.value })}
                 onBlur={handleElevenLabsKeyBlur}
                 placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxx"
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
               />
               <button
                 type="button"
@@ -624,7 +624,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               <select
                 value={settings.elevenlabs_voice_id}
                 onChange={(e) => setSettings({ ...settings, elevenlabs_voice_id: e.target.value })}
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
               >
                 {VOICE_OPTIONS.map(voice => (
                   <option key={voice.id} value={voice.id}>{voice.name} - {voice.desc}</option>
@@ -637,7 +637,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               <select
                 value={settings.elevenlabs_model || 'eleven_turbo_v2_5'}
                 onChange={(e) => setSettings({ ...settings, elevenlabs_model: e.target.value })}
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
               >
                 {MODEL_OPTIONS.map(model => (
                   <option key={model.id} value={model.id}>{model.name}</option>
@@ -666,7 +666,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   disabled={!elevenlabsConfigured}
                   className="sr-only peer"
                 />
-                <div className={`w-11 h-6 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary ${!elevenlabsConfigured ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
+                <div className={`w-11 h-6 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary ${!elevenlabsConfigured ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
               </label>
             </div>
             {!elevenlabsConfigured && (
@@ -701,7 +701,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     step="0.05"
                     value={settings.elevenlabs_stability}
                     onChange={(e) => setSettings({ ...settings, elevenlabs_stability: parseFloat(e.target.value) })}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-violet-500"
+                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                   />
                 </div>
 
@@ -717,7 +717,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     step="0.05"
                     value={settings.elevenlabs_similarity_boost}
                     onChange={(e) => setSettings({ ...settings, elevenlabs_similarity_boost: parseFloat(e.target.value) })}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-violet-500"
+                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                   />
                 </div>
 
@@ -733,7 +733,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     step="0.05"
                     value={settings.elevenlabs_style}
                     onChange={(e) => setSettings({ ...settings, elevenlabs_style: parseFloat(e.target.value) })}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-violet-500"
+                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                   />
                 </div>
 
@@ -749,7 +749,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     step="0.1"
                     value={settings.elevenlabs_speed || 1.0}
                     onChange={(e) => setSettings({ ...settings, elevenlabs_speed: parseFloat(e.target.value) })}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-violet-500"
+                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-red-500"
                   />
                 </div>
               </div>
@@ -762,7 +762,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     onChange={(e) => setSettings({ ...settings, elevenlabs_speaker_boost: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                  <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                 </label>
                 <span className="text-sm text-muted-foreground">Speaker Boost</span>
               </div>
@@ -785,7 +785,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   placeholder="Digite o texto que deseja converter em áudio..."
                   rows={3}
                   maxLength={1000}
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50 resize-none"
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50 resize-none"
                 />
                 <p className="text-xs text-muted-foreground mt-1">{audioTestText.length}/1000 caracteres</p>
               </div>

@@ -3,14 +3,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
+  "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
   {
     variants: {
       variant: {
-        primary: "bg-gradient-to-r from-cyan-600 to-teal-600 text-foreground hover:from-cyan-500 hover:to-teal-500 shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] border border-transparent",
+        primary: "bg-gradient-to-r from-red-600 to-red-600 text-foreground hover:from-red-500 hover:to-red-500 shadow-[0_0_15px_rgba(220,38,38,0.3)] hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] border border-transparent",
         secondary: "bg-muted text-foreground hover:bg-accent border border-border",
         outline: "border border-border bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground hover:border-slate-600",
-        ghost: "text-muted-foreground hover:bg-muted/50 hover:text-cyan-400",
+        ghost: "text-muted-foreground hover:bg-muted/50 hover:text-red-400",
         danger: "bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20",
         default: "bg-muted text-foreground hover:bg-accent border border-border",
       },

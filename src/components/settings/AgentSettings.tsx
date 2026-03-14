@@ -274,7 +274,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   value={settings.company_name || ''}
                   onChange={(e) => setSettings({ ...settings, company_name: e.target.value || null })}
                   placeholder="Nome da sua empresa"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
                 />
               </div>
               <div>
@@ -286,7 +286,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   value={settings.sdr_name || ''}
                   onChange={(e) => setSettings({ ...settings, sdr_name: e.target.value || null })}
                   placeholder="Nome do agente (ex: Ana, Sofia)"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
                 />
               </div>
             </div>
@@ -295,7 +295,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
           {/* Business Hours */}
           <div className="rounded-xl border border-border bg-card/50 p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Calendar className="w-5 h-5 text-indigo-400" />
+              <Calendar className="w-5 h-5 text-red-400" />
               <h3 className="font-semibold text-foreground">Horário de Atendimento</h3>
             </div>
             <div className="space-y-4">
@@ -306,7 +306,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                     type="time"
                     value={settings.business_hours_start}
                     onChange={(e) => setSettings({ ...settings, business_hours_start: e.target.value })}
-                    className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   />
                 </div>
                 <div>
@@ -315,7 +315,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                     type="time"
                     value={settings.business_hours_end}
                     onChange={(e) => setSettings({ ...settings, business_hours_end: e.target.value })}
-                    className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   />
                 </div>
               </div>
@@ -328,7 +328,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                       onClick={() => toggleBusinessDay(day.value)}
                       className={`flex-1 h-9 text-xs font-medium rounded-lg transition-all ${
                         settings.business_days.includes(day.value)
-                          ? 'bg-indigo-500 text-foreground'
+                          ? 'bg-red-500 text-foreground'
                           : 'bg-muted text-muted-foreground hover:bg-accent'
                       }`}
                     >
@@ -434,7 +434,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, is_active: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
               </label>
             </div>
 
@@ -457,7 +457,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, auto_response_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
               </label>
             </div>
 
@@ -480,7 +480,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, message_breaking_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
               </label>
             </div>
 
@@ -503,7 +503,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, ai_scheduling_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
               </label>
             </div>
           </div>

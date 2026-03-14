@@ -251,7 +251,7 @@ export const StepVerification: React.FC<StepVerificationProps> = ({ onAllChecked
 
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-violet-400" />
+          <Loader2 className="w-8 h-8 animate-spin text-red-400" />
           <p className="text-sm text-muted-foreground">Verificando sistema...</p>
         </div>
       ) : (
@@ -270,7 +270,7 @@ export const StepVerification: React.FC<StepVerificationProps> = ({ onAllChecked
               size="sm"
               onClick={runHealthCheck}
               disabled={isLoading}
-              className="gap-2 border-violet-500/50 text-violet-400 hover:bg-violet-500/20 hover:text-violet-300"
+              className="gap-2 border-red-500/50 text-red-400 hover:bg-red-500/20 hover:text-red-300"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
               Verificar Novamente

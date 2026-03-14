@@ -24,14 +24,14 @@ const SystemRoadmap: React.FC = () => {
       icon: Zap,
       content: (
         <div className="space-y-4">
-          <div className="bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 border border-cyan-500/20 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-red-500/10 to-red-500/10 border border-red-500/20 rounded-lg p-6">
             <p className="text-muted-foreground mb-4">
               Configure seu agente de IA em poucos minutos seguindo estes passos:
             </p>
             
             <div className="space-y-4">
               <div className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">1</div>
+                <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">1</div>
                 <div>
                   <p className="text-foreground font-medium">Configure sua empresa</p>
                   <p className="text-sm text-muted-foreground">Na aba "Agente", preencha o nome da empresa e do agente de IA</p>
@@ -39,7 +39,7 @@ const SystemRoadmap: React.FC = () => {
               </div>
               
               <div className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">2</div>
+                <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">2</div>
                 <div>
                   <p className="text-foreground font-medium">Personalize o prompt</p>
                   <p className="text-sm text-muted-foreground">Edite o prompt do sistema com as informações do seu negócio ou use o "Gerar com IA"</p>
@@ -47,7 +47,7 @@ const SystemRoadmap: React.FC = () => {
               </div>
               
               <div className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">3</div>
+                <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">3</div>
                 <div>
                   <p className="text-foreground font-medium">Conecte o WhatsApp</p>
                   <p className="text-sm text-muted-foreground">Na aba "APIs", configure o Access Token e Phone Number ID do WhatsApp Cloud API</p>
@@ -55,7 +55,7 @@ const SystemRoadmap: React.FC = () => {
               </div>
               
               <div className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">4</div>
+                <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-sm flex-shrink-0">4</div>
                 <div>
                   <p className="text-foreground font-medium">Configure o Webhook</p>
                   <p className="text-sm text-muted-foreground">Copie a URL e o Verify Token para configurar no Meta for Developers</p>
@@ -88,7 +88,7 @@ const SystemRoadmap: React.FC = () => {
       content: (
         <div className="space-y-6">
           {/* Introdução */}
-          <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-emerald-500/10 to-red-500/10 border border-emerald-500/20 rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-3 flex items-center gap-2">
               <MessageSquare className="w-5 h-5 text-emerald-400" />
               Visão Geral
@@ -107,7 +107,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 1: Criar conta no Meta for Developers */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">1</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">1</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Criar conta no Meta for Developers</h4>
                 <p className="text-muted-foreground text-sm">Configure sua conta de desenvolvedor no Meta</p>
@@ -117,14 +117,14 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">1.1</span>
+                  <span className="text-red-400 font-bold">1.1</span>
                   <div>
                     <p className="text-muted-foreground">Acesse o portal de desenvolvedores do Meta:</p>
                     <a 
                       href="https://developers.facebook.com" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-muted hover:bg-accent rounded-lg text-cyan-400 text-sm transition-colors"
+                      className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-muted hover:bg-accent rounded-lg text-red-400 text-sm transition-colors"
                     >
                       <ExternalLink className="w-4 h-4" />
                       developers.facebook.com
@@ -133,12 +133,12 @@ const SystemRoadmap: React.FC = () => {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">1.2</span>
+                  <span className="text-red-400 font-bold">1.2</span>
                   <p className="text-muted-foreground">Faça login com sua conta do Facebook/Meta</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">1.3</span>
+                  <span className="text-red-400 font-bold">1.3</span>
                   <p className="text-muted-foreground">Se for sua primeira vez, aceite os termos de desenvolvedor</p>
                 </div>
               </div>
@@ -158,7 +158,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 2: Criar um App */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">2</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">2</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Criar um App no Meta</h4>
                 <p className="text-muted-foreground text-sm">Crie um aplicativo para usar a WhatsApp API</p>
@@ -168,12 +168,12 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.1</span>
+                  <span className="text-red-400 font-bold">2.1</span>
                   <p className="text-muted-foreground">No painel, clique em <strong className="text-foreground">"My Apps"</strong> → <strong className="text-foreground">"Create App"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.2</span>
+                  <span className="text-red-400 font-bold">2.2</span>
                   <div>
                     <p className="text-muted-foreground">Selecione o tipo de app: <strong className="text-emerald-400">"Business"</strong></p>
                     <p className="text-muted-foreground text-xs mt-1">Este tipo permite acesso à WhatsApp Business API</p>
@@ -181,19 +181,19 @@ const SystemRoadmap: React.FC = () => {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.3</span>
+                  <span className="text-red-400 font-bold">2.3</span>
                   <p className="text-muted-foreground">Dê um nome ao seu app (ex: "Minha Empresa - WhatsApp Bot")</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.4</span>
+                  <span className="text-red-400 font-bold">2.4</span>
                   <p className="text-muted-foreground">Preencha seu email de contato e clique em <strong className="text-foreground">"Create App"</strong></p>
                 </div>
               </div>
               
               <div className="bg-muted rounded-lg p-4 border border-border">
                 <p className="text-xs text-muted-foreground flex items-center gap-2">
-                  <Info className="w-4 h-4 text-cyan-400" />
+                  <Info className="w-4 h-4 text-red-400" />
                   O Meta pode solicitar verificação de segurança (senha ou autenticação 2FA)
                 </p>
               </div>
@@ -203,7 +203,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 3: Adicionar WhatsApp ao App */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">3</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">3</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Adicionar WhatsApp ao App</h4>
                 <p className="text-muted-foreground text-sm">Configure o produto WhatsApp no seu app</p>
@@ -213,25 +213,25 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.1</span>
+                  <span className="text-red-400 font-bold">3.1</span>
                   <p className="text-muted-foreground">No menu lateral, clique em <strong className="text-foreground">"Add Products"</strong> ou <strong className="text-foreground">"Adicionar Produtos"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.2</span>
+                  <span className="text-red-400 font-bold">3.2</span>
                   <p className="text-muted-foreground">Encontre <strong className="text-emerald-400">"WhatsApp"</strong> na lista e clique em <strong className="text-foreground">"Set up"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.3</span>
+                  <span className="text-red-400 font-bold">3.3</span>
                   <p className="text-muted-foreground">Selecione ou crie uma <strong className="text-foreground">Meta Business Account</strong> (conta comercial)</p>
                 </div>
               </div>
               
-              <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                 <div className="flex items-start gap-2">
-                  <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-cyan-200 text-sm">
+                  <Info className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-red-200 text-sm">
                     O Meta oferece um número de teste gratuito para desenvolvimento. 
                     Para produção, você precisará de um número de telefone próprio verificado.
                   </p>
@@ -243,7 +243,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 4: Obter Access Token */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">4</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">4</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Obter o Access Token</h4>
                 <p className="text-muted-foreground text-sm">Token de autenticação para a API</p>
@@ -253,12 +253,12 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">4.1</span>
+                  <span className="text-red-400 font-bold">4.1</span>
                   <p className="text-muted-foreground">No menu lateral, vá em <strong className="text-foreground">WhatsApp</strong> → <strong className="text-foreground">API Setup</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">4.2</span>
+                  <span className="text-red-400 font-bold">4.2</span>
                   <div>
                     <p className="text-muted-foreground">Localize a seção <strong className="text-foreground">"Temporary access token"</strong></p>
                     <p className="text-muted-foreground text-xs mt-1">Este token expira em 24 horas - ideal para testes</p>
@@ -266,7 +266,7 @@ const SystemRoadmap: React.FC = () => {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">4.3</span>
+                  <span className="text-red-400 font-bold">4.3</span>
                   <p className="text-muted-foreground">Clique em <strong className="text-foreground">"Copy"</strong> para copiar o token</p>
                 </div>
               </div>
@@ -296,7 +296,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 5: Obter Phone Number ID e Business Account ID */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">5</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">5</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Obter Phone Number ID e Business Account ID</h4>
                 <p className="text-muted-foreground text-sm">Identificadores únicos do seu número e conta</p>
@@ -306,12 +306,12 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">5.1</span>
+                  <span className="text-red-400 font-bold">5.1</span>
                   <p className="text-muted-foreground">Na mesma página <strong className="text-foreground">API Setup</strong>, role para baixo</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">5.2</span>
+                  <span className="text-red-400 font-bold">5.2</span>
                   <div>
                     <p className="text-muted-foreground">Localize <strong className="text-emerald-400">"Phone number ID"</strong></p>
                     <div className="bg-background border border-border rounded-lg p-3 mt-2">
@@ -322,7 +322,7 @@ const SystemRoadmap: React.FC = () => {
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">5.3</span>
+                  <span className="text-red-400 font-bold">5.3</span>
                   <div>
                     <p className="text-muted-foreground">Localize <strong className="text-emerald-400">"WhatsApp Business Account ID"</strong></p>
                     <div className="bg-background border border-border rounded-lg p-3 mt-2">
@@ -333,10 +333,10 @@ const SystemRoadmap: React.FC = () => {
                 </div>
               </div>
               
-              <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                 <div className="flex items-start gap-2">
-                  <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-cyan-200 text-sm">
+                  <Info className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-red-200 text-sm">
                     <strong>Dica:</strong> O Phone Number ID é diferente do número de telefone em si. 
                     É um identificador interno do Meta para seu número.
                   </p>
@@ -348,7 +348,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 6: Configurar Webhook */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">6</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">6</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Configurar Webhook</h4>
                 <p className="text-muted-foreground text-sm">Conecte o Meta ao seu sistema para receber mensagens</p>
@@ -369,37 +369,37 @@ const SystemRoadmap: React.FC = () => {
               
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.1</span>
+                  <span className="text-red-400 font-bold">6.1</span>
                   <p className="text-muted-foreground">No seu sistema, vá em <strong className="text-foreground">Configurações</strong> → <strong className="text-foreground">APIs</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.2</span>
+                  <span className="text-red-400 font-bold">6.2</span>
                   <p className="text-muted-foreground">Copie a <strong className="text-emerald-400">URL do Webhook</strong> e o <strong className="text-emerald-400">Verify Token</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.3</span>
+                  <span className="text-red-400 font-bold">6.3</span>
                   <p className="text-muted-foreground">No Meta, vá em <strong className="text-foreground">WhatsApp</strong> → <strong className="text-foreground">Configuration</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.4</span>
+                  <span className="text-red-400 font-bold">6.4</span>
                   <p className="text-muted-foreground">Na seção <strong className="text-foreground">"Webhook"</strong>, clique em <strong className="text-foreground">"Edit"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.5</span>
+                  <span className="text-red-400 font-bold">6.5</span>
                   <p className="text-muted-foreground">Cole a <strong className="text-foreground">Callback URL</strong> (URL do Webhook do seu sistema)</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.6</span>
+                  <span className="text-red-400 font-bold">6.6</span>
                   <p className="text-muted-foreground">Cole o <strong className="text-foreground">Verify Token</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">6.7</span>
+                  <span className="text-red-400 font-bold">6.7</span>
                   <p className="text-muted-foreground">Clique em <strong className="text-foreground">"Verify and Save"</strong></p>
                 </div>
               </div>
@@ -416,7 +416,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Passo 7: Selecionar Eventos do Webhook */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">7</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">7</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Selecionar Eventos do Webhook</h4>
                 <p className="text-muted-foreground text-sm">Configure quais eventos serão enviados ao seu sistema</p>
@@ -426,12 +426,12 @@ const SystemRoadmap: React.FC = () => {
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">7.1</span>
+                  <span className="text-red-400 font-bold">7.1</span>
                   <p className="text-muted-foreground">Após verificar o webhook, clique em <strong className="text-foreground">"Manage"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">7.2</span>
+                  <span className="text-red-400 font-bold">7.2</span>
                   <div>
                     <p className="text-muted-foreground mb-2">Ative (Subscribe) os seguintes eventos:</p>
                     <div className="space-y-2">
@@ -453,14 +453,14 @@ const SystemRoadmap: React.FC = () => {
               <div className="bg-muted rounded-lg p-4 border border-border">
                 <p className="text-xs text-muted-foreground">
                   <strong className="text-muted-foreground">Opcional:</strong> Você também pode ativar{' '}
-                  <code className="text-cyan-400">message_status</code> para receber confirmações de leitura.
+                  <code className="text-red-400">message_status</code> para receber confirmações de leitura.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Checklist Final */}
-          <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-emerald-500/10 to-red-500/10 border border-emerald-500/20 rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
               Checklist Final
@@ -506,7 +506,7 @@ const SystemRoadmap: React.FC = () => {
                 <div className="w-5 h-5 rounded border-2 border-emerald-400 flex items-center justify-center">
                   <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                 </div>
-                <p className="text-muted-foreground text-sm">Eventos <code className="text-cyan-400">messages</code> e <code className="text-cyan-400">message_echoes</code> ativados</p>
+                <p className="text-muted-foreground text-sm">Eventos <code className="text-red-400">messages</code> e <code className="text-red-400">message_echoes</code> ativados</p>
               </div>
             </div>
           </div>
@@ -558,7 +558,7 @@ const SystemRoadmap: React.FC = () => {
           {/* Links Úteis */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <ExternalLink className="w-5 h-5 text-cyan-400" />
+              <ExternalLink className="w-5 h-5 text-red-400" />
               Links Úteis
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -568,7 +568,7 @@ const SystemRoadmap: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 bg-muted hover:bg-accent rounded-lg transition-colors"
               >
-                <ExternalLink className="w-4 h-4 text-cyan-400" />
+                <ExternalLink className="w-4 h-4 text-red-400" />
                 <span className="text-muted-foreground text-sm">Documentação oficial WhatsApp Cloud API</span>
               </a>
               <a 
@@ -577,7 +577,7 @@ const SystemRoadmap: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 bg-muted hover:bg-accent rounded-lg transition-colors"
               >
-                <ExternalLink className="w-4 h-4 text-cyan-400" />
+                <ExternalLink className="w-4 h-4 text-red-400" />
                 <span className="text-muted-foreground text-sm">Meta Business Settings</span>
               </a>
               <a 
@@ -586,7 +586,7 @@ const SystemRoadmap: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 bg-muted hover:bg-accent rounded-lg transition-colors"
               >
-                <ExternalLink className="w-4 h-4 text-cyan-400" />
+                <ExternalLink className="w-4 h-4 text-red-400" />
                 <span className="text-muted-foreground text-sm">Referência da API de Mensagens</span>
               </a>
               <a 
@@ -595,7 +595,7 @@ const SystemRoadmap: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 bg-muted hover:bg-accent rounded-lg transition-colors"
               >
-                <ExternalLink className="w-4 h-4 text-cyan-400" />
+                <ExternalLink className="w-4 h-4 text-red-400" />
                 <span className="text-muted-foreground text-sm">Documentação de Webhooks</span>
               </a>
             </div>
@@ -611,12 +611,12 @@ const SystemRoadmap: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <Zap className="w-5 h-5 text-cyan-500" />
+              <Zap className="w-5 h-5 text-red-500" />
               Stack Tecnológica
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-bold text-cyan-400 mb-2">Frontend</p>
+                <p className="text-sm font-bold text-red-400 mb-2">Frontend</p>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• React 18 com TypeScript</li>
                   <li>• Vite (build tool)</li>
@@ -677,9 +677,9 @@ WhatsApp Cloud API (resposta ao cliente)`}
             <table className="w-full text-sm">
               <thead className="bg-card">
                 <tr>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Rota</th>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Componente</th>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Descrição</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Rota</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Componente</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Descrição</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
@@ -731,7 +731,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
             <h4 className="text-foreground font-bold mb-4">Modais e Componentes Especiais</h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-cyan-400 font-bold text-xs mb-1">CreateDealModal</p>
+                <p className="text-red-400 font-bold text-xs mb-1">CreateDealModal</p>
                 <p className="text-muted-foreground text-xs">Criação de novos deals no CRM</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
@@ -739,7 +739,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
                 <p className="text-muted-foreground text-xs">Captura motivo de perda de deal</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-violet-400 font-bold text-xs mb-1">PipelineSettingsModal</p>
+                <p className="text-red-400 font-bold text-xs mb-1">PipelineSettingsModal</p>
                 <p className="text-muted-foreground text-xs">Configuração de estágios do funil</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
@@ -751,7 +751,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
                 <p className="text-muted-foreground text-xs">Seleção e criação de tags</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-blue-400 font-bold text-xs mb-1">PromptGeneratorSheet</p>
+                <p className="text-red-400 font-bold text-xs mb-1">PromptGeneratorSheet</p>
                 <p className="text-muted-foreground text-xs">Geração de prompts com IA</p>
               </div>
             </div>
@@ -759,7 +759,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
             <h4 className="text-foreground font-bold mb-4">Componentes Principais</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <p className="text-cyan-400 font-bold mb-2">ChatInterface.tsx</p>
+                <p className="text-red-400 font-bold mb-2">ChatInterface.tsx</p>
                 <ul className="text-xs text-muted-foreground space-y-1">
                   <li>• Sidebar com lista de conversas</li>
                   <li>• Área de mensagens com scroll infinito</li>
@@ -779,7 +779,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
                 </ul>
               </div>
               <div className="bg-background border border-border rounded-lg p-4">
-                <p className="text-violet-400 font-bold mb-2">Settings.tsx</p>
+                <p className="text-red-400 font-bold mb-2">Settings.tsx</p>
                 <ul className="text-xs text-muted-foreground space-y-1">
                   <li>• Tab "Agente" (AgentSettings.tsx)</li>
                   <li>• Tab "APIs" (ApiSettings.tsx)</li>
@@ -804,10 +804,10 @@ WhatsApp Cloud API (resposta ao cliente)`}
 
           <div className="bg-card/50 border border-border rounded-lg p-6 mt-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <Layers className="w-5 h-5 text-cyan-400" />
+              <Layers className="w-5 h-5 text-red-400" />
               Componentes Reutilizáveis
             </h4>
-            <p className="text-muted-foreground mb-4">Componentes compartilhados em <code className="text-cyan-400">src/components/</code>:</p>
+            <p className="text-muted-foreground mb-4">Componentes compartilhados em <code className="text-red-400">src/components/</code>:</p>
             <ul className="list-disc list-inside space-y-2 text-muted-foreground mb-6">
               <li><strong className="text-foreground">Button.tsx</strong>: Botão customizado com variants</li>
               <li><strong className="text-foreground">Sidebar.tsx</strong>: Menu lateral com navegação</li>
@@ -819,8 +819,8 @@ WhatsApp Cloud API (resposta ao cliente)`}
             </ul>
 
             <div className="bg-background border border-border rounded-lg p-5">
-              <h5 className="text-lg font-semibold text-cyan-400 mb-3">🎨 Button Component Customizado</h5>
-              <p className="text-muted-foreground mb-3">O componente <code className="text-cyan-400">Button.tsx</code> utiliza <code className="text-cyan-400">class-variance-authority</code> para variants tipadas:</p>
+              <h5 className="text-lg font-semibold text-red-400 mb-3">🎨 Button Component Customizado</h5>
+              <p className="text-muted-foreground mb-3">O componente <code className="text-red-400">Button.tsx</code> utiliza <code className="text-red-400">class-variance-authority</code> para variants tipadas:</p>
               
               <div className="bg-card rounded-lg p-4 mb-4">
                 <pre className="text-sm text-muted-foreground overflow-x-auto">
@@ -846,8 +846,8 @@ WhatsApp Cloud API (resposta ao cliente)`}
               </div>
 
               <p className="text-sm text-muted-foreground">
-                ℹ️ Todos os botões incluem animação <code className="text-cyan-400">active:scale-95</code> e 
-                focus ring com <code className="text-cyan-400">focus-visible:ring-2 ring-cyan-500</code>
+                ℹ️ Todos os botões incluem animação <code className="text-red-400">active:scale-95</code> e 
+                focus ring com <code className="text-red-400">focus-visible:ring-2 ring-cyan-500</code>
               </p>
             </div>
           </div>
@@ -864,9 +864,9 @@ WhatsApp Cloud API (resposta ao cliente)`}
             <table className="w-full text-sm">
               <thead className="bg-card">
                 <tr>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Edge Function</th>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Propósito</th>
-                  <th className="text-left p-4 text-cyan-400 font-bold">Autenticação</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Edge Function</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Propósito</th>
+                  <th className="text-left p-4 text-red-400 font-bold">Autenticação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800">
@@ -876,17 +876,17 @@ WhatsApp Cloud API (resposta ao cliente)`}
                   <td className="p-4 text-muted-foreground">verify_jwt: false</td>
                 </tr>
                 <tr>
-                  <td className="p-4 font-mono text-cyan-400">nina-orchestrator</td>
+                  <td className="p-4 font-mono text-red-400">nina-orchestrator</td>
                   <td className="p-4 text-muted-foreground">Processa fila de mensagens, gera respostas via IA, gerencia contexto</td>
                   <td className="p-4 text-amber-400">verify_jwt: true</td>
                 </tr>
                 <tr>
-                  <td className="p-4 font-mono text-violet-400">whatsapp-sender</td>
+                  <td className="p-4 font-mono text-red-400">whatsapp-sender</td>
                   <td className="p-4 text-muted-foreground">Processa fila de envio, envia mensagens via WhatsApp Cloud API</td>
                   <td className="p-4 text-amber-400">verify_jwt: true</td>
                 </tr>
                 <tr>
-                  <td className="p-4 font-mono text-blue-400">analyze-conversation</td>
+                  <td className="p-4 font-mono text-red-400">analyze-conversation</td>
                   <td className="p-4 text-muted-foreground">Análise de conversa com IA, extração de insights, movimentação automática de deals</td>
                   <td className="p-4 text-muted-foreground">verify_jwt: false</td>
                 </tr>
@@ -927,7 +927,7 @@ WhatsApp Cloud API (resposta ao cliente)`}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4">Arquitetura de Chamadas</h4>
             <p className="text-sm text-muted-foreground mb-4">
-              As Edge Functions se comunicam diretamente via <code className="text-cyan-400 bg-background px-2 py-1 rounded">fetch()</code> com autenticação via SERVICE_ROLE_KEY:
+              As Edge Functions se comunicam diretamente via <code className="text-red-400 bg-background px-2 py-1 rounded">fetch()</code> com autenticação via SERVICE_ROLE_KEY:
             </p>
             <pre className="text-xs text-muted-foreground font-mono bg-background p-4 rounded border border-border overflow-x-auto">
 {`// Exemplo de chamada entre funções
@@ -955,7 +955,7 @@ const response = await fetch(
         <div className="space-y-4">
           <div className="bg-card/50 border border-border rounded-lg p-6 mb-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <Database className="w-5 h-5 text-cyan-400" />
+              <Database className="w-5 h-5 text-red-400" />
               📊 Diagrama de Relacionamentos (ER)
             </h4>
             <div className="bg-background border border-border rounded-lg p-4">
@@ -1018,17 +1018,17 @@ const response = await fetch(
               </pre>
             </div>
             <p className="text-sm text-muted-foreground mt-4 flex items-start gap-2">
-              <span className="text-cyan-400">ℹ️</span>
+              <span className="text-red-400">ℹ️</span>
               <span>
                 Este diagrama mostra os principais relacionamentos do banco. Copie o código Mermaid acima 
-                para visualizar em ferramentas como <a href="https://mermaid.live" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">mermaid.live</a>
+                para visualizar em ferramentas como <a href="https://mermaid.live" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">mermaid.live</a>
               </span>
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-card/50 border border-border rounded-lg p-5">
-              <h4 className="text-cyan-400 font-bold mb-3 text-sm">contacts</h4>
+              <h4 className="text-red-400 font-bold mb-3 text-sm">contacts</h4>
               <p className="text-xs text-muted-foreground mb-3">Armazena dados dos contatos/clientes</p>
               <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                 <li>• id, phone_number, name, email</li>
@@ -1050,7 +1050,7 @@ const response = await fetch(
             </div>
 
             <div className="bg-card/50 border border-border rounded-lg p-5">
-              <h4 className="text-violet-400 font-bold mb-3 text-sm">messages</h4>
+              <h4 className="text-red-400 font-bold mb-3 text-sm">messages</h4>
               <p className="text-xs text-muted-foreground mb-3">Histórico completo de mensagens</p>
               <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                 <li>• id, conversation_id, content</li>
@@ -1084,7 +1084,7 @@ const response = await fetch(
             </div>
 
             <div className="bg-card/50 border border-border rounded-lg p-5">
-              <h4 className="text-blue-400 font-bold mb-3 text-sm">appointments</h4>
+              <h4 className="text-red-400 font-bold mb-3 text-sm">appointments</h4>
               <p className="text-xs text-muted-foreground mb-3">Agendamentos e reuniões</p>
               <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                 <li>• id, title, description</li>
@@ -1122,7 +1122,7 @@ const response = await fetch(
             <h4 className="text-foreground font-bold mb-4">Filas de Processamento</h4>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <span className="text-cyan-400 font-mono text-xs">nina_processing_queue</span>
+                <span className="text-red-400 font-mono text-xs">nina_processing_queue</span>
                 <span className="text-muted-foreground text-xs">→ Mensagens aguardando processamento pela IA</span>
               </div>
               <div className="flex items-start gap-3">
@@ -1130,7 +1130,7 @@ const response = await fetch(
                 <span className="text-muted-foreground text-xs">→ Mensagens aguardando envio via WhatsApp</span>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-violet-400 font-mono text-xs">message_processing_queue</span>
+                <span className="text-red-400 font-mono text-xs">message_processing_queue</span>
                 <span className="text-muted-foreground text-xs">→ Fila de mensagens brutas recebidas do webhook</span>
               </div>
               <div className="flex items-start gap-3">
@@ -1144,7 +1144,7 @@ const response = await fetch(
             <h4 className="text-foreground font-bold mb-4">Tabelas Adicionais</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-background border border-border rounded p-4">
-                <h5 className="text-cyan-400 font-bold text-sm mb-2">conversation_states</h5>
+                <h5 className="text-red-400 font-bold text-sm mb-2">conversation_states</h5>
                 <p className="text-xs text-muted-foreground mb-2">Estado de máquina para conversas</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• current_state (idle/active/scheduling)</li>
@@ -1162,7 +1162,7 @@ const response = await fetch(
                 </ul>
               </div>
               <div className="bg-background border border-border rounded p-4">
-                <h5 className="text-violet-400 font-bold text-sm mb-2">tag_definitions</h5>
+                <h5 className="text-red-400 font-bold text-sm mb-2">tag_definitions</h5>
                 <p className="text-xs text-muted-foreground mb-2">Definições de tags do sistema</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• key, label, color</li>
@@ -1186,7 +1186,7 @@ const response = await fetch(
             <h4 className="text-foreground font-bold mb-4">Database Functions (Stored Procedures)</h4>
             <div className="space-y-3">
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-cyan-400 font-mono text-xs mb-1">claim_nina_processing_batch(p_limit)</p>
+                <p className="text-red-400 font-mono text-xs mb-1">claim_nina_processing_batch(p_limit)</p>
                 <p className="text-muted-foreground text-xs">Atomicamente busca e marca mensagens como 'processing' na nina_processing_queue</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
@@ -1194,7 +1194,7 @@ const response = await fetch(
                 <p className="text-muted-foreground text-xs">Atomicamente busca e marca mensagens como 'processing' na send_queue</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-violet-400 font-mono text-xs mb-1">claim_message_processing_batch(p_limit)</p>
+                <p className="text-red-400 font-mono text-xs mb-1">claim_message_processing_batch(p_limit)</p>
                 <p className="text-muted-foreground text-xs">Atomicamente busca e marca webhooks na message_processing_queue</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
@@ -1206,7 +1206,7 @@ const response = await fetch(
                 <p className="text-muted-foreground text-xs">Atualiza o estado da máquina de conversas com contexto e ação</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-blue-400 font-mono text-xs mb-1">update_client_memory(p_contact_id, p_new_memory)</p>
+                <p className="text-red-400 font-mono text-xs mb-1">update_client_memory(p_contact_id, p_new_memory)</p>
                 <p className="text-muted-foreground text-xs">Atualiza o JSONB client_memory de um contato</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
@@ -1220,7 +1220,7 @@ const response = await fetch(
             <h4 className="text-foreground font-bold mb-4">Database Triggers</h4>
             <div className="space-y-3">
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-cyan-400 font-bold text-xs mb-1">update_updated_at_column (8 tabelas)</p>
+                <p className="text-red-400 font-bold text-xs mb-1">update_updated_at_column (8 tabelas)</p>
                 <p className="text-muted-foreground text-xs">Trigger <code className="text-muted-foreground">BEFORE UPDATE</code> que automaticamente atualiza <code>updated_at = now()</code></p>
                 <p className="text-muted-foreground text-xs mt-1">Tabelas: contacts, conversations, conversation_states, nina_processing_queue, message_processing_queue, send_queue, nina_settings, tag_definitions</p>
               </div>
@@ -1229,7 +1229,7 @@ const response = await fetch(
                 <p className="text-muted-foreground text-xs">Trigger <code className="text-muted-foreground">AFTER INSERT</code> em messages que atualiza last_message_at nas conversations e last_activity nos contacts</p>
               </div>
               <div className="bg-background border border-border rounded p-3">
-                <p className="text-violet-400 font-bold text-xs mb-1">create_deal_for_new_contact</p>
+                <p className="text-red-400 font-bold text-xs mb-1">create_deal_for_new_contact</p>
                 <p className="text-muted-foreground text-xs">Trigger <code className="text-muted-foreground">AFTER INSERT</code> em contacts que automaticamente cria um deal no estágio 'new'</p>
               </div>
             </div>
@@ -1251,7 +1251,7 @@ const response = await fetch(
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-cyan-400 font-bold mb-2 text-sm">appointment_type</h5>
+                <h5 className="text-red-400 font-bold mb-2 text-sm">appointment_type</h5>
                 <p className="text-xs text-muted-foreground mb-2">Tipo de compromisso agendado</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• demo</li>
@@ -1272,7 +1272,7 @@ const response = await fetch(
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-violet-400 font-bold mb-2 text-sm">member_role</h5>
+                <h5 className="text-red-400 font-bold mb-2 text-sm">member_role</h5>
                 <p className="text-xs text-muted-foreground mb-2">Papel do membro da equipe</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• admin (administrador)</li>
@@ -1302,7 +1302,7 @@ const response = await fetch(
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-blue-400 font-bold mb-2 text-sm">message_status</h5>
+                <h5 className="text-red-400 font-bold mb-2 text-sm">message_status</h5>
                 <p className="text-xs text-muted-foreground mb-2">Status de entrega da mensagem</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• sent (enviada)</li>
@@ -1326,7 +1326,7 @@ const response = await fetch(
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-teal-400 font-bold mb-2 text-sm">queue_status</h5>
+                <h5 className="text-red-400 font-bold mb-2 text-sm">queue_status</h5>
                 <p className="text-xs text-muted-foreground mb-2">Status de itens nas filas</p>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• pending (pendente)</li>
@@ -1349,9 +1349,9 @@ const response = await fetch(
               </div>
             </div>
 
-            <div className="bg-cyan-900/20 border border-cyan-700/50 rounded-lg p-4 mt-4">
-              <p className="text-sm text-cyan-200 flex items-start gap-2">
-                <span className="text-cyan-400 font-bold">💡</span>
+            <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4 mt-4">
+              <p className="text-sm text-red-200 flex items-start gap-2">
+                <span className="text-red-400 font-bold">💡</span>
                 <span>
                   <strong>Por que usar ENUMs?</strong> ENUMs garantem que apenas valores válidos sejam inseridos no banco, 
                   prevenindo erros de digitação e mantendo consistência. São mais eficientes que strings livres e facilitam 
@@ -1371,7 +1371,7 @@ const response = await fetch(
         <div className="space-y-4">
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-cyan-500" />
+              <MessageSquare className="w-5 h-5 text-red-500" />
               1. Fluxo de Mensagem Recebida
             </h4>
             <pre className="text-xs text-muted-foreground font-mono bg-background p-4 rounded border border-border overflow-x-auto leading-loose">
@@ -1476,7 +1476,7 @@ const response = await fetch(
 
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
-              <Users className="w-5 h-5 text-violet-500" />
+              <Users className="w-5 h-5 text-red-500" />
               3. Fluxo de Takeover Humano
             </h4>
             <pre className="text-xs text-muted-foreground font-mono bg-background p-4 rounded border border-border overflow-x-auto leading-loose">
@@ -1521,18 +1521,18 @@ const response = await fetch(
             <h4 className="text-foreground font-bold mb-4">Custom Hooks</h4>
             <div className="space-y-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-cyan-400 font-bold mb-3">useConversations</h5>
+                <h5 className="text-red-400 font-bold mb-3">useConversations</h5>
                 <p className="text-sm text-muted-foreground mb-3">
                   Hook central para gerenciar todas as conversas e mensagens com realtime subscriptions.
                 </p>
                 <div className="bg-card rounded p-3 mb-3">
                   <p className="text-xs text-muted-foreground font-mono mb-2">Funcionalidades:</p>
                   <ul className="text-xs text-muted-foreground space-y-1">
-                    <li>• <code className="text-cyan-400">fetchConversations()</code> - Busca inicial de conversas</li>
-                    <li>• <code className="text-cyan-400">sendMessage(conversationId, content)</code> - Envia mensagem com optimistic update</li>
-                    <li>• <code className="text-cyan-400">updateStatus(conversationId, status)</code> - Alterna nina/human/paused</li>
-                    <li>• <code className="text-cyan-400">markAsRead(conversationId)</code> - Marca mensagens como lidas</li>
-                    <li>• <code className="text-cyan-400">assignConversation(conversationId, userId)</code> - Atribui a agente</li>
+                    <li>• <code className="text-red-400">fetchConversations()</code> - Busca inicial de conversas</li>
+                    <li>• <code className="text-red-400">sendMessage(conversationId, content)</code> - Envia mensagem com optimistic update</li>
+                    <li>• <code className="text-red-400">updateStatus(conversationId, status)</code> - Alterna nina/human/paused</li>
+                    <li>• <code className="text-red-400">markAsRead(conversationId)</code> - Marca mensagens como lidas</li>
+                    <li>• <code className="text-red-400">assignConversation(conversationId, userId)</code> - Atribui a agente</li>
                   </ul>
                 </div>
                 <div className="bg-card rounded p-3">
@@ -1593,7 +1593,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-violet-400 font-bold mb-3">useIsMobile</h5>
+                <h5 className="text-red-400 font-bold mb-3">useIsMobile</h5>
                 <p className="text-sm text-muted-foreground mb-3">
                   Hook para detectar viewport mobile (breakpoint: 768px).
                 </p>
@@ -1629,7 +1629,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-cyan-400 font-bold mb-3 text-sm">Contacts API</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">Contacts API</h5>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• fetchContacts()</li>
                   <li>• fetchContactById(id)</li>
@@ -1652,7 +1652,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-violet-400 font-bold mb-3 text-sm">Deals API</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">Deals API</h5>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• fetchDeals()</li>
                   <li>• createDeal(data)</li>
@@ -1687,7 +1687,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-blue-400 font-bold mb-3 text-sm">Settings API</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">Settings API</h5>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• fetchNinaSettings()</li>
                   <li>• updateNinaSettings(data)</li>
@@ -1707,7 +1707,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-teal-400 font-bold mb-3 text-sm">Tags API</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">Tags API</h5>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• fetchTagDefinitions()</li>
                   <li>• createTagDefinition(data)</li>
@@ -1726,7 +1726,7 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-indigo-400 font-bold mb-3 text-sm">Métodos Extras</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">Métodos Extras</h5>
                 <ul className="text-xs text-muted-foreground space-y-1 font-mono">
                   <li>• updateContactNotes(contactId, notes)</li>
                   <li>• toggleContactBlock(contactId, blocked)</li>
@@ -1752,9 +1752,9 @@ setConversations(prev => replaceTempId(prev, tempId, data.id));
             
             <div className="space-y-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-cyan-400 font-bold mb-3 text-sm">ClientMemory (JSONB)</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">ClientMemory (JSONB)</h5>
                 <p className="text-xs text-muted-foreground mb-3">
-                  Estrutura de memória contextual do cliente armazenada em <code className="text-cyan-400">contacts.client_memory</code>
+                  Estrutura de memória contextual do cliente armazenada em <code className="text-red-400">contacts.client_memory</code>
                 </p>
                 <pre className="text-xs text-muted-foreground font-mono bg-card p-3 rounded overflow-x-auto">
 {`interface ClientMemory {
@@ -1858,14 +1858,14 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
             
             <div className="space-y-4">
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-cyan-400 font-bold mb-3">1. Deduplicação de Mensagens</h5>
+                <h5 className="text-red-400 font-bold mb-3">1. Deduplicação de Mensagens</h5>
                 <p className="text-sm text-muted-foreground mb-3">
                   Sistema de optimistic updates com IDs temporários para evitar duplicatas na UI.
                 </p>
                 <div className="bg-card rounded p-3">
                   <p className="text-xs text-muted-foreground font-mono mb-2">Fluxo:</p>
                   <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
-                    <li>Usuário envia mensagem → cria <code className="text-cyan-400">temp-{"{timestamp}"}</code></li>
+                    <li>Usuário envia mensagem → cria <code className="text-red-400">temp-{"{timestamp}"}</code></li>
                     <li>Mensagem inserida no banco → retorna ID real</li>
                     <li>ID temporário é substituído pelo real no estado</li>
                     <li>Realtime subscription detecta INSERT → compara ID real</li>
@@ -1899,7 +1899,7 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-violet-400 font-bold mb-3">3. Adaptive AI Mode</h5>
+                <h5 className="text-red-400 font-bold mb-3">3. Adaptive AI Mode</h5>
                 <p className="text-sm text-muted-foreground mb-3">
                   Sistema que seleciona dinamicamente o modelo de IA baseado no contexto da conversa.
                 </p>
@@ -1963,15 +1963,15 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
               </div>
 
               <div className="bg-background border border-border rounded-lg p-4">
-                <h5 className="text-blue-400 font-bold mb-3">6. Pipeline Stages AI-Managed</h5>
+                <h5 className="text-red-400 font-bold mb-3">6. Pipeline Stages AI-Managed</h5>
                 <p className="text-sm text-muted-foreground mb-3">
                   Estágios podem ser configurados para movimentação automática por IA.
                 </p>
                 <div className="bg-card rounded p-3">
                   <p className="text-xs text-muted-foreground font-mono mb-2">Configuração:</p>
                   <ul className="text-xs text-muted-foreground space-y-1">
-                    <li>• <code className="text-blue-400">is_ai_managed: true</code> → IA pode mover para este estágio</li>
-                    <li>• <code className="text-blue-400">ai_trigger_criteria: string</code> → Descrição de quando mover</li>
+                    <li>• <code className="text-red-400">is_ai_managed: true</code> → IA pode mover para este estágio</li>
+                    <li>• <code className="text-red-400">ai_trigger_criteria: string</code> → Descrição de quando mover</li>
                     <li>• analyze-conversation consulta apenas estágios com criteria definida</li>
                     <li>• Estágios Manual → IA ignora, só humano pode mover</li>
                     <li>• Estágios system (won/lost) → protegidos contra delete</li>
@@ -1996,28 +1996,28 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
 
             <div className="space-y-6">
               <div>
-                <h4 className="text-cyan-400 font-bold mb-3 text-sm flex items-center gap-2">
+                <h4 className="text-red-400 font-bold mb-3 text-sm flex items-center gap-2">
                   <Settings className="w-4 h-4" />
                   Identidade Visual
                 </h4>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">Nome da Empresa:</span>{' '}
                         <span className="text-muted-foreground">Editável em Settings → Agente → Informações da Empresa</span>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">Nome do SDR/Agente:</span>{' '}
                         <span className="text-muted-foreground">Editável em Settings → Agente → Informações da Empresa</span>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">Uso no Sistema:</span>{' '}
                         <span className="text-muted-foreground">Sidebar, ChatInterface, Settings, status labels, prompts dinâmicos</span>
@@ -2067,28 +2067,28 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
               </div>
 
               <div>
-                <h4 className="text-violet-400 font-bold mb-3 text-sm flex items-center gap-2">
+                <h4 className="text-red-400 font-bold mb-3 text-sm flex items-center gap-2">
                   <Key className="w-4 h-4" />
                   Integrações de API
                 </h4>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">WhatsApp Cloud API:</span>{' '}
                         <span className="text-muted-foreground">Access Token + Phone Number ID + Verify Token</span>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">ElevenLabs (opcional):</span>{' '}
                         <span className="text-muted-foreground">API Key + Voice ID + configurações avançadas (stability, speed, style)</span>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <span className="font-bold">Agendamento Nativo:</span>{' '}
                         <span className="text-muted-foreground">Integrado via Nina (create/reschedule/cancel appointment)</span>
@@ -2179,22 +2179,22 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
 
             <div className="space-y-6">
               <div>
-                <h4 className="text-cyan-400 font-bold mb-3 text-sm">1. Variáveis de Ambiente (.env)</h4>
+                <h4 className="text-red-400 font-bold mb-3 text-sm">1. Variáveis de Ambiente (.env)</h4>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <p className="text-xs text-muted-foreground mb-3">
                     <strong>⚠️ Gerenciadas automaticamente pelo Supabase/Lovable Cloud</strong> - Não editar manualmente:
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-2 font-mono">
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <code className="text-xs">VITE_SUPABASE_URL</code>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <code className="text-xs">VITE_SUPABASE_PUBLISHABLE_KEY</code>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400">•</span>
+                      <span className="text-red-400">•</span>
                       <code className="text-xs">VITE_SUPABASE_PROJECT_ID</code>
                     </li>
                   </ul>
@@ -2210,7 +2210,7 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
                   
                   <div className="space-y-4">
                     <div>
-                      <p className="text-xs font-bold text-violet-400 mb-2">WhatsApp Cloud API (obrigatório)</p>
+                      <p className="text-xs font-bold text-red-400 mb-2">WhatsApp Cloud API (obrigatório)</p>
                       <ul className="text-sm text-muted-foreground space-y-1 font-mono pl-4">
                         <li className="text-xs"><code>whatsapp_access_token</code></li>
                         <li className="text-xs"><code>whatsapp_phone_number_id</code></li>
@@ -2237,7 +2237,7 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
                     </div>
 
                     <div>
-                      <p className="text-xs font-bold text-blue-400 mb-2">IA (Lovable AI Gateway)</p>
+                      <p className="text-xs font-bold text-red-400 mb-2">IA (Lovable AI Gateway)</p>
                       <ul className="text-sm text-muted-foreground space-y-1 pl-4">
                         <li className="text-xs">✅ O sistema usa <strong>Lovable AI Gateway</strong> (Gemini/GPT)</li>
                         <li className="text-xs">Não requer API key própria da OpenAI</li>
@@ -2272,12 +2272,12 @@ const transformConversation = (dbConv: DBConversation): UIConversation => {
             
             <div className="space-y-6">
               <div>
-                <h5 className="text-cyan-400 font-bold mb-3 text-sm">1. Adicionar Nova Página</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">1. Adicionar Nova Página</h5>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-                    <li>Criar componente em <code className="text-cyan-400">src/components/NovaPagina.tsx</code></li>
-                    <li>Adicionar rota em <code className="text-cyan-400">src/App.tsx</code></li>
-                    <li>Adicionar link na <code className="text-cyan-400">Sidebar.tsx</code></li>
+                    <li>Criar componente em <code className="text-red-400">src/components/NovaPagina.tsx</code></li>
+                    <li>Adicionar rota em <code className="text-red-400">src/App.tsx</code></li>
+                    <li>Adicionar link na <code className="text-red-400">Sidebar.tsx</code></li>
                   </ol>
                   <pre className="text-xs text-muted-foreground font-mono bg-card p-3 rounded mt-3 overflow-x-auto">
 {`// App.tsx
@@ -2318,23 +2318,23 @@ Deno.serve(async (req) => {
               </div>
 
               <div>
-                <h5 className="text-violet-400 font-bold mb-3 text-sm">3. Modificar Comportamento da IA</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">3. Modificar Comportamento da IA</h5>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <strong>Via Interface:</strong> Settings → Agente → Editar prompt manualmente ou gerar com IA
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
-                        <strong>Via Código:</strong> Editar lógica de processamento em <code className="text-violet-400">nina-orchestrator/index.ts</code>
+                        <strong>Via Código:</strong> Editar lógica de processamento em <code className="text-red-400">nina-orchestrator/index.ts</code>
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-violet-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
                         <strong>Modelos Disponíveis:</strong> google/gemini-2.5-flash, google/gemini-2.5-pro, google/gemini-3-pro-preview, openai/gpt-5, openai/gpt-5-mini, openai/gpt-5-nano
                       </div>
@@ -2386,25 +2386,25 @@ CREATE POLICY "Allow all" ON public.minha_tabela
               </div>
 
               <div>
-                <h5 className="text-blue-400 font-bold mb-3 text-sm">6. Customizar Cores e Tema</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">6. Customizar Cores e Tema</h5>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
-                        <strong>Cores Principais:</strong> Editar <code className="text-blue-400">src/index.css</code> (variáveis HSL)
+                        <strong>Cores Principais:</strong> Editar <code className="text-red-400">src/index.css</code> (variáveis HSL)
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
-                        <strong>Tailwind Config:</strong> Editar <code className="text-blue-400">tailwind.config.ts</code> para novos tokens
+                        <strong>Tailwind Config:</strong> Editar <code className="text-red-400">tailwind.config.ts</code> para novos tokens
                       </div>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-400">•</span>
+                      <span className="text-red-400">•</span>
                       <div>
-                        <strong>Componentes UI:</strong> Editar <code className="text-blue-400">src/components/ui/*</code> (shadcn variants)
+                        <strong>Componentes UI:</strong> Editar <code className="text-red-400">src/components/ui/*</code> (shadcn variants)
                       </div>
                     </li>
                   </ul>
@@ -2451,10 +2451,10 @@ CREATE POLICY "Allow all" ON public.minha_tabela
               </div>
 
               <div>
-                <h5 className="text-indigo-400 font-bold mb-3 text-sm">8. Customizar Navegação (Sidebar)</h5>
+                <h5 className="text-red-400 font-bold mb-3 text-sm">8. Customizar Navegação (Sidebar)</h5>
                 <div className="bg-background border border-border rounded-lg p-4">
                   <p className="text-sm text-muted-foreground mb-3">
-                    Para adicionar, remover ou reordenar itens do menu lateral, edite o array <code className="text-indigo-400">menuItems</code> em <code className="text-indigo-400">src/components/Sidebar.tsx</code>:
+                    Para adicionar, remover ou reordenar itens do menu lateral, edite o array <code className="text-red-400">menuItems</code> em <code className="text-red-400">src/components/Sidebar.tsx</code>:
                   </p>
                   
                   <div className="bg-card rounded-lg p-4 mb-4">
@@ -2481,10 +2481,10 @@ CREATE POLICY "Allow all" ON public.minha_tabela
                   </div>
 
                   <p className="text-xs text-muted-foreground flex items-start gap-2">
-                    <span className="text-indigo-400">ℹ️</span>
+                    <span className="text-red-400">ℹ️</span>
                     <span>
-                      O <code className="text-indigo-400">id</code> deve corresponder à rota definida no React Router. 
-                      O item ativo é automaticamente destacado com <code className="text-indigo-400">bg-cyan-500/10</code>.
+                      O <code className="text-red-400">id</code> deve corresponder à rota definida no React Router. 
+                      O item ativo é automaticamente destacado com <code className="text-red-400">bg-cyan-500/10</code>.
                     </span>
                   </p>
                 </div>
@@ -2492,9 +2492,9 @@ CREATE POLICY "Allow all" ON public.minha_tabela
             </div>
           </div>
 
-          <div className="bg-cyan-900/20 border border-cyan-700/50 rounded-lg p-4">
-            <p className="text-sm text-cyan-200 flex items-start gap-2">
-              <span className="text-cyan-400 font-bold">💡</span>
+          <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-4">
+            <p className="text-sm text-red-200 flex items-start gap-2">
+              <span className="text-red-400 font-bold">💡</span>
               <span>
                 <strong>Dica:</strong> Para modificações avançadas, consulte a documentação do Supabase (<a href="https://supabase.com/docs" className="underline">supabase.com/docs</a>) 
                 e do React (<a href="https://react.dev" className="underline">react.dev</a>). O código é 100% open-source e pode ser customizado livremente.
@@ -2525,7 +2525,7 @@ CREATE POLICY "Allow all" ON public.minha_tabela
           {/* Edge Functions verify_jwt */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">1</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">1</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Configurar verify_jwt = false nas Edge Functions</h4>
                 <p className="text-muted-foreground text-sm">Webhooks e funções do sistema precisam aceitar requisições externas</p>
@@ -2534,7 +2534,7 @@ CREATE POLICY "Allow all" ON public.minha_tabela
             
             <div className="space-y-4 ml-14">
               <p className="text-muted-foreground text-sm">
-                No arquivo <code className="text-cyan-400 bg-muted px-2 py-0.5 rounded">supabase/config.toml</code>, adicione as seguintes configurações:
+                No arquivo <code className="text-red-400 bg-muted px-2 py-0.5 rounded">supabase/config.toml</code>, adicione as seguintes configurações:
               </p>
               
               <div className="bg-background border border-border rounded-lg p-4 overflow-x-auto">
@@ -2601,7 +2601,7 @@ verify_jwt = false`}</pre>
           {/* Webhook Meta */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">2</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">2</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Configurar Webhook no Meta for Developers</h4>
                 <p className="text-muted-foreground text-sm">Conectar o WhatsApp Business API ao seu sistema</p>
@@ -2611,12 +2611,12 @@ verify_jwt = false`}</pre>
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.1</span>
-                  <p className="text-muted-foreground">Acesse <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">developers.facebook.com</a> → Seu App → WhatsApp → Configuration</p>
+                  <span className="text-red-400 font-bold">2.1</span>
+                  <p className="text-muted-foreground">Acesse <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer" className="text-red-400 underline">developers.facebook.com</a> → Seu App → WhatsApp → Configuration</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.2</span>
+                  <span className="text-red-400 font-bold">2.2</span>
                   <div>
                     <p className="text-muted-foreground">Configure o Callback URL (copie de Configurações → APIs):</p>
                     <div className="bg-background border border-border rounded-lg p-3 mt-2">
@@ -2628,7 +2628,7 @@ verify_jwt = false`}</pre>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.3</span>
+                  <span className="text-red-400 font-bold">2.3</span>
                   <div>
                     <p className="text-muted-foreground">Configure o Verify Token (copie de Configurações → APIs):</p>
                     <div className="bg-background border border-border rounded-lg p-3 mt-2">
@@ -2640,13 +2640,13 @@ verify_jwt = false`}</pre>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.4</span>
+                  <span className="text-red-400 font-bold">2.4</span>
                   <p className="text-muted-foreground">Clique em <strong className="text-foreground">"Verify and Save"</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">2.5</span>
-                  <p className="text-muted-foreground">Em <strong className="text-foreground">"Webhook fields"</strong>, inscreva-se em: <code className="text-cyan-400">messages</code></p>
+                  <span className="text-red-400 font-bold">2.5</span>
+                  <p className="text-muted-foreground">Em <strong className="text-foreground">"Webhook fields"</strong>, inscreva-se em: <code className="text-red-400">messages</code></p>
                 </div>
               </div>
             </div>
@@ -2655,7 +2655,7 @@ verify_jwt = false`}</pre>
           {/* ElevenLabs */}
           <div className="bg-card/50 border border-border rounded-lg p-6">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-cyan-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">3</div>
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-foreground font-bold text-lg flex-shrink-0">3</div>
               <div>
                 <h4 className="text-foreground font-bold text-lg">Configurar ElevenLabs API Key (Opcional)</h4>
                 <p className="text-muted-foreground text-sm">Apenas se quiser respostas em áudio</p>
@@ -2665,29 +2665,29 @@ verify_jwt = false`}</pre>
             <div className="space-y-4 ml-14">
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.1</span>
-                  <p className="text-muted-foreground">Crie uma conta em <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline">elevenlabs.io</a></p>
+                  <span className="text-red-400 font-bold">3.1</span>
+                  <p className="text-muted-foreground">Crie uma conta em <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-red-400 underline">elevenlabs.io</a></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.2</span>
+                  <span className="text-red-400 font-bold">3.2</span>
                   <p className="text-muted-foreground">Vá em Profile → API Key e copie sua chave</p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.3</span>
+                  <span className="text-red-400 font-bold">3.3</span>
                   <p className="text-muted-foreground">Cole a chave em <strong className="text-foreground">Configurações → APIs → ElevenLabs API Key</strong></p>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <span className="text-cyan-400 font-bold">3.4</span>
+                  <span className="text-red-400 font-bold">3.4</span>
                   <p className="text-muted-foreground">Ative <strong className="text-foreground">"Resposta em Áudio"</strong> na aba Agente</p>
                 </div>
               </div>
               
               <div className="bg-muted rounded-lg p-4 border border-border">
                 <p className="text-xs text-muted-foreground flex items-center gap-2">
-                  <Info className="w-4 h-4 text-cyan-400" />
+                  <Info className="w-4 h-4 text-red-400" />
                   O plano gratuito do ElevenLabs oferece ~10.000 caracteres/mês. Para uso comercial, considere um plano pago.
                 </p>
               </div>
@@ -2695,7 +2695,7 @@ verify_jwt = false`}</pre>
           </div>
 
           {/* Resumo */}
-          <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-lg p-6">
+          <div className="bg-gradient-to-br from-emerald-500/10 to-red-500/10 border border-emerald-500/20 rounded-lg p-6">
             <h4 className="text-foreground font-bold mb-3 flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-emerald-400" />
               Checklist Completo
@@ -2729,7 +2729,7 @@ verify_jwt = false`}</pre>
       <div className="bg-card/50 border border-border rounded-lg p-6 mb-6">
         <p className="text-muted-foreground text-sm leading-relaxed">
           Esta documentação foi criada para ajudar você a entender a arquitetura completa do sistema. 
-          Como este é um projeto <strong className="text-cyan-400">white-label</strong>, todas as funcionalidades 
+          Como este é um projeto <strong className="text-red-400">white-label</strong>, todas as funcionalidades 
           podem ser customizadas através da interface ou editando o código diretamente.
         </p>
         <p className="text-muted-foreground text-xs mt-3">
@@ -2751,7 +2751,7 @@ verify_jwt = false`}</pre>
               className="w-full p-5 flex items-center justify-between hover:bg-card/80 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <Icon className="w-5 h-5 text-cyan-400" />
+                <Icon className="w-5 h-5 text-red-400" />
                 <h3 className="text-lg font-bold text-foreground text-left">{section.title}</h3>
               </div>
               {isExpanded ? (

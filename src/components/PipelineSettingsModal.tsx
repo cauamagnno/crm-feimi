@@ -28,15 +28,15 @@ interface PipelineSettingsModalProps {
 
 const STAGE_COLORS = [
   { value: 'border-slate-500', label: 'Cinza', preview: 'bg-slate-500' },
-  { value: 'border-cyan-500', label: 'Ciano', preview: 'bg-cyan-500' },
-  { value: 'border-violet-500', label: 'Violeta', preview: 'bg-violet-500' },
+  { value: 'border-red-500', label: 'Vermelho', preview: 'bg-red-500' },
+  { value: 'border-rose-500', label: 'Rosa', preview: 'bg-rose-500' },
   { value: 'border-orange-500', label: 'Laranja', preview: 'bg-orange-500' },
   { value: 'border-emerald-500', label: 'Verde', preview: 'bg-emerald-500' },
-  { value: 'border-red-500', label: 'Vermelho', preview: 'bg-red-500' },
-  { value: 'border-blue-500', label: 'Azul', preview: 'bg-blue-500' },
+  { value: 'border-red-600', label: 'Vermelho Médio', preview: 'bg-red-600' },
+  { value: 'border-red-400', label: 'Vermelho Claro', preview: 'bg-red-400' },
   { value: 'border-yellow-500', label: 'Amarelo', preview: 'bg-yellow-500' },
   { value: 'border-pink-500', label: 'Rosa', preview: 'bg-pink-500' },
-  { value: 'border-indigo-500', label: 'Índigo', preview: 'bg-indigo-500' },
+  { value: 'border-red-700', label: 'Vermelho Escuro', preview: 'bg-red-700' },
 ];
 
 export function PipelineSettingsModal({ open, onClose, onSave }: PipelineSettingsModalProps) {
@@ -322,7 +322,7 @@ export function PipelineSettingsModal({ open, onClose, onSave }: PipelineSetting
                           {stage.isAiManaged ? (
                             stage.aiTriggerCriteria ? (
                               <div title="Estágio automático com critério configurado">
-                                <Bot className="w-4 h-4 text-blue-500" />
+                                <Bot className="w-4 h-4 text-red-500" />
                               </div>
                             ) : (
                               <div title="Estágio automático sem critério - IA não sabe quando usar">

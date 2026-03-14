@@ -129,7 +129,7 @@ export const StepBusinessHours: React.FC<StepBusinessHoursProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-muted border-border z-50">
               {TIMEZONES.map((tz) => (
-                <SelectItem key={tz.id} value={tz.id} className="text-foreground hover:bg-violet-500/20 focus:bg-violet-500/20 focus:text-foreground">
+                <SelectItem key={tz.id} value={tz.id} className="text-foreground hover:bg-red-500/20 focus:bg-red-500/20 focus:text-foreground">
                   {tz.name}
                 </SelectItem>
               ))}
@@ -152,7 +152,7 @@ export const StepBusinessHours: React.FC<StepBusinessHoursProps> = ({
                 </SelectTrigger>
                 <SelectContent className="bg-muted border-border max-h-60 z-50">
                   {HOURS.map((hour) => (
-                    <SelectItem key={hour.id} value={hour.id} className="text-foreground hover:bg-violet-500/20 focus:bg-violet-500/20 focus:text-foreground">
+                    <SelectItem key={hour.id} value={hour.id} className="text-foreground hover:bg-red-500/20 focus:bg-red-500/20 focus:text-foreground">
                       {hour.name}
                     </SelectItem>
                   ))}
@@ -167,7 +167,7 @@ export const StepBusinessHours: React.FC<StepBusinessHoursProps> = ({
                 </SelectTrigger>
                 <SelectContent className="bg-muted border-border max-h-60 z-50">
                   {HOURS.map((hour) => (
-                    <SelectItem key={hour.id} value={hour.id} className="text-foreground hover:bg-violet-500/20 focus:bg-violet-500/20 focus:text-foreground">
+                    <SelectItem key={hour.id} value={hour.id} className="text-foreground hover:bg-red-500/20 focus:bg-red-500/20 focus:text-foreground">
                       {hour.name}
                     </SelectItem>
                   ))}

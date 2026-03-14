@@ -262,7 +262,7 @@ export const StepFinish: React.FC<StepFinishProps> = ({
 
         {isValidating && !validation && (
           <div className="flex items-center justify-center p-8">
-            <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />
+            <Loader2 className="w-6 h-6 animate-spin text-red-400" />
             <span className="ml-2 text-sm text-muted-foreground">Validando...</span>
           </div>
         )}

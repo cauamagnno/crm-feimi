@@ -149,11 +149,11 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
     >
       <motion.div variants={itemVariants} className="text-center mb-8">
         <motion.div 
-          className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/30 flex items-center justify-center"
+          className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-500/20 border border-red-500/30 flex items-center justify-center"
           whileHover={{ scale: 1.05, rotate: 5 }}
           transition={{ type: "spring", stiffness: 400 }}
         >
-          <Mic className="w-8 h-8 text-violet-400" />
+          <Mic className="w-8 h-8 text-red-400" />
         </motion.div>
         <h3 className="text-xl font-semibold text-foreground mb-2">Respostas em Áudio</h3>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">
@@ -168,7 +168,7 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
         {/* Enable Audio Toggle */}
         <motion.div variants={itemVariants} className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border/50">
           <div className="flex items-center gap-3">
-            <Volume2 className="w-5 h-5 text-violet-400" />
+            <Volume2 className="w-5 h-5 text-red-400" />
             <div>
               <Label className="text-muted-foreground">Habilitar Respostas em Áudio</Label>
               <p className="text-xs text-muted-foreground">O agente enviará mensagens de voz</p>
@@ -193,7 +193,7 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
               value={elevenLabsApiKey}
               onChange={(e) => onApiKeyChange(e.target.value)}
               placeholder="sk-..."
-              className="bg-muted/50 border-border focus:border-violet-500 text-foreground placeholder:text-muted-foreground pr-10 font-mono"
+              className="bg-muted/50 border-border focus:border-red-500 text-foreground placeholder:text-muted-foreground pr-10 font-mono"
             />
             <button
               type="button"
@@ -205,7 +205,7 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
           </div>
           <p className="text-xs text-muted-foreground">
             Obtenha em{' '}
-            <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener noreferrer" className="text-violet-400 hover:underline">
+            <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:underline">
               elevenlabs.io
             </a>
           </p>
@@ -222,7 +222,7 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-muted border-border z-50">
               {VOICES.map((voice) => (
-                <SelectItem key={voice.id} value={voice.id} className="text-foreground hover:bg-violet-500/20 focus:bg-violet-500/20 focus:text-foreground">
+                <SelectItem key={voice.id} value={voice.id} className="text-foreground hover:bg-red-500/20 focus:bg-red-500/20 focus:text-foreground">
                   <span className="font-medium">{voice.name}</span>
                   <span className="text-muted-foreground ml-2">- {voice.description}</span>
                 </SelectItem>
@@ -240,7 +240,7 @@ export const StepElevenLabs: React.FC<StepElevenLabsProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-muted border-border z-50">
               {MODELS.map((model) => (
-                <SelectItem key={model.id} value={model.id} className="text-foreground hover:bg-violet-500/20 focus:bg-violet-500/20 focus:text-foreground">
+                <SelectItem key={model.id} value={model.id} className="text-foreground hover:bg-red-500/20 focus:bg-red-500/20 focus:text-foreground">
                   <span className="font-medium">{model.name}</span>
                   <span className="text-muted-foreground ml-2">- {model.description}</span>
                 </SelectItem>
