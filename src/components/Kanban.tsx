@@ -283,16 +283,16 @@ const Kanban: React.FC = () => {
 
   const getPriorityColor = (priority: string) => {
       switch(priority) {
-          case 'high': return 'bg-red-500/10 text-red-400 border-red-500/20';
-          case 'medium': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-          default: return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+          case 'high': return 'bg-destructive/10 text-red-400 border-destructive/30';
+          case 'medium': return 'bg-muted/60 text-muted-foreground border-border';
+          default: return 'bg-muted/60 text-foreground border-border';
       }
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -313,7 +313,7 @@ const Kanban: React.FC = () => {
                 placeholder="Buscar oportunidade..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:ring-1 focus:ring-cyan-500 outline-none placeholder:text-slate-600"
+                className="w-full pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm text-foreground focus:ring-1 focus:ring-ring outline-none placeholder:text-muted-foreground"
              />
           </div>
           <Button 
@@ -324,7 +324,7 @@ const Kanban: React.FC = () => {
             <Settings className="w-4 h-4 mr-2" />
             Configurar
           </Button>
-          <Button className="shadow-lg shadow-cyan-500/20" onClick={() => setIsCreateModalOpen(true)}>
+          <Button className="shadow-lg" onClick={() => setIsCreateModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Novo Deal
           </Button>
@@ -345,9 +345,9 @@ const Kanban: React.FC = () => {
                 key={column.id}
                 className={`w-72 flex flex-col h-full rounded-xl border backdrop-blur-sm ${
                   isWonColumn 
-                    ? 'bg-emerald-950/40 border-emerald-700/50' 
+                    ? 'bg-muted/60 border-border' 
                     : isLostColumn 
-                      ? 'bg-red-950/40 border-red-700/50' 
+                      ? 'bg-destructive/10 border-destructive/30' 
                       : 'bg-card/30 border-border/50'
                 }`}
                 onDragOver={onDragOver}
@@ -356,32 +356,32 @@ const Kanban: React.FC = () => {
                 {/* Column Header */}
                 <div className={`p-3 border-b flex flex-col gap-1 rounded-t-xl ${
                   isWonColumn 
-                    ? 'bg-emerald-500/20 border-emerald-700/50 border-t-4 border-t-emerald-500' 
+                    ? 'bg-muted/60 border-border border-t-4 border-t-emerald-500' 
                     : isLostColumn 
-                      ? 'bg-red-500/20 border-red-700/50 border-t-4 border-t-red-500' 
+                      ? 'bg-destructive/10 border-destructive/30 border-t-4 border-t-red-500' 
                       : `border-border/50 border-t-2 ${column.color}`
                 }`}>
                   <div className="flex justify-between items-center">
                     <h3 className={`font-bold text-xs uppercase tracking-wide flex items-center gap-1.5 ${
-                      isWonColumn ? 'text-emerald-300' : isLostColumn ? 'text-red-300' : 'text-foreground'
+                      isWonColumn ? 'text-foreground' : isLostColumn ? 'text-red-300' : 'text-foreground'
                     }`}>
                       {column.isAiManaged && (
                         <span title="Gerenciado pela IA">
-                          <Bot className="w-3 h-3 text-cyan-400" />
+                          <Bot className="w-3 h-3 text-foreground" />
                         </span>
                       )}
                       {column.title}
                     </h3>
                     <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
                       isWonColumn 
-                        ? 'bg-emerald-900/50 text-emerald-400' 
+                        ? 'bg-muted/60 text-foreground' 
                         : isLostColumn 
-                          ? 'bg-red-900/50 text-red-400' 
+                          ? 'bg-destructive/10 text-red-400' 
                           : 'bg-muted text-muted-foreground'
                     }`}>{columnDeals.length}</span>
                   </div>
                   <div className="text-[10px] text-muted-foreground font-medium">
-                     Total: <span className={isWonColumn ? 'text-emerald-300' : isLostColumn ? 'text-red-300' : 'text-muted-foreground'}>{formatCurrency(totalValue)}</span>
+                     Total: <span className={isWonColumn ? 'text-foreground' : isLostColumn ? 'text-red-300' : 'text-muted-foreground'}>{formatCurrency(totalValue)}</span>
                   </div>
                 </div>
 
@@ -394,13 +394,13 @@ const Kanban: React.FC = () => {
                       onDragStart={(e) => onDragStart(e, deal.id)}
                       onDragEnd={onDragEnd}
                       onClick={() => setSelectedDeal(deal)}
-                      className="bg-card border border-border rounded-lg p-3 shadow-sm cursor-grab active:cursor-grabbing hover:border-cyan-500/50 hover:shadow-cyan-500/10 transition-all group relative"
+                      className="bg-card border border-border rounded-lg p-3 shadow-sm cursor-grab active:cursor-grabbing hover:border-border hover:shadow-none transition-all group relative"
                     >
                       <div className="flex justify-between items-start mb-1.5">
                         <span className={`text-[9px] px-1.5 py-0.5 rounded border font-medium ${getPriorityColor(deal.priority)}`}>
                            {deal.priority === 'high' ? 'Alta' : deal.priority === 'medium' ? 'Média' : 'Baixa'}
                         </span>
-                        <button className="text-slate-600 hover:text-foreground transition-colors opacity-0 group-hover:opacity-100">
+                        <button className="text-muted-foreground hover:text-foreground transition-colors opacity-0 group-hover:opacity-100">
                            <MoreHorizontal className="w-3.5 h-3.5" />
                         </button>
                       </div>
@@ -418,7 +418,7 @@ const Kanban: React.FC = () => {
 
                       <div className="flex items-center justify-between pt-2 border-t border-border">
                          <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-bold">
-                            <DollarSign className="w-3 h-3 text-emerald-500" />
+                            <DollarSign className="w-3 h-3 text-foreground" />
                             {formatCurrency(deal.value)}
                          </div>
                          <div className="flex items-center gap-2">
@@ -462,10 +462,10 @@ const Kanban: React.FC = () => {
                         <div>
                             <h2 className="text-2xl font-bold text-foreground mb-1">{selectedDeal.title}</h2>
                             <div className="flex items-center gap-2 text-muted-foreground text-sm flex-wrap">
-                                <span className="font-semibold text-emerald-400">{formatCurrency(selectedDeal.value)}</span>
-                                <span className="w-1 h-1 rounded-full bg-slate-600"></span>
+                                <span className="font-semibold text-foreground">{formatCurrency(selectedDeal.value)}</span>
+                                <span className="w-1 h-1 rounded-full bg-muted/60"></span>
                                 <span className="flex items-center gap-1"><Building className="w-3 h-3" /> {selectedDeal.company}</span>
-                                <span className="w-1 h-1 rounded-full bg-slate-600"></span>
+                                <span className="w-1 h-1 rounded-full bg-muted/60"></span>
                                 <Select value={selectedDeal.ownerId || ''} onValueChange={handleOwnerChange}>
                                   <SelectTrigger className="w-[180px] h-7 text-xs bg-muted border-border">
                                     <SelectValue placeholder="Selecione proprietário">
@@ -486,10 +486,10 @@ const Kanban: React.FC = () => {
                             </div>
                         </div>
                         <div className="flex gap-2">
-                            <Button variant="secondary" onClick={handleMarkWon} className="bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 text-emerald-400">
+                            <Button variant="secondary" onClick={handleMarkWon} className="bg-muted/60 hover:bg-muted/60 border-border text-foreground">
                               Ganho
                             </Button>
-                            <Button variant="secondary" onClick={() => setIsLostModalOpen(true)} className="bg-red-500/10 hover:bg-red-500/20 border-red-500/20 text-red-400">
+                            <Button variant="secondary" onClick={() => setIsLostModalOpen(true)} className="bg-destructive/10 hover:bg-destructive/10 border-destructive/30 text-red-400">
                               Perdido
                             </Button>
                             <button 
@@ -513,8 +513,8 @@ const Kanban: React.FC = () => {
                                     <div 
                                         key={col.id} 
                                         className={`flex-1 h-8 flex items-center justify-center px-2 relative cursor-pointer group transition-all first:rounded-l-md last:rounded-r-md 
-                                            ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' : 
-                                              isActive ? 'bg-cyan-600 text-foreground shadow-lg shadow-cyan-500/20' : 
+                                            ${isCompleted ? 'bg-muted/60 text-foreground hover:bg-muted/60' : 
+                                              isActive ? 'bg-primary text-foreground shadow-lg' : 
                                               'bg-muted text-muted-foreground hover:bg-accent hover:text-muted-foreground'}
                                         `}
                                         onClick={async () => {
@@ -568,43 +568,42 @@ const Kanban: React.FC = () => {
                         <div className="flex gap-4 mb-4">
                             <button 
                                 onClick={() => setActiveTab('note')}
-                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'note' ? 'text-cyan-400' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'note' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                             >
-                                <div className={`p-2 rounded-full ${activeTab === 'note' ? 'bg-cyan-500/10' : 'bg-muted'}`}>
+                                <div className={`p-2 rounded-full ${activeTab === 'note' ? 'bg-muted/60' : 'bg-muted'}`}>
                                     <FileText className="w-4 h-4" />
                                 </div>
                                 Nota
                             </button>
                             <button 
                                 onClick={() => setActiveTab('activity')}
-                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'activity' ? 'text-amber-400' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'activity' ? 'text-muted-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                             >
-                                <div className={`p-2 rounded-full ${activeTab === 'activity' ? 'bg-amber-500/10' : 'bg-muted'}`}>
+                                <div className={`p-2 rounded-full ${activeTab === 'activity' ? 'bg-muted/60' : 'bg-muted'}`}>
                                     <Calendar className="w-4 h-4" />
                                 </div>
                                 Atividade
                             </button>
                             <button 
                                 onClick={() => setActiveTab('email')}
-                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'email' ? 'text-violet-400' : 'text-muted-foreground hover:text-foreground'}`}
+                                className={`flex items-center gap-2 text-sm font-medium transition-colors ${activeTab === 'email' ? 'text-muted-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                             >
-                                <div className={`p-2 rounded-full ${activeTab === 'email' ? 'bg-violet-500/10' : 'bg-muted'}`}>
+                                <div className={`p-2 rounded-full ${activeTab === 'email' ? 'bg-muted/60' : 'bg-muted'}`}>
                                     <Mail className="w-4 h-4" />
                                 </div>
                                 Email
                             </button>
                         </div>
 
-                        <div className="bg-card border border-border rounded-xl overflow-hidden focus-within:ring-1 focus-within:ring-cyan-500/50 transition-all shadow-inner">
-                            <input 
+                        <div className="bg-card border border-border rounded-xl overflow-hidden focus-within:ring-ring                            <input 
                                 type="text"
-                                className="w-full bg-transparent p-3 text-sm text-foreground placeholder:text-slate-600 outline-none border-b border-border"
+                                className="w-full bg-transparent p-3 text-sm text-foreground placeholder:text-muted-foreground outline-none border-b border-border"
                                 placeholder="Título da atividade"
                                 value={newActivityTitle}
                                 onChange={(e) => setNewActivityTitle(e.target.value)}
                             />
                             <textarea 
-                                className="w-full bg-transparent p-4 text-sm text-foreground placeholder:text-slate-600 outline-none resize-none min-h-[80px]"
+                                className="w-full bg-transparent p-4 text-sm text-foreground placeholder:text-muted-foreground outline-none resize-none min-h-[80px]"
                                 placeholder={
                                     activeTab === 'note' ? "Escreva uma nota..." :
                                     activeTab === 'activity' ? "Descreva a atividade..." :
@@ -615,7 +614,7 @@ const Kanban: React.FC = () => {
                             />
                             <div className="px-3 py-2 bg-background/50 border-t border-border flex justify-between items-center">
                                 <div className="flex gap-2">
-                                    <button className="p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-cyan-400 transition-colors"><Paperclip className="w-4 h-4" /></button>
+                                    <button className="p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground transition-colors"><Paperclip className="w-4 h-4" /></button>
                                 </div>
                                 <Button size="sm" className="h-8" onClick={handleCreateActivity} disabled={!newActivityTitle.trim()}>
                                     Salvar
@@ -632,7 +631,7 @@ const Kanban: React.FC = () => {
                         
                         {loadingActivities ? (
                           <div className="flex justify-center py-8">
-                            <Loader2 className="w-6 h-6 animate-spin text-cyan-500" />
+                            <Loader2 className="w-6 h-6 animate-spin text-foreground" />
                           </div>
                         ) : activities.length === 0 ? (
                           <div className="text-center py-8 text-muted-foreground text-sm">
@@ -646,21 +645,21 @@ const Kanban: React.FC = () => {
                                                    activity.type === 'meeting' ? Calendar :
                                                    activity.type === 'task' ? CheckSquare :
                                                    FileText;
-                              const activityColor = activity.type === 'call' ? 'text-amber-500 bg-amber-500/10' :
-                                                    activity.type === 'email' ? 'text-violet-500 bg-violet-500/10' :
-                                                    activity.type === 'meeting' ? 'text-cyan-500 bg-cyan-500/10' :
-                                                    activity.type === 'task' ? 'text-emerald-500 bg-emerald-500/10' :
-                                                    'text-muted-foreground bg-slate-500/10';
+                              const activityColor = activity.type === 'call' ? 'text-muted-foreground bg-muted/60' :
+                                                    activity.type === 'email' ? 'text-muted-foreground bg-muted/60' :
+                                                    activity.type === 'meeting' ? 'text-foreground bg-muted/60' :
+                                                    activity.type === 'task' ? 'text-foreground bg-muted/60' :
+                                                    'text-muted-foreground bg-muted/60';
                               const ActivityIcon = activityIcon;
                               
                               return (
                                 <div key={activity.id} className="flex items-start gap-3 p-3 rounded-xl bg-card/50 border border-border hover:border-border transition-all group">
                                   <button 
                                     onClick={() => handleToggleActivityComplete(activity.id, activity.isCompleted)}
-                                    className="mt-0.5 text-muted-foreground hover:text-emerald-500 transition-colors"
+                                    className="mt-0.5 text-muted-foreground hover:text-foreground transition-colors"
                                   >
                                     {activity.isCompleted ? (
-                                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                                      <CheckCircle2 className="w-5 h-5 text-foreground" />
                                     ) : (
                                       <Circle className="w-5 h-5" />
                                     )}
@@ -675,14 +674,14 @@ const Kanban: React.FC = () => {
                                     {activity.description && (
                                       <p className="text-xs text-muted-foreground mt-1">{activity.description}</p>
                                     )}
-                                    <p className="text-[10px] text-slate-600 mt-1">
+                                    <p className="text-[10px] text-muted-foreground mt-1">
                                       {new Date(activity.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                       {activity.createdByName && ` • ${activity.createdByName}`}
                                     </p>
                                   </div>
                                   <button 
                                     onClick={() => handleDeleteActivity(activity.id)}
-                                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-500/10 rounded text-muted-foreground hover:text-red-500 transition-all"
+                                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/10 rounded text-muted-foreground hover:text-red-500 transition-all"
                                   >
                                     <Trash2 className="w-4 h-4" />
                                   </button>
@@ -697,7 +696,7 @@ const Kanban: React.FC = () => {
                     {selectedDeal.clientMemory && (
                       <div className="p-6 border-t border-border">
                         <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-                          <Brain className="w-4 h-4 text-violet-500" /> Insights do(a) {sdrName}
+                          <Brain className="w-4 h-4 text-muted-foreground" /> Insights do(a) {sdrName}
                         </h4>
                         
                         <div className="space-y-3">
@@ -705,13 +704,13 @@ const Kanban: React.FC = () => {
                           <div className="p-3 rounded-lg bg-card/50 border border-border">
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-xs text-muted-foreground">Score de Qualificação</span>
-                              <span className="text-sm font-bold text-cyan-400">
+                              <span className="text-sm font-bold text-foreground">
                                 {selectedDeal.clientMemory.lead_profile.qualification_score || 0}%
                               </span>
                             </div>
                             <div className="w-full bg-muted rounded-full h-1.5">
                               <div 
-                                className="bg-gradient-to-r from-cyan-500 to-violet-500 h-1.5 rounded-full transition-all"
+                                className="bg-gradient-to-r from-primary to-primary/80 h-1.5 rounded-full transition-all"
                                 style={{ width: `${selectedDeal.clientMemory.lead_profile.qualification_score || 0}%` }}
                               />
                             </div>
@@ -720,7 +719,7 @@ const Kanban: React.FC = () => {
                           {/* Next Best Action */}
                           <div className="p-3 rounded-lg bg-card/50 border border-border">
                             <span className="text-xs text-muted-foreground">Próxima Ação Sugerida</span>
-                            <p className="text-sm text-cyan-400 mt-1 font-medium">
+                            <p className="text-sm text-foreground mt-1 font-medium">
                               {selectedDeal.clientMemory.sales_intelligence.next_best_action === 'qualify' ? '📋 Qualificar lead' :
                                selectedDeal.clientMemory.sales_intelligence.next_best_action === 'demo' ? '🎯 Agendar demonstração' :
                                selectedDeal.clientMemory.sales_intelligence.next_best_action === 'follow_up' ? '📞 Fazer follow-up' :
@@ -734,7 +733,7 @@ const Kanban: React.FC = () => {
                               <span className="text-xs text-muted-foreground">Interesses</span>
                               <div className="flex flex-wrap gap-1.5 mt-2">
                                 {selectedDeal.clientMemory.lead_profile.interests.map((interest, idx) => (
-                                  <span key={idx} className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-xs rounded-md border border-emerald-500/20">
+                                  <span key={idx} className="px-2 py-0.5 bg-muted/60 text-foreground text-xs rounded-md border border-border">
                                     {interest}
                                   </span>
                                 ))}
@@ -748,7 +747,7 @@ const Kanban: React.FC = () => {
                               <span className="text-xs text-muted-foreground">Dores Identificadas</span>
                               <div className="flex flex-wrap gap-1.5 mt-2">
                                 {selectedDeal.clientMemory.sales_intelligence.pain_points.map((pain, idx) => (
-                                  <span key={idx} className="px-2 py-0.5 bg-red-500/10 text-red-400 text-xs rounded-md border border-red-500/20">
+                                  <span key={idx} className="px-2 py-0.5 bg-destructive/10 text-red-400 text-xs rounded-md border border-destructive/30">
                                     {pain}
                                   </span>
                                 ))}
@@ -780,13 +779,13 @@ const Kanban: React.FC = () => {
                     {selectedDeal.conversationId && (
                       <div className="p-6 border-t border-border">
                         <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4 text-cyan-500" /> 
+                          <MessageSquare className="w-4 h-4 text-foreground" /> 
                           Últimas Mensagens ({conversationMessages.length})
                         </h4>
                         
                         {loadingMessages ? (
                           <div className="flex justify-center py-4">
-                            <Loader2 className="w-5 h-5 animate-spin text-cyan-500" />
+                            <Loader2 className="w-5 h-5 animate-spin text-foreground" />
                           </div>
                         ) : conversationMessages.length === 0 ? (
                           <div className="text-center py-4 text-muted-foreground text-sm">
@@ -801,8 +800,8 @@ const Kanban: React.FC = () => {
                                   msg.from_type === 'user' 
                                     ? 'bg-muted text-foreground ml-0 mr-8' 
                                     : msg.from_type === 'nina'
-                                      ? 'bg-cyan-900/30 text-cyan-100 ml-8 mr-0'
-                                      : 'bg-emerald-900/30 text-emerald-100 ml-8 mr-0'
+                                      ? 'bg-muted/60 text-foreground ml-8 mr-0'
+                                      : 'bg-muted/60 text-foreground ml-8 mr-0'
                                 }`}
                               >
                                 <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mb-1">
@@ -821,7 +820,7 @@ const Kanban: React.FC = () => {
                         )}
                         
                         <Button 
-                          className="w-full mt-3 bg-violet-600 hover:bg-violet-700"
+                          className="w-full mt-3 bg-primary hover:bg-primary"
                           onClick={() => window.location.href = `/chat?conversation=${selectedDeal.conversationId}`}
                         >
                           <MessageSquare className="w-4 h-4 mr-2" />

@@ -172,9 +172,9 @@ const ChatInterface: React.FC = () => {
 
   const renderStatusBadge = (status: ConversationStatus) => {
     const config = {
-      nina: { label: sdrName, icon: Bot, color: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
-      human: { label: 'Humano', icon: User, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-      paused: { label: 'Pausado', icon: Pause, color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' }
+      nina: { label: sdrName, icon: Bot, color: 'bg-muted/60 text-muted-foreground border-border' },
+      human: { label: 'Humano', icon: User, color: 'bg-muted/60 text-foreground border-border' },
+      paused: { label: 'Pausado', icon: Pause, color: 'bg-muted/60 text-muted-foreground border-border' }
     };
     const { label, icon: Icon, color } = config[status];
     return (
@@ -247,8 +247,8 @@ const ChatInterface: React.FC = () => {
             disabled={!msg.mediaUrl}
             className={`flex items-center justify-center w-9 h-9 rounded-full transition-all shadow-md ${
               msg.direction === MessageDirection.OUTGOING 
-                ? 'bg-white text-cyan-600 hover:bg-cyan-50 disabled:opacity-50' 
-                : 'bg-cyan-500 text-foreground hover:bg-cyan-400 disabled:opacity-50'
+                ? 'bg-white text-foreground hover:bg-primary disabled:opacity-50' 
+                : 'bg-primary text-foreground hover:bg-primary disabled:opacity-50'
             }`}
           >
             {isPlaying ? (
@@ -262,7 +262,7 @@ const ChatInterface: React.FC = () => {
           <div className="flex-1 flex flex-col gap-1 justify-center h-9">
             <div 
               className={`h-1.5 rounded-full overflow-hidden cursor-pointer ${
-                msg.direction === MessageDirection.OUTGOING ? 'bg-white/30' : 'bg-slate-600'
+                msg.direction === MessageDirection.OUTGOING ? 'bg-white/30' : 'bg-muted/60'
               }`}
               onClick={(e) => {
                 const audio = audioRefs.current[msg.id];
@@ -280,7 +280,7 @@ const ChatInterface: React.FC = () => {
               />
             </div>
             <span className={`text-[10px] font-medium ${
-              msg.direction === MessageDirection.OUTGOING ? 'text-cyan-100' : 'text-muted-foreground'
+              msg.direction === MessageDirection.OUTGOING ? 'text-foreground' : 'text-muted-foreground'
             }`}>
               {formatAudioTime(progress)} / {formatAudioTime(duration)}
             </span>
@@ -296,7 +296,7 @@ const ChatInterface: React.FC = () => {
     return (
       <div className="flex h-full bg-background items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-foreground" />
           <p className="text-sm text-muted-foreground">Sincronizando conversas...</p>
         </div>
       </div>
@@ -312,13 +312,13 @@ const ChatInterface: React.FC = () => {
         <div className="p-4 border-b border-border/50">
           <h2 className="text-lg font-bold text-foreground mb-4 px-1">Chats Ativos</h2>
           <div className="relative group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-cyan-400 transition-colors" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
             <input 
               type="text" 
               placeholder="Buscar conversa..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none text-foreground placeholder:text-slate-600 transition-all"
+              className="w-full pl-9 pr-4 py-2.5 bg-background/50 border border-border rounded-xl text-sm focus:ring-2 focus:ring-ring focus:border-border outline-none text-foreground placeholder:text-muted-foreground transition-all"
             />
           </div>
         </div>
@@ -351,9 +351,9 @@ const ChatInterface: React.FC = () => {
                     />
                   </div>
                   {chat.unreadCount > 0 ? (
-                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-cyan-500 border-2 border-slate-900 rounded-full animate-pulse"></span>
+                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary border-2 border-border rounded-full animate-pulse"></span>
                   ) : (
-                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-600 border-2 border-slate-900 rounded-full"></span>
+                    <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-muted/60 border-2 border-border rounded-full"></span>
                   )}
                 </div>
                 
@@ -378,7 +378,7 @@ const ChatInterface: React.FC = () => {
                       </span>
                     ))}
                     {chat.unreadCount > 0 && (
-                      <span className="ml-auto bg-gradient-to-r from-cyan-600 to-teal-600 text-foreground text-[10px] font-bold px-1.5 h-4 min-w-[1rem] flex items-center justify-center rounded-full shadow-lg shadow-cyan-500/20">
+                      <span className="ml-auto bg-gradient-to-r from-primary to-primary/80 text-foreground text-[10px] font-bold px-1.5 h-4 min-w-[1rem] flex items-center justify-center rounded-full shadow-lg">
                         {chat.unreadCount}
                       </span>
                     )}
@@ -392,7 +392,7 @@ const ChatInterface: React.FC = () => {
 
       {/* Right Area: Chat Window & Profile */}
       {activeChat ? (
-        <div className="flex-1 flex overflow-hidden bg-[#0B0E14]">
+        <div className="flex-1 flex overflow-hidden bg-[transparent]">
           {/* Main Chat Content */}
           <div className="flex-1 flex flex-col min-w-0 relative">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
@@ -405,14 +405,14 @@ const ChatInterface: React.FC = () => {
               >
                 <div className="relative">
                   <img src={activeChat.contactAvatar} alt={activeChat.contactName} className="w-9 h-9 rounded-full ring-2 ring-slate-800" />
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-muted border-2 border-border rounded-full"></span>
                 </div>
                 <div className="ml-3">
                   <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
                     {activeChat.contactName}
                     {renderStatusBadge(activeChat.status)}
                   </h2>
-                  <p className="text-xs text-cyan-500 font-medium">{activeChat.contactPhone}</p>
+                  <p className="text-xs text-foreground font-medium">{activeChat.contactPhone}</p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -420,7 +420,7 @@ const ChatInterface: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'nina' ? 'bg-violet-500/20 text-violet-400' : ''}`}
+                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'nina' ? 'bg-muted/60 text-muted-foreground' : ''}`}
                   onClick={() => handleStatusChange('nina')}
                   title={`Ativar ${sdrName} (IA)`}
                 >
@@ -429,7 +429,7 @@ const ChatInterface: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'human' ? 'bg-emerald-500/20 text-emerald-400' : ''}`}
+                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'human' ? 'bg-muted/60 text-foreground' : ''}`}
                   onClick={() => handleStatusChange('human')}
                   title="Assumir conversa"
                 >
@@ -438,7 +438,7 @@ const ChatInterface: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'paused' ? 'bg-amber-500/20 text-amber-400' : ''}`}
+                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'paused' ? 'bg-muted/60 text-muted-foreground' : ''}`}
                   onClick={() => handleStatusChange('paused')}
                   title="Pausar conversa"
                 >
@@ -448,7 +448,7 @@ const ChatInterface: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className={`text-muted-foreground hover:text-foreground ${showProfileInfo ? 'bg-muted text-cyan-400' : ''}`} 
+                  className={`text-muted-foreground hover:text-foreground ${showProfileInfo ? 'bg-muted text-foreground' : ''}`} 
                   onClick={() => setShowProfileInfo(!showProfileInfo)} 
                   title="Ver Informações"
                 >
@@ -489,8 +489,8 @@ const ChatInterface: React.FC = () => {
                             className={`px-5 py-3 rounded-2xl shadow-md relative text-sm leading-relaxed ${
                               isOutgoing 
                                 ? msg.fromType === 'nina'
-                                  ? 'bg-gradient-to-br from-violet-600 to-purple-700 text-foreground rounded-tr-sm shadow-violet-900/20'
-                                  : 'bg-gradient-to-br from-cyan-600 to-teal-700 text-foreground rounded-tr-sm shadow-cyan-900/20'
+                                  ? 'bg-gradient-to-br from-primary to-primary/80 text-foreground rounded-tr-sm shadow-violet-900/20'
+                                  : 'bg-gradient-to-br from-primary to-primary/80 text-foreground rounded-tr-sm shadow-none'
                                 : 'bg-muted text-foreground rounded-tl-sm border border-border/50'
                             }`}
                           >
@@ -499,14 +499,14 @@ const ChatInterface: React.FC = () => {
                           
                           <div className="flex items-center mt-1.5 gap-1.5 opacity-60 group-hover:opacity-100 transition-opacity px-1">
                             {isOutgoing && msg.fromType === 'nina' && (
-                              <Bot className="w-3 h-3 text-violet-400" />
+                              <Bot className="w-3 h-3 text-muted-foreground" />
                             )}
                             {isOutgoing && msg.fromType === 'human' && (
-                              <User className="w-3 h-3 text-cyan-400" />
+                              <User className="w-3 h-3 text-foreground" />
                             )}
                             <span className="text-[10px] text-muted-foreground font-medium">{msg.timestamp}</span>
                             {isOutgoing && (
-                              msg.status === 'read' ? <CheckCheck className="w-3.5 h-3.5 text-cyan-500" /> : 
+                              msg.status === 'read' ? <CheckCheck className="w-3.5 h-3.5 text-foreground" /> : 
                               msg.status === 'delivered' ? <CheckCheck className="w-3.5 h-3.5 text-muted-foreground" /> :
                               <Check className="w-3.5 h-3.5 text-muted-foreground" />
                             )}
@@ -546,8 +546,7 @@ const ChatInterface: React.FC = () => {
                   </Button>
                 </div>
                 
-                <div className="flex-1 bg-background rounded-2xl border border-border focus-within:ring-2 focus-within:ring-cyan-500/30 focus-within:border-cyan-500/50 transition-all shadow-inner">
-                  <textarea
+                <div className="flex-1 bg-background rounded-2xl border border-border focus-within:ring-ring                  <textarea
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={(e) => {
@@ -557,7 +556,7 @@ const ChatInterface: React.FC = () => {
                       }
                     }}
                     placeholder={activeChat.status === 'nina' ? `${sdrName} está respondendo automaticamente...` : 'Digite sua mensagem...'}
-                    className="w-full bg-transparent border-none p-3.5 max-h-32 min-h-[48px] text-sm text-foreground focus:ring-0 resize-none outline-none placeholder:text-slate-600"
+                    className="w-full bg-transparent border-none p-3.5 max-h-32 min-h-[48px] text-sm text-foreground focus:ring-0 resize-none outline-none placeholder:text-muted-foreground"
                     rows={1}
                   />
                 </div>
@@ -567,7 +566,7 @@ const ChatInterface: React.FC = () => {
                   disabled={!inputText.trim()}
                   className={`rounded-full w-12 h-12 p-0 transition-all ${
                     inputText.trim() 
-                      ? 'shadow-lg shadow-cyan-500/20 hover:scale-105 active:scale-95' 
+                      ? 'shadow-lg hover:scale-105 active:scale-95' 
                       : 'opacity-50 cursor-not-allowed'
                   }`}
                 >
@@ -597,8 +596,8 @@ const ChatInterface: React.FC = () => {
               <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8">
                 {/* Identity */}
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-cyan-500 to-teal-600 shadow-xl mb-4">
-                    <img src={activeChat.contactAvatar} alt={activeChat.contactName} className="w-full h-full rounded-full object-cover border-2 border-slate-900" />
+                  <div className="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary to-primary/80 shadow-xl mb-4">
+                    <img src={activeChat.contactAvatar} alt={activeChat.contactName} className="w-full h-full rounded-full object-cover border-2 border-border" />
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-1">{activeChat.contactName}</h3>
                   <p className="text-sm text-muted-foreground mb-4">
@@ -691,7 +690,7 @@ const ChatInterface: React.FC = () => {
                       assignConversation(activeChat.id, userId);
                       toast.success('Conversa atribuída. Deal atualizado automaticamente.');
                     }}
-                    className="w-full bg-background/50 border border-border rounded-lg p-3 text-sm text-muted-foreground focus:ring-1 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none transition-all"
+                    className="w-full bg-background/50 border border-border rounded-lg p-3 text-sm text-muted-foreground focus:ring-1 focus:ring-ring focus:border-border outline-none transition-all"
                   >
                     <option value="">Não atribuído</option>
                     {teamMembers.map(member => (
@@ -710,7 +709,7 @@ const ChatInterface: React.FC = () => {
                     Tags
                     <Popover open={isTagSelectorOpen} onOpenChange={setIsTagSelectorOpen}>
                       <PopoverTrigger asChild>
-                        <button className="text-cyan-500 hover:text-cyan-400 transition-colors">
+                        <button className="text-foreground hover:text-foreground transition-colors">
                           <Plus className="w-4 h-4" />
                         </button>
                       </PopoverTrigger>
@@ -757,10 +756,10 @@ const ChatInterface: React.FC = () => {
                 <div className="space-y-3">
                   <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     Notas Internas
-                    {isSavingNotes && <Loader2 className="w-3 h-3 animate-spin text-cyan-500" />}
+                    {isSavingNotes && <Loader2 className="w-3 h-3 animate-spin text-foreground" />}
                   </h4>
                   <textarea 
-                    className="w-full bg-background/50 border border-border rounded-lg p-3 text-sm text-muted-foreground placeholder:text-slate-600 focus:ring-1 focus:ring-cyan-500/50 focus:border-cyan-500/50 outline-none resize-none transition-all"
+                    className="w-full bg-background/50 border border-border rounded-lg p-3 text-sm text-muted-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:border-border outline-none resize-none transition-all"
                     rows={4}
                     placeholder="Adicione observações sobre este lead..."
                     value={notesValue}
@@ -774,12 +773,12 @@ const ChatInterface: React.FC = () => {
 
         </div>
       ) : (
-        <div className="flex-1 flex flex-col items-center justify-center bg-[#0B0E14] relative overflow-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center bg-[transparent] relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 to-transparent"></div>
           <div className="relative z-10 flex flex-col items-center p-8 text-center max-w-md">
             <div className="w-24 h-24 bg-card rounded-full flex items-center justify-center mb-6 shadow-2xl border border-border relative group">
-              <div className="absolute inset-0 bg-cyan-500/20 rounded-full blur-xl group-hover:bg-cyan-500/30 transition-all duration-1000"></div>
-              <MessageSquare className="w-10 h-10 text-cyan-500" />
+              <div className="absolute inset-0 bg-muted/60 rounded-full blur-xl group-hover:bg-muted/60 transition-all duration-1000"></div>
+              <MessageSquare className="w-10 h-10 text-foreground" />
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-2">{companyName} Workspace</h2>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -789,7 +788,7 @@ const ChatInterface: React.FC = () => {
             </p>
             <div className="mt-8 flex gap-3 text-xs text-muted-foreground font-mono bg-card/50 px-4 py-2 rounded-lg border border-border/50">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-muted animate-pulse"></span>
                 {sdrName} Online
               </span>
               <span className="w-px h-4 bg-muted"></span>

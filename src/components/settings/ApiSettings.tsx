@@ -453,7 +453,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -464,13 +464,13 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
       <div className="rounded-xl border border-border bg-card/50 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <MessageSquare className="w-5 h-5 text-cyan-400" />
+            <MessageSquare className="w-5 h-5 text-foreground" />
             <h3 className="font-semibold text-foreground">WhatsApp Cloud API</h3>
           </div>
           <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
             whatsappConfigured 
-              ? 'bg-emerald-500/10 text-emerald-400' 
-              : 'bg-amber-500/10 text-amber-400'
+              ? 'bg-muted/60 text-foreground' 
+              : 'bg-muted/60 text-muted-foreground'
           }`}>
             <span className={`h-2 w-2 rounded-full ${whatsappConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
             {whatsappConfigured ? 'Configurado' : 'Aguardando'}
@@ -479,7 +479,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
 
         {/* Mini-guia de configuração */}
         <details className="mb-4">
-          <summary className="text-xs text-cyan-400 cursor-pointer hover:text-cyan-300 flex items-center gap-2 py-2">
+          <summary className="text-xs text-foreground cursor-pointer hover:text-foreground flex items-center gap-2 py-2">
             <HelpCircle className="w-4 h-4" />
             Como obter as credenciais do WhatsApp?
           </summary>
@@ -487,7 +487,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
             <div className="space-y-2">
               <p className="text-foreground font-medium">📋 Passo a passo:</p>
               <ol className="list-decimal list-inside space-y-1.5 text-muted-foreground">
-                <li>Acesse o <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Meta for Developers</a></li>
+                <li>Acesse o <a href="https://developers.facebook.com" target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Meta for Developers</a></li>
                 <li>Crie ou selecione um App do tipo "Business"</li>
                 <li>Adicione o produto "WhatsApp" ao app</li>
                 <li>Na seção "API Setup", copie o <strong className="text-foreground">Access Token</strong> temporário (ou gere um permanente)</li>
@@ -497,7 +497,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
             </div>
             <div className="pt-2 border-t border-border">
               <p className="text-muted-foreground">
-                📚 <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">Documentação oficial do WhatsApp Cloud API</a>
+                📚 <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Documentação oficial do WhatsApp Cloud API</a>
               </p>
             </div>
           </div>
@@ -514,7 +514,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 value={settings.whatsapp_access_token || ''}
                 onChange={(e) => setSettings({ ...settings, whatsapp_access_token: e.target.value })}
                 placeholder="EAAxxxxxxxxxxxxxxx..."
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
               <button
                 type="button"
@@ -535,7 +535,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               value={settings.whatsapp_phone_number_id || ''}
               onChange={(e) => setSettings({ ...settings, whatsapp_phone_number_id: e.target.value })}
               placeholder="123456789012345"
-              className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+              className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
@@ -572,7 +572,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 type="text"
                 value={settings.whatsapp_verify_token || ''}
                 onChange={(e) => setSettings({ ...settings, whatsapp_verify_token: e.target.value })}
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
           </Collapsible.Content>
@@ -583,13 +583,13 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
       <div className="rounded-xl border border-border bg-card/50 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <Mic className="w-5 h-5 text-violet-400" />
+            <Mic className="w-5 h-5 text-muted-foreground" />
             <h3 className="font-semibold text-foreground">ElevenLabs (Text-to-Speech)</h3>
           </div>
           <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
             elevenlabsConfigured 
-              ? 'bg-emerald-500/10 text-emerald-400' 
-              : 'bg-amber-500/10 text-amber-400'
+              ? 'bg-muted/60 text-foreground' 
+              : 'bg-muted/60 text-muted-foreground'
           }`}>
             <span className={`h-2 w-2 rounded-full ${elevenlabsConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
             {elevenlabsConfigured ? 'Configurado' : 'Aguardando'}
@@ -606,7 +606,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 onChange={(e) => setSettings({ ...settings, elevenlabs_api_key: e.target.value })}
                 onBlur={handleElevenLabsKeyBlur}
                 placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxx"
-                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50"
+                className="h-9 w-full rounded-lg border border-border bg-background px-3 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50"
               />
               <button
                 type="button"
@@ -647,11 +647,11 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
           </div>
 
           {/* Audio Response Toggle */}
-          <div className="p-4 bg-violet-500/5 border border-violet-500/20 rounded-lg">
+          <div className="p-4 bg-muted/60 border border-border rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <Volume2 className="w-4 h-4 text-violet-400" />
+                  <Volume2 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-foreground">Respostas em Áudio</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -666,16 +666,16 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   disabled={!elevenlabsConfigured}
                   className="sr-only peer"
                 />
-                <div className={`w-11 h-6 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-500 ${!elevenlabsConfigured ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
+                <div className={`w-11 h-6 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary ${!elevenlabsConfigured ? 'opacity-50 cursor-not-allowed' : ''}`}></div>
               </label>
             </div>
             {!elevenlabsConfigured && (
-              <p className="text-xs text-amber-400 mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 ⚠️ Configure a API Key da ElevenLabs para habilitar respostas em áudio
               </p>
             )}
             {settings.audio_response_enabled && elevenlabsConfigured && (
-              <p className="text-xs text-emerald-400 mt-2">
+              <p className="text-xs text-foreground mt-2">
                 ✅ Áudios recebidos serão transcritos automaticamente e o agente responderá com áudio
               </p>
             )}
@@ -762,7 +762,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     onChange={(e) => setSettings({ ...settings, elevenlabs_speaker_boost: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-violet-500"></div>
+                  <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-violet-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                 </label>
                 <span className="text-sm text-muted-foreground">Speaker Boost</span>
               </div>
@@ -785,7 +785,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   placeholder="Digite o texto que deseja converter em áudio..."
                   rows={3}
                   maxLength={1000}
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 resize-none"
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50 resize-none"
                 />
                 <p className="text-xs text-muted-foreground mt-1">{audioTestText.length}/1000 caracteres</p>
               </div>
@@ -794,7 +794,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 <Button
                   onClick={handleGenerateAudio}
                   disabled={audioGenerating || !settings.elevenlabs_api_key}
-                  className="bg-violet-600 hover:bg-violet-700"
+                  className="bg-primary hover:bg-primary"
                 >
                   {audioGenerating ? (
                     <>
@@ -823,7 +823,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               </div>
 
               {!settings.elevenlabs_api_key && (
-                <p className="text-xs text-amber-400">
+                <p className="text-xs text-muted-foreground">
                   ⚠️ Configure sua API Key da ElevenLabs acima para testar
                 </p>
               )}
@@ -866,7 +866,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   value={testPhone}
                   onChange={(e) => setTestPhone(e.target.value)}
                   placeholder="+5511999999999"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
 
@@ -877,7 +877,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   value={testMessage}
                   onChange={(e) => setTestMessage(e.target.value)}
                   placeholder="Mensagem de teste..."
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
             </div>
@@ -886,7 +886,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               <Button
                 onClick={handleTestMessage}
                 disabled={testSending}
-                className="shadow-lg shadow-cyan-500/20"
+                className="shadow-lg"
               >
                 {testSending ? (
                   <>
@@ -913,9 +913,9 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
         </summary>
         <div className="mt-2">
       <Collapsible.Root open={audioSimulateOpen} onOpenChange={setAudioSimulateOpen}>
-        <div className="rounded-xl border border-amber-500/20 bg-card/50 p-6">
+        <div className="rounded-xl border border-border bg-card/50 p-6">
           <Collapsible.Trigger className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full">
-            <FileAudio className="w-4 h-4 text-amber-400" />
+            <FileAudio className="w-4 h-4 text-muted-foreground" />
             <span>Simular Recebimento de Áudio</span>
             <ChevronDown className={`w-4 h-4 ml-auto transition-transform ${audioSimulateOpen ? 'rotate-180' : ''}`} />
           </Collapsible.Trigger>
@@ -932,7 +932,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   value={audioSimulatePhone}
                   onChange={(e) => setAudioSimulatePhone(e.target.value)}
                   placeholder="5511999999999"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/50"
                 />
               </div>
 
@@ -943,7 +943,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   value={audioSimulateName}
                   onChange={(e) => setAudioSimulateName(e.target.value)}
                   placeholder="João da Silva"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/50"
                 />
               </div>
             </div>
@@ -954,8 +954,8 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               <div 
                 className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
                   audioFile 
-                    ? 'border-amber-500/50 bg-amber-500/5' 
-                    : 'border-border hover:border-slate-600 bg-background/50'
+                    ? 'border-border bg-muted/60' 
+                    : 'border-border hover:border-border bg-background/50'
                 }`}
                 onClick={() => audioFileInputRef.current?.click()}
               >
@@ -968,7 +968,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                 />
                 {audioFile ? (
                   <div className="flex items-center justify-center gap-2">
-                    <FileAudio className="w-5 h-5 text-amber-400" />
+                    <FileAudio className="w-5 h-5 text-muted-foreground" />
                     <div className="text-left">
                       <p className="text-sm text-foreground">{audioFile.name}</p>
                       <p className="text-xs text-muted-foreground">{(audioFile.size / 1024).toFixed(1)} KB</p>
@@ -989,7 +989,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                   <div>
                     <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
                     <p className="text-sm text-muted-foreground">Clique ou arraste um arquivo de áudio</p>
-                    <p className="text-xs text-slate-600 mt-1">.ogg, .mp3, .wav, .m4a, .webm (máx 10MB)</p>
+                    <p className="text-xs text-muted-foreground mt-1">.ogg, .mp3, .wav, .m4a, .webm (máx 10MB)</p>
                   </div>
                 )}
               </div>
@@ -999,7 +999,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
               <Button
                 onClick={handleSimulateAudioWebhook}
                 disabled={audioSimulating || !audioFile || !audioSimulatePhone.trim()}
-                className="bg-amber-600 hover:bg-amber-700 shadow-lg shadow-amber-500/20"
+                className="bg-muted hover:bg-muted shadow-lg shadow-amber-500/20"
               >
                 {audioSimulating ? (
                   <>
@@ -1017,8 +1017,8 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
 
             {/* Result Display */}
             {audioSimulateResult && (
-              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg space-y-3">
-                <div className="flex items-center gap-2 text-emerald-400">
+              <div className="p-4 bg-muted/60 border border-border rounded-lg space-y-3">
+                <div className="flex items-center gap-2 text-foreground">
                   <Check className="w-4 h-4" />
                   <span className="text-sm font-medium">Áudio processado com sucesso!</span>
                 </div>
@@ -1046,7 +1046,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
                     </div>
                     <div>
                       <span className="text-muted-foreground">Nina:</span>
-                      <p className={audioSimulateResult.queued_for_nina ? 'text-emerald-400' : 'text-amber-400'}>
+                      <p className={audioSimulateResult.queued_for_nina ? 'text-foreground' : 'text-muted-foreground'}>
                         {audioSimulateResult.queued_for_nina ? '✅ Processando' : '⏸️ Não enfileirado'}
                       </p>
                     </div>

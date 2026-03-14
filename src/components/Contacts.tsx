@@ -36,8 +36,8 @@ const Contacts: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'customer': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-      case 'lead': return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
+      case 'customer': return 'bg-muted/60 text-foreground border-border';
+      case 'lead': return 'bg-muted/60 text-foreground border-border';
       case 'churned': return 'bg-muted text-muted-foreground border-border';
       default: return 'bg-muted text-muted-foreground';
     }
@@ -55,7 +55,7 @@ const Contacts: React.FC = () => {
           <p className="text-sm text-muted-foreground mt-1">Gerencie sua base de leads e clientes com inteligência.</p>
         </div>
         <Button 
-          className="shadow-lg shadow-cyan-500/20 opacity-50 cursor-not-allowed"
+          className="shadow-lg opacity-50 cursor-not-allowed"
           disabled
           title="Em breve: Adicionar contato"
         >
@@ -73,7 +73,7 @@ const Contacts: React.FC = () => {
             placeholder="Buscar por nome, email ou telefone"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 placeholder:text-slate-600 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-border placeholder:text-muted-foreground transition-all"
           />
         </div>
         <Button 
@@ -91,7 +91,7 @@ const Contacts: React.FC = () => {
       <div className="rounded-2xl border border-border bg-card/40 backdrop-blur-sm shadow-xl overflow-hidden min-h-[400px]">
         {loading ? (
            <div className="flex flex-col items-center justify-center h-80">
-             <Loader2 className="h-10 w-10 animate-spin text-cyan-500 mb-3" />
+             <Loader2 className="h-10 w-10 animate-spin text-foreground mb-3" />
              <span className="text-sm text-muted-foreground animate-pulse">Carregando base de dados...</span>
            </div>
         ) : filteredContacts.length === 0 ? (
@@ -119,11 +119,11 @@ const Contacts: React.FC = () => {
                   <tr key={contact.id} className="hover:bg-muted/40 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border border-border flex items-center justify-center text-sm font-bold text-cyan-400 shadow-inner">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 border border-border flex items-center justify-center text-sm font-bold text-foreground shadow-inner">
                           {(contact.name || contact.phone || '?').substring(0, 2).toUpperCase()}
                         </div>
                         <div>
-                            <div className="font-semibold text-foreground group-hover:text-cyan-400 transition-colors">
+                            <div className="font-semibold text-foreground group-hover:text-foreground transition-colors">
                               {contact.name || 'Sem nome'}
                             </div>
                             <div className="text-xs text-muted-foreground">{contact.phone}</div>
@@ -151,7 +151,7 @@ const Contacts: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                        <span className="text-muted-foreground">{new Date(contact.lastContact).toLocaleDateString('pt-BR')}</span>
-                       <div className="text-[10px] text-slate-600">via WhatsApp</div>
+                       <div className="text-[10px] text-muted-foreground">via WhatsApp</div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">

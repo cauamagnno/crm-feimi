@@ -63,17 +63,14 @@ const Dashboard: React.FC = () => {
   }, [period]);
 
   const getIcon = (label: string) => {
-    if (label.includes('Conversões')) return <DollarSign className="h-5 w-5 text-emerald-400" />;
-    if (label.includes('Atendimentos')) return <MessageSquare className="h-5 w-5 text-cyan-400" />;
-    if (label.includes('Leads')) return <Users className="h-5 w-5 text-violet-400" />;
-    return <Activity className="h-5 w-5 text-orange-400" />;
+    if (label.includes('Conversões')) return <DollarSign className="h-5 w-5 text-foreground" />;
+    if (label.includes('Atendimentos')) return <MessageSquare className="h-5 w-5 text-foreground" />;
+    if (label.includes('Leads')) return <Users className="h-5 w-5 text-foreground" />;
+    return <Activity className="h-5 w-5 text-foreground" />;
   };
 
-  const getGradient = (label: string) => {
-    if (label.includes('Conversões')) return 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/20';
-    if (label.includes('Atendimentos')) return 'from-cyan-500/20 to-cyan-500/5 border-cyan-500/20';
-    if (label.includes('Leads')) return 'from-violet-500/20 to-violet-500/5 border-violet-500/20';
-    return 'from-orange-500/20 to-orange-500/5 border-orange-500/20';
+  const getGradient = (_label: string) => {
+    return 'from-muted/40 to-muted/10 border-border/50';
   };
 
   const getMetricLabel = (baseLabel: string) => {
@@ -91,8 +88,8 @@ const Dashboard: React.FC = () => {
       <div className="flex items-center justify-center h-full bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-             <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full"></div>
-             <Loader2 className="h-10 w-10 animate-spin text-cyan-400 relative z-10" />
+             <div className="absolute inset-0 bg-muted blur-xl rounded-full"></div>
+             <Loader2 className="h-10 w-10 animate-spin text-muted-foreground relative z-10" />
           </div>
           <p className="text-sm text-muted-foreground font-medium animate-pulse">Carregando insights...</p>
         </div>
@@ -170,7 +167,7 @@ const Dashboard: React.FC = () => {
                   Interações da IA {period === 'today' ? 'hoje' : `nos últimos ${periodDays[period]} dias`}
                 </p>
             </div>
-            <button className="text-cyan-400 hover:text-cyan-300 transition-colors p-2 hover:bg-cyan-950/30 rounded-lg">
+            <button className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-muted rounded-lg">
                 <ArrowUpRight className="w-5 h-5" />
             </button>
           </div>
@@ -179,8 +176,8 @@ const Dashboard: React.FC = () => {
               <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorChats" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="currentColor" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="currentColor" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" stroke={gridColor} />
@@ -200,12 +197,12 @@ const Dashboard: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{ backgroundColor: tooltipBg, borderRadius: '10px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor, boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
-                  itemStyle={{ color: '#06b6d4' }}
+                  itemStyle={{ color: "hsl(var(--foreground))" }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="chats" 
-                  stroke="#06b6d4" 
+                  stroke="hsl(var(--foreground))" 
                   strokeWidth={3}
                   fillOpacity={1} 
                   fill="url(#colorChats)" 
@@ -228,11 +225,11 @@ const Dashboard: React.FC = () => {
               <div key={i} className="group">
                 <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-muted-foreground">{day.name}</span>
-                    <span className="text-sm font-bold text-foreground group-hover:text-cyan-400 transition-colors">{day.sales} conv.</span>
+                    <span className="text-sm font-bold text-foreground group-hover:text-foreground transition-colors">{day.sales} conv.</span>
                 </div>
                 <div className="h-2.5 bg-muted rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-gradient-to-r from-cyan-600 to-teal-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.3)] transition-all duration-1000 ease-out group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)]" 
+                    className="h-full bg-gradient-to-r from-foreground/60 to-foreground/40 rounded-full shadow-none transition-all duration-1000 ease-out " 
                     style={{ width: `${Math.min((day.sales / Math.max(...chartData.map(d => d.sales), 1)) * 100, 100)}%` }} 
                   />
                 </div>
@@ -243,7 +240,7 @@ const Dashboard: React.FC = () => {
           <div className="mt-6 pt-4 border-t border-border">
              <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Total no período</span>
-                <span className="text-emerald-400 font-bold">
+                <span className="text-foreground font-bold">
                   {chartData.reduce((sum, d) => sum + d.sales, 0)} conversões
                 </span>
              </div>

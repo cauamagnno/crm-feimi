@@ -179,7 +179,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-foreground" />
       </div>
     );
   }
@@ -198,7 +198,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
         <div className="rounded-xl border border-border bg-card/50 p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <Bot className="w-5 h-5 text-cyan-400" />
+              <Bot className="w-5 h-5 text-foreground" />
               <h3 className="font-semibold text-foreground">Prompt do Sistema</h3>
             </div>
             <div className="flex gap-2">
@@ -215,7 +215,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsGeneratorOpen(true)}
-                className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-500/10"
+                className="text-foreground hover:text-foreground hover:bg-muted/60"
               >
                 <Wand2 className="w-4 h-4 mr-2" />
                 Gerar com IA
@@ -224,7 +224,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
           </div>
           
           {/* Nota explicativa sobre o prompt */}
-          <div className="mb-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300">
+          <div className="mb-3 p-3 rounded-lg bg-muted/60 border border-border text-xs text-muted-foreground">
             <p className="flex items-start gap-2">
               <Info className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>
@@ -239,19 +239,19 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
             onChange={(e) => setSettings({ ...settings, system_prompt_override: e.target.value || null })}
             placeholder="Cole ou escreva o prompt do agente aqui..."
             rows={12}
-            className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 resize-y font-mono custom-scrollbar"
+            className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-y font-mono custom-scrollbar"
           />
           <details className="mt-3">
-            <summary className="text-xs text-cyan-400 cursor-pointer hover:text-cyan-300 flex items-center gap-2">
+            <summary className="text-xs text-foreground cursor-pointer hover:text-foreground flex items-center gap-2">
               <span>📋</span> Variáveis dinâmicas disponíveis
             </summary>
             <div className="mt-2 p-3 rounded-lg bg-background border border-border text-xs font-mono space-y-1">
-              <div><span className="text-cyan-400">{"{{ data_hora }}"}</span> → Data e hora atual (ex: 29/11/2024 14:35:22)</div>
-              <div><span className="text-cyan-400">{"{{ data }}"}</span> → Apenas data (ex: 29/11/2024)</div>
-              <div><span className="text-cyan-400">{"{{ hora }}"}</span> → Apenas hora (ex: 14:35:22)</div>
-              <div><span className="text-cyan-400">{"{{ dia_semana }}"}</span> → Dia da semana por extenso (ex: sexta-feira)</div>
-              <div><span className="text-cyan-400">{"{{ cliente_nome }}"}</span> → Nome do cliente na conversa</div>
-              <div><span className="text-cyan-400">{"{{ cliente_telefone }}"}</span> → Telefone do cliente</div>
+              <div><span className="text-foreground">{"{{ data_hora }}"}</span> → Data e hora atual (ex: 29/11/2024 14:35:22)</div>
+              <div><span className="text-foreground">{"{{ data }}"}</span> → Apenas data (ex: 29/11/2024)</div>
+              <div><span className="text-foreground">{"{{ hora }}"}</span> → Apenas hora (ex: 14:35:22)</div>
+              <div><span className="text-foreground">{"{{ dia_semana }}"}</span> → Dia da semana por extenso (ex: sexta-feira)</div>
+              <div><span className="text-foreground">{"{{ cliente_nome }}"}</span> → Nome do cliente na conversa</div>
+              <div><span className="text-foreground">{"{{ cliente_telefone }}"}</span> → Telefone do cliente</div>
             </div>
           </details>
         </div>
@@ -261,32 +261,32 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
           {/* Company Info */}
           <div className="rounded-xl border border-border bg-card/50 p-6">
             <div className="flex items-center gap-3 mb-4">
-              <Building2 className="w-5 h-5 text-blue-400" />
+              <Building2 className="w-5 h-5 text-foreground" />
               <h3 className="font-semibold text-foreground">Informações da Empresa</h3>
             </div>
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  Nome da Empresa <span className="text-amber-400 text-[10px]">(recomendado)</span>
+                  Nome da Empresa <span className="text-muted-foreground text-[10px]">(recomendado)</span>
                 </label>
                 <input
                   type="text"
                   value={settings.company_name || ''}
                   onChange={(e) => setSettings({ ...settings, company_name: e.target.value || null })}
                   placeholder="Nome da sua empresa"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 />
               </div>
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  Nome do Agente <span className="text-amber-400 text-[10px]">(recomendado)</span>
+                  Nome do Agente <span className="text-muted-foreground text-[10px]">(recomendado)</span>
                 </label>
                 <input
                   type="text"
                   value={settings.sdr_name || ''}
                   onChange={(e) => setSettings({ ...settings, sdr_name: e.target.value || null })}
                   placeholder="Nome do agente (ex: Ana, Sofia)"
-                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 />
               </div>
             </div>
@@ -344,7 +344,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
         {/* Comportamento */}
         <div className="rounded-xl border border-border bg-card/50 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <Bot className="w-5 h-5 text-violet-400" />
+            <Bot className="w-5 h-5 text-muted-foreground" />
             <h3 className="font-semibold text-foreground">Comportamento</h3>
           </div>
           
@@ -357,7 +357,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 onClick={() => setSettings({ ...settings, ai_model_mode: 'flash' })}
                 className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-all ${
                   settings.ai_model_mode === 'flash'
-                    ? 'bg-violet-500/20 border-violet-500 text-violet-300'
+                    ? 'bg-muted/60 border-primary text-muted-foreground'
                     : 'bg-background/50 border-border text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -370,7 +370,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 onClick={() => setSettings({ ...settings, ai_model_mode: 'pro' })}
                 className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-all ${
                   settings.ai_model_mode === 'pro'
-                    ? 'bg-violet-500/20 border-violet-500 text-violet-300'
+                    ? 'bg-muted/60 border-primary text-muted-foreground'
                     : 'bg-background/50 border-border text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -383,7 +383,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 onClick={() => setSettings({ ...settings, ai_model_mode: 'pro3' })}
                 className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-all ${
                   settings.ai_model_mode === 'pro3'
-                    ? 'bg-violet-500/20 border-violet-500 text-violet-300'
+                    ? 'bg-muted/60 border-primary text-muted-foreground'
                     : 'bg-background/50 border-border text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -396,7 +396,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 onClick={() => setSettings({ ...settings, ai_model_mode: 'adaptive' })}
                 className={`flex flex-col items-center gap-1 p-3 rounded-lg border transition-all ${
                   settings.ai_model_mode === 'adaptive'
-                    ? 'bg-violet-500/20 border-violet-500 text-violet-300'
+                    ? 'bg-muted/60 border-primary text-muted-foreground'
                     : 'bg-background/50 border-border text-muted-foreground hover:bg-muted'
                 }`}
               >
@@ -434,7 +434,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, is_active: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
               </label>
             </div>
 
@@ -457,7 +457,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, auto_response_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
               </label>
             </div>
 
@@ -480,7 +480,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, message_breaking_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
               </label>
             </div>
 
@@ -503,7 +503,7 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                   onChange={(e) => setSettings({ ...settings, ai_scheduling_enabled: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500/50 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
               </label>
             </div>
           </div>

@@ -69,7 +69,6 @@ export const SystemHealthCard: React.FC = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('validate-setup');
-
       if (error) throw error;
       setHealthData(data);
     } catch (error) {
@@ -86,58 +85,43 @@ export const SystemHealthCard: React.FC = () => {
   const getStatusIcon = (status: 'ok' | 'warning' | 'error') => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+        return <CheckCircle className="w-4 h-4 text-foreground" />;
       case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-amber-400" />;
+        return <AlertTriangle className="w-4 h-4 text-muted-foreground" />;
       case 'error':
-        return <XCircle className="w-4 h-4 text-red-400" />;
+        return <XCircle className="w-4 h-4 text-destructive" />;
     }
   };
 
-  const getStatusColor = (status: 'ok' | 'warning' | 'error') => {
+  const getStatusBadge = (status: 'ok' | 'warning' | 'error') => {
     switch (status) {
       case 'ok':
-        return 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
+        return 'bg-muted text-foreground border-border';
       case 'warning':
-        return 'bg-amber-500/10 border-amber-500/20 text-amber-400';
+        return 'bg-muted/60 text-muted-foreground border-border/60';
       case 'error':
-        return 'bg-red-500/10 border-red-500/20 text-red-400';
-    }
-  };
-
-  const getOverallGradient = (status?: 'ok' | 'warning' | 'error') => {
-    switch (status) {
-      case 'ok':
-        return 'from-emerald-500/20 to-emerald-500/5 border-emerald-500/30';
-      case 'warning':
-        return 'from-amber-500/20 to-amber-500/5 border-amber-500/30';
-      case 'error':
-        return 'from-red-500/20 to-red-500/5 border-red-500/30';
-      default:
-        return 'from-slate-500/20 to-slate-500/5 border-slate-500/30';
+        return 'bg-destructive/10 text-destructive border-destructive/20';
     }
   };
 
   if (loading) {
     return (
-      <div className={`rounded-2xl border bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-border/50 p-6`}>
+      <div className="rounded-2xl border border-border/50 bg-card/50 p-6">
         <div className="flex items-center justify-center gap-3">
-          <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
+          <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           <span className="text-sm text-muted-foreground">Verificando sistema...</span>
         </div>
       </div>
     );
   }
 
-  if (!healthData) {
-    return null;
-  }
+  if (!healthData) return null;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border bg-gradient-to-br ${getOverallGradient(healthData.overallStatus)} p-6 transition-all duration-300`}
+      className="rounded-2xl border border-border/50 bg-card/50 p-6 transition-all duration-300"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -148,13 +132,13 @@ export const SystemHealthCard: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(healthData.overallStatus)}`}>
+          <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusBadge(healthData.overallStatus)}`}>
             {healthData.summary.percentage}% OK
           </div>
           <button
             onClick={fetchHealth}
             disabled={loading}
-            className="p-2 rounded-lg hover:bg-accent/50 transition-colors text-muted-foreground hover:text-foreground"
+            className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -162,21 +146,15 @@ export const SystemHealthCard: React.FC = () => {
       </div>
 
       {/* Progress Bar */}
-      <div className="h-2 bg-muted rounded-full overflow-hidden mb-4">
+      <div className="h-1.5 bg-muted rounded-full overflow-hidden mb-4">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${healthData.summary.percentage}%` }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className={`h-full rounded-full ${healthData.overallStatus === 'ok'
-              ? 'bg-gradient-to-r from-emerald-500 to-teal-400'
-              : healthData.overallStatus === 'warning'
-                ? 'bg-gradient-to-r from-amber-500 to-yellow-400'
-                : 'bg-gradient-to-r from-red-500 to-rose-400'
-            }`}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="h-full rounded-full bg-foreground/80"
         />
       </div>
 
-      {/* Expandable Details */}
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -198,7 +176,7 @@ export const SystemHealthCard: React.FC = () => {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
-              className={`flex items-center gap-2 p-2 rounded-lg border ${getStatusColor(result.status)} bg-opacity-50`}
+              className={`flex items-center gap-2 p-2 rounded-lg border ${getStatusBadge(result.status)}`}
             >
               <div className="flex-shrink-0">
                 {componentIcons[result.component] || <CheckCircle className="w-4 h-4" />}

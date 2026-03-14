@@ -160,7 +160,7 @@ const Team: React.FC = () => {
         case 'active':
             return <span className="px-3 py-1 rounded-full text-xs font-bold bg-background border border-border text-foreground shadow-sm">Ativo</span>;
         case 'invited':
-            return <span className="px-3 py-1 rounded-full text-xs font-bold bg-background border border-amber-900/50 text-amber-500 shadow-sm">Pendente</span>;
+            return <span className="px-3 py-1 rounded-full text-xs font-bold bg-background border border-border text-muted-foreground shadow-sm">Pendente</span>;
         default:
             return <span className="px-3 py-1 rounded-full text-xs font-bold bg-background border border-border text-muted-foreground shadow-sm">Inativo</span>;
     }
@@ -201,7 +201,7 @@ const Team: React.FC = () => {
             <Settings className="w-4 h-4 mr-2" />
             Configurar
           </Button>
-          <Button onClick={() => setShowModal(true)} className="shadow-lg shadow-cyan-500/20 bg-slate-100 text-slate-900 hover:bg-white hover:text-black">
+          <Button onClick={() => setShowModal(true)} className="shadow-lg bg-muted/60 text-muted-foreground hover:bg-white hover:text-black">
             <UserPlus className="w-4 h-4 mr-2" />
             Convidar Usuário
           </Button>
@@ -236,7 +236,7 @@ const Team: React.FC = () => {
             placeholder="Buscar por nome, email, time ou função..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full sm:w-96 pl-10 pr-4 py-2 bg-card/50 border border-border rounded-lg text-sm text-foreground focus:ring-1 focus:ring-slate-700 outline-none placeholder:text-slate-600 transition-all"
+            className="w-full sm:w-96 pl-10 pr-4 py-2 bg-card/50 border border-border rounded-lg text-sm text-foreground focus:ring-1 focus:ring-slate-700 outline-none placeholder:text-muted-foreground transition-all"
         />
       </div>
 
@@ -249,14 +249,14 @@ const Team: React.FC = () => {
 
         {loading ? (
              <div className="flex flex-col items-center justify-center p-12">
-                <Loader2 className="h-8 w-8 animate-spin text-cyan-500 mb-3" />
+                <Loader2 className="h-8 w-8 animate-spin text-foreground mb-3" />
                 <span className="text-sm text-muted-foreground">Carregando dados...</span>
            </div>
         ) : members.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-12">
-                <Users className="w-12 h-12 text-slate-600 mb-4" />
+                <Users className="w-12 h-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground mb-4">Nenhum membro cadastrado ainda.</p>
-                <Button onClick={() => setShowModal(true)} className="bg-slate-100 text-slate-900 hover:bg-white">
+                <Button onClick={() => setShowModal(true)} className="bg-muted/60 text-muted-foreground hover:bg-white">
                     <UserPlus className="w-4 h-4 mr-2" />
                     Convidar Primeiro Membro
                 </Button>
@@ -299,7 +299,7 @@ const Team: React.FC = () => {
                                     <select
                                         value={member.role}
                                         onChange={(e) => handleUpdateMember(member.id, 'role', e.target.value)}
-                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-slate-600 transition-colors"
+                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-border transition-colors"
                                     >
                                         <option value="agent">Atendente</option>
                                         <option value="manager">Gerente</option>
@@ -312,7 +312,7 @@ const Team: React.FC = () => {
                                     <select
                                         value={member.team_id || ''}
                                         onChange={(e) => handleUpdateMember(member.id, 'team_id', e.target.value || null)}
-                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-slate-600 transition-colors"
+                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-border transition-colors"
                                     >
                                         <option value="">Sem time</option>
                                         {teams.map(team => (
@@ -326,7 +326,7 @@ const Team: React.FC = () => {
                                     <select
                                         value={member.function_id || ''}
                                         onChange={(e) => handleUpdateMember(member.id, 'function_id', e.target.value || null)}
-                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-slate-600 transition-colors"
+                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-border transition-colors"
                                     >
                                         <option value="">Sem função</option>
                                         {functions.map(func => (
@@ -364,7 +364,7 @@ const Team: React.FC = () => {
                                         </button>
                                         <button 
                                             onClick={() => handleDeleteMember(member.id, member.name)}
-                                            className="p-2 rounded-lg text-muted-foreground hover:bg-red-900/50 hover:text-red-400 transition-colors"
+                                            className="p-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-red-400 transition-colors"
                                             title="Excluir membro"
                                         >
                                             <Trash2 className="w-4 h-4" />
@@ -422,7 +422,7 @@ const Team: React.FC = () => {
                                     onClick={() => setFormData({...formData, role})}
                                     className={`cursor-pointer rounded-lg border p-2 text-center transition-all ${
                                         formData.role === role 
-                                        ? 'bg-muted border-slate-500 text-foreground' 
+                                        ? 'bg-muted border-border text-foreground' 
                                         : 'bg-background border-border text-muted-foreground hover:border-border'
                                     }`}
                                 >
@@ -475,7 +475,7 @@ const Team: React.FC = () => {
 
                     <div className="pt-4 flex gap-3">
                         <Button type="button" variant="ghost" onClick={() => setShowModal(false)} className="flex-1 border border-border hover:bg-muted">Cancelar</Button>
-                        <Button type="submit" className="flex-1 bg-white text-black hover:bg-slate-200">Enviar Convite</Button>
+                        <Button type="submit" className="flex-1 bg-white text-black hover:bg-muted/60">Enviar Convite</Button>
                     </div>
                 </form>
             </div>
@@ -530,7 +530,7 @@ const Team: React.FC = () => {
                                     onClick={() => setEditFormData({...editFormData, role})}
                                     className={`cursor-pointer rounded-lg border p-2 text-center transition-all ${
                                         editFormData.role === role 
-                                        ? 'bg-muted border-slate-500 text-foreground' 
+                                        ? 'bg-muted border-border text-foreground' 
                                         : 'bg-background border-border text-muted-foreground hover:border-border'
                                     }`}
                                 >
@@ -596,7 +596,7 @@ const Team: React.FC = () => {
 
                     <div className="pt-4 flex gap-3">
                         <Button type="button" variant="ghost" onClick={() => { setShowEditModal(false); setEditingMember(null); }} className="flex-1 border border-border hover:bg-muted">Cancelar</Button>
-                        <Button type="submit" className="flex-1 bg-white text-black hover:bg-slate-200">Salvar Alterações</Button>
+                        <Button type="submit" className="flex-1 bg-white text-black hover:bg-muted/60">Salvar Alterações</Button>
                     </div>
                 </form>
             </div>
