@@ -6,6 +6,7 @@ import { api } from '../services/api';
 import { OnboardingBanner } from './OnboardingBanner';
 import { SystemHealthCard } from './SystemHealthCard';
 import { useOutletContext } from 'react-router-dom';
+import { useTheme } from '@/hooks/useTheme';
 
 interface OutletContext {
   showOnboarding: boolean;
@@ -32,6 +33,13 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState<PeriodFilter>('today');
   const { setShowOnboarding } = useOutletContext<OutletContext>();
+  const { theme } = useTheme();
+
+  const gridColor = theme === 'dark' ? '#27272a' : '#e4e4e7';
+  const axisColor = theme === 'dark' ? '#71717a' : '#a1a1aa';
+  const tooltipBg = theme === 'dark' ? '#18181b' : '#ffffff';
+  const tooltipBorder = theme === 'dark' ? '#27272a' : '#e4e4e7';
+  const tooltipTextColor = theme === 'dark' ? '#fafafa' : '#18181b';
 
   useEffect(() => {
     const loadData = async () => {
@@ -175,23 +183,23 @@ const Dashboard: React.FC = () => {
                     <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tickMargin={10} 
-                    fontSize={12} 
-                    stroke="#64748b"
+                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={10}
+                    fontSize={12}
+                    stroke={axisColor}
                 />
-                <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    fontSize={12} 
-                    stroke="#64748b"
+                <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    fontSize={12}
+                    stroke={axisColor}
                 />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: '1px solid #1e293b', color: '#f8fafc', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)' }} 
+                <Tooltip
+                  contentStyle={{ backgroundColor: tooltipBg, borderRadius: '10px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor, boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
                   itemStyle={{ color: '#06b6d4' }}
                 />
                 <Area 

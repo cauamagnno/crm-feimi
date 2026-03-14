@@ -1,150 +1,202 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, MessageSquare, Users, Settings as SettingsIcon, LogOut, ShieldCheck, Calendar, Kanban, Bot } from 'lucide-react';
+import {
+  LayoutDashboard, MessageSquare, Users, Settings as SettingsIcon,
+  LogOut, ShieldCheck, Calendar, Kanban, Bot, Sun, Moon, ChevronLeft, ChevronRight
+} from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
 import { useAuth } from '@/hooks/useAuth';
-import { Sidebar, SidebarBody, SidebarLink, useSidebar } from '@/components/ui/sidebar';
+import { useTheme } from '@/hooks/useTheme';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'pipeline', label: 'Pipeline', icon: Kanban },
-  { id: 'chat', label: 'Chat Ao Vivo', icon: MessageSquare },
-  { id: 'contacts', label: 'Contatos', icon: Users },
-  { id: 'scheduling', label: 'Agendamentos', icon: Calendar },
-  { id: 'team', label: 'Equipe', icon: ShieldCheck },
-  { id: 'settings', label: 'Configurações', icon: SettingsIcon },
+  { id: 'dashboard',  label: 'Dashboard',      icon: LayoutDashboard },
+  { id: 'pipeline',   label: 'Pipeline',        icon: Kanban },
+  { id: 'chat',       label: 'Chat Ao Vivo',    icon: MessageSquare },
+  { id: 'contacts',   label: 'Contatos',        icon: Users },
+  { id: 'scheduling', label: 'Agendamentos',    icon: Calendar },
+  { id: 'team',       label: 'Equipe',          icon: ShieldCheck },
+  { id: 'settings',   label: 'Configurações',   icon: SettingsIcon },
 ];
 
-const Logo = ({ companyName }: { companyName: string }) => {
+interface SidebarProps {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+}
+
+const NavItem: React.FC<{
+  item: typeof menuItems[0];
+  isActive: boolean;
+  open: boolean;
+}> = ({ item, isActive, open }) => {
+  const navigate = useNavigate();
+  const Icon = item.icon;
+
   return (
-    <Link to="/dashboard" className="flex items-center space-x-3 py-1">
-      <div className="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
-        <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full" />
-        <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/20 p-1.5">
-          <Bot className="w-6 h-6 text-primary-foreground" />
-        </div>
-      </div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-        className="flex flex-col overflow-hidden"
-      >
-        <span className="font-bold text-lg tracking-tight text-foreground whitespace-nowrap">{companyName || 'Minha Empresa'}</span>
-        <span className="text-[10px] uppercase tracking-wider text-primary font-semibold">Workspace</span>
-      </motion.div>
-    </Link>
+    <button
+      onClick={() => navigate(`/${item.id}`)}
+      title={!open ? item.label : undefined}
+      className={`
+        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+        transition-all duration-150 group relative
+        ${isActive
+          ? 'bg-primary/10 text-primary'
+          : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'}
+      `}
+    >
+      {isActive && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
+      )}
+      <Icon className={`h-4 w-4 flex-shrink-0 ${isActive ? 'text-primary' : ''}`} />
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            exit={{ opacity: 0, width: 0 }}
+            transition={{ duration: 0.15 }}
+            className="overflow-hidden whitespace-nowrap"
+          >
+            {item.label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
   );
 };
 
-const LogoIcon = () => {
-  return (
-    <Link to="/dashboard" className="flex items-center py-1">
-      <div className="relative w-10 h-10 flex items-center justify-center flex-shrink-0">
-        <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full" />
-        <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/20 p-1.5">
-          <Bot className="w-6 h-6 text-primary-foreground" />
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-const SidebarContent = () => {
+const SidebarContent: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const { companyName } = useCompanySettings();
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname.substring(1) || 'dashboard';
-  const { open, setOpen } = useSidebar();
-
-  const links = menuItems.map(item => ({
-    label: item.label,
-    href: `/${item.id}`,
-    icon: <item.icon className="h-5 w-5" />,
-  }));
 
   const handleLogout = async () => {
     try {
       await signOut();
       toast.success('Logout realizado com sucesso');
       navigate('/auth', { replace: true });
-    } catch (error) {
+    } catch {
       toast.error('Erro ao fazer logout');
     }
   };
 
-  // Get user initials
   const getUserInitials = () => {
     if (!user?.email) return 'US';
-    const email = user.email;
-    return email.substring(0, 2).toUpperCase();
+    return user.email.substring(0, 2).toUpperCase();
   };
 
-  // Get display name
   const getDisplayName = () => {
-    if (user?.user_metadata?.full_name) {
-      return user.user_metadata.full_name;
-    }
-    return 'Usuário';
+    return user?.user_metadata?.full_name || 'Usuário';
   };
 
   return (
-    <>
-      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="mb-6">
-          {open ? <Logo companyName={companyName} /> : <LogoIcon />}
-        </div>
-
-        <nav className="flex flex-col gap-1.5">
-          {links.map((link, idx) => (
-            <SidebarLink
-              key={idx}
-              link={link}
-              isActive={currentPath.startsWith(link.href.slice(1))}
-            />
-          ))}
-        </nav>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 px-1">
+        <Link to="/dashboard" className="flex items-center gap-3 min-w-0">
+          <div className="relative flex-shrink-0 w-8 h-8 rounded-lg bg-primary flex items-center justify-center glow-primary-sm">
+            <Bot className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.15 }}
+                className="overflow-hidden"
+              >
+                <p className="text-sm font-bold text-foreground whitespace-nowrap leading-none">
+                  {companyName || 'Workspace'}
+                </p>
+                <p className="text-[10px] text-primary uppercase tracking-widest font-medium mt-0.5">
+                  CRM
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Link>
       </div>
 
-      {/* User Footer */}
-      <div className="border-t border-border/50 pt-4">
-        <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-secondary/50 transition-colors cursor-pointer group">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary/20 to-secondary flex items-center justify-center text-xs font-bold text-primary border border-border ring-2 ring-transparent group-hover:ring-primary/20 transition-all flex-shrink-0">
+      {/* Nav */}
+      <nav className="flex flex-col gap-0.5 flex-1">
+        {menuItems.map(item => (
+          <NavItem
+            key={item.id}
+            item={item}
+            isActive={currentPath.startsWith(item.id)}
+            open={open}
+          />
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div className="mt-auto pt-4 border-t border-border/50 space-y-1">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-150"
+        >
+          {theme === 'dark'
+            ? <Sun className="h-4 w-4 flex-shrink-0" />
+            : <Moon className="h-4 w-4 flex-shrink-0" />}
+          <AnimatePresence>
+            {open && (
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.15 }}
+                className="overflow-hidden whitespace-nowrap"
+              >
+                {theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+
+        {/* User */}
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted/60 transition-all duration-150 group">
+          <div className="w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] font-bold text-primary flex-shrink-0">
             {getUserInitials()}
           </div>
-          <motion.div
-            animate={{
-              display: open ? "block" : "none",
-              opacity: open ? 1 : 0,
-            }}
-            transition={{ duration: 0.2 }}
-            className="flex-1 overflow-hidden"
-          >
-            <p className="text-sm font-medium text-foreground group-hover:text-foreground whitespace-nowrap">{getDisplayName()}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email || 'email@example.com'}</p>
-          </motion.div>
-          <motion.div
-            animate={{
-              display: open ? "block" : "none",
-              opacity: open ? 1 : 0,
-            }}
-            transition={{ duration: 0.2 }}
-          >
-            <button
-              onClick={handleLogout}
-              className="p-1.5 rounded-lg hover:bg-destructive/10 transition-colors"
-              title="Sair"
-            >
-              <LogOut className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
-            </button>
-          </motion.div>
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.15 }}
+                className="flex-1 overflow-hidden min-w-0"
+              >
+                <p className="text-xs font-medium text-foreground whitespace-nowrap truncate">{getDisplayName()}</p>
+                <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {open && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={handleLogout}
+                className="p-1 rounded-md hover:bg-destructive/10 transition-colors flex-shrink-0"
+                title="Sair"
+              >
+                <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive transition-colors" />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -152,11 +204,23 @@ const AppSidebar: React.FC = () => {
   const [open, setOpen] = useState(true);
 
   return (
-    <Sidebar open={open} setOpen={setOpen}>
-      <SidebarBody className="justify-between gap-10 bg-card/50 backdrop-blur-xl border-r border-border/50">
-        <SidebarContent />
-      </SidebarBody>
-    </Sidebar>
+    <motion.aside
+      animate={{ width: open ? 220 : 64 }}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
+      className="relative flex flex-col h-screen flex-shrink-0 bg-sidebar border-r border-border/50 overflow-hidden"
+    >
+      <div className="flex flex-col h-full p-3 overflow-hidden">
+        <SidebarContent open={open} setOpen={setOpen} />
+      </div>
+
+      {/* Toggle button */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="absolute -right-3 top-8 w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/50 transition-all duration-150 z-10 shadow-sm"
+      >
+        {open ? <ChevronLeft className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+      </button>
+    </motion.aside>
   );
 };
 
