@@ -172,9 +172,9 @@ const ChatInterface: React.FC = () => {
 
   const renderStatusBadge = (status: ConversationStatus) => {
     const config = {
-      nina: { label: sdrName, icon: Bot, color: 'bg-muted/60 text-muted-foreground border-border' },
-      human: { label: 'Humano', icon: User, color: 'bg-muted/60 text-foreground border-border' },
-      paused: { label: 'Pausado', icon: Pause, color: 'bg-muted/60 text-muted-foreground border-border' }
+      nina: { label: 'Em Andamento', icon: MessageSquare, color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+      human: { label: 'Aberta', icon: User, color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
+      paused: { label: 'Resolvida', icon: CheckCheck, color: 'bg-muted text-muted-foreground border-border' }
     };
     const { label, icon: Icon, color } = config[status];
     return (
@@ -310,7 +310,7 @@ const ChatInterface: React.FC = () => {
       <div className="w-80 lg:w-96 border-r border-border flex flex-col bg-card/50 backdrop-blur-md z-20 flex-shrink-0">
         {/* Search Header */}
         <div className="p-4 border-b border-border/50">
-          <h2 className="text-lg font-bold text-foreground mb-4 px-1">Chats Ativos</h2>
+          <h2 className="text-lg font-bold text-foreground mb-4 px-1">Inbox</h2>
           <div className="relative group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-foreground transition-colors" />
             <input 
@@ -420,29 +420,29 @@ const ChatInterface: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'nina' ? 'bg-muted/60 text-muted-foreground' : ''}`}
-                  onClick={() => handleStatusChange('nina')}
-                  title={`Ativar ${sdrName} (IA)`}
-                >
-                  <Bot className="w-5 h-5" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
                   className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'human' ? 'bg-muted/60 text-foreground' : ''}`}
                   onClick={() => handleStatusChange('human')}
-                  title="Assumir conversa"
+                  title="Aberta"
                 >
                   <User className="w-5 h-5" />
                 </Button>
                 <Button 
                   variant="ghost" 
                   size="icon" 
+                  className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'nina' ? 'bg-muted/60 text-muted-foreground' : ''}`}
+                  onClick={() => handleStatusChange('nina')}
+                  title="Em Andamento"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
                   className={`text-muted-foreground hover:text-foreground ${activeChat.status === 'paused' ? 'bg-muted/60 text-muted-foreground' : ''}`}
                   onClick={() => handleStatusChange('paused')}
-                  title="Pausar conversa"
+                  title="Resolvida"
                 >
-                  <Pause className="w-5 h-5" />
+                  <CheckCheck className="w-5 h-5" />
                 </Button>
                 <div className="h-6 w-px bg-muted mx-1"></div>
                 <Button 

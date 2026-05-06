@@ -1141,10 +1141,7 @@ export const api = {
   fetchDealActivities: async (dealId: string): Promise<any[]> => {
     const { data, error } = await supabase
       .from('deal_activities')
-      .select(`
-        *,
-        created_by_member:team_members!deal_activities_created_by_fkey(name)
-      `)
+      .select('*')
       .eq('deal_id', dealId)
       .order('created_at', { ascending: false });
 
@@ -1152,8 +1149,19 @@ export const api = {
       console.error('[API] Error fetching deal activities:', error);
       throw error;
     }
-    
-    return data || [];
+
+    return (data || []).map(a => ({
+      id: a.id,
+      dealId: a.deal_id,
+      type: a.type,
+      title: a.title,
+      description: a.description,
+      scheduledAt: a.scheduled_at,
+      isCompleted: a.is_completed || false,
+      completedAt: a.completed_at,
+      createdAt: a.created_at,
+      createdByName: null,
+    }));
   },
 
   /**
@@ -1228,6 +1236,20 @@ export const api = {
 
     if (error) {
       console.error('[API] Error deleting deal activity:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update deal tags
+   */
+  updateDealTags: async (dealId: string, tags: string[]): Promise<void> => {
+    const { error } = await supabase
+      .from('deals')
+      .update({ tags })
+      .eq('id', dealId);
+    if (error) {
+      console.error('[API] Error updating deal tags:', error);
       throw error;
     }
   },
@@ -1352,6 +1374,115 @@ export const api = {
     }).catch(err => console.error('[API] Failed to trigger whatsapp-sender:', err));
 
     return msgData.id;
+  },
+
+  /**
+   * Create and dispatch a new campaign
+   */
+  createCampaign: async (campaign: {
+    name: string;
+    channel: string;
+    audience: string; // 'todos', 'vip', 'pipeline_qualificado', etc.
+    templateName: string;
+    date?: string;
+    time?: string;
+  }): Promise<void> => {
+    const userId = await getCurrentUserId();
+    
+    // 1. Fetch matching contacts
+    let query = supabase.from('contacts').select('id, name, call_name, phone_number, tags, client_memory');
+    // If we had real filters we would apply them here.
+    // Assuming 'todos' fetches all for now.
+    
+    const { data: contacts, error: contactsError } = await query;
+    if (contactsError) throw contactsError;
+    if (!contacts || contacts.length === 0) throw new Error('No contacts found for this audience');
+
+    // 2. Create the campaign record
+    const { data: campaignRecord, error: campaignError } = await supabase
+      .from('campaigns')
+      .insert({
+        name: campaign.name,
+        channel: campaign.channel,
+        status: 'Em andamento',
+        segment_filter: campaign.audience,
+        user_id: userId
+      })
+      .select('id')
+      .single();
+
+    if (campaignError) throw campaignError;
+
+    // 3. Ensure a conversation exists for each contact
+    const { data: existingConvs, error: convsError } = await supabase
+      .from('conversations')
+      .select('id, contact_id')
+      .in('contact_id', contacts.map(c => c.id));
+    if (convsError) throw convsError;
+
+    const convMap = new Map(existingConvs?.map(c => [c.contact_id, c.id]) || []);
+    
+    // Find contacts missing a conversation
+    const missingConvContacts = contacts.filter(c => !convMap.has(c.id));
+    if (missingConvContacts.length > 0) {
+      const { data: newConvs, error: newConvsError } = await supabase
+        .from('conversations')
+        .insert(missingConvContacts.map(c => ({
+          contact_id: c.id,
+          status: 'nina',
+          user_id: userId
+        })))
+        .select('id, contact_id');
+      
+      if (newConvsError) throw newConvsError;
+      newConvs?.forEach(c => convMap.set(c.contact_id, c.id));
+    }
+
+    // 4. Queue messages for each contact
+    const queuePayloads = contacts.map(contact => {
+      // Extract first name for the template
+      const fullName = contact.call_name || contact.name || 'Cliente';
+      const firstName = fullName.split(' ')[0];
+      const conversationId = convMap.get(contact.id);
+      
+      return {
+        conversation_id: conversationId,
+        contact_id: contact.id,
+        content: `Template: ${campaign.templateName}`,
+        from_type: 'human',
+        message_type: 'template',
+        priority: 1, // lower priority than direct human messages
+        status: 'pending',
+        metadata: {
+          campaign_id: campaignRecord.id,
+          template: {
+            name: campaign.templateName,
+            language: { code: 'pt_BR' },
+            components: [
+              {
+                type: 'body',
+                parameters: [
+                  { type: 'text', text: firstName } // Maps to {{1}}
+                ]
+              }
+            ]
+          }
+        }
+      };
+    });
+
+    // Batch insert into send_queue
+    const { error: queueError } = await supabase
+      .from('send_queue')
+      .insert(queuePayloads);
+
+    if (queueError) throw queueError;
+
+    // 5. Trigger whatsapp-sender
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trigger-whatsapp-sender`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }).catch(err => console.error('[API] Failed to trigger whatsapp-sender:', err));
   },
 
   /**

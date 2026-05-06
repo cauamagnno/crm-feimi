@@ -468,9 +468,9 @@ const Scheduling: React.FC = () => {
         <div>
            <h2 className="text-3xl font-bold text-foreground flex items-center gap-2">
             <CalendarIcon className="w-8 h-8 text-foreground" />
-            Agendamentos
+            Calendário de Campanhas
            </h2>
-           <p className="text-muted-foreground text-sm mt-1">Gerencie demos, reuniões e suporte técnico.</p>
+           <p className="text-muted-foreground text-sm mt-1">Acompanhe e agende os disparos via WABA e Email.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">

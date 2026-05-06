@@ -242,7 +242,7 @@ CREATE TABLE public.nina_settings (
     elevenlabs_speed NUMERIC DEFAULT 1.0,
     whatsapp_access_token TEXT,
     whatsapp_phone_number_id TEXT,
-    whatsapp_verify_token TEXT DEFAULT 'viver-de-ia-nina-webhook',
+    whatsapp_verify_token TEXT DEFAULT 'orchestra-ai-webhook',
     calcom_api_key TEXT,
     auto_response_enabled BOOLEAN NOT NULL DEFAULT true,
     adaptive_response_enabled BOOLEAN NOT NULL DEFAULT true,

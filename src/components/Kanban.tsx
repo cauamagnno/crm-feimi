@@ -33,6 +33,7 @@ const Kanban: React.FC = () => {
   const [newActivityDescription, setNewActivityDescription] = useState('');
   const [conversationMessages, setConversationMessages] = useState<any[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [newTag, setNewTag] = useState('');
   
   const dragItem = useRef<string | null>(null);
   
@@ -232,6 +233,38 @@ const Kanban: React.FC = () => {
     }
   };
 
+  const handleAddTag = async () => {
+    if (!selectedDeal || !newTag.trim()) return;
+    const tag = newTag.trim();
+    if (selectedDeal.tags.includes(tag)) {
+      setNewTag('');
+      return;
+    }
+    const updatedTags = [...selectedDeal.tags, tag];
+    try {
+      await api.updateDealTags(selectedDeal.id, updatedTags);
+      setSelectedDeal({ ...selectedDeal, tags: updatedTags });
+      setDeals(deals.map(d => d.id === selectedDeal.id ? { ...d, tags: updatedTags } : d));
+      setNewTag('');
+    } catch (error) {
+      console.error("Erro ao adicionar tag", error);
+      toast.error("Não foi possível adicionar tag");
+    }
+  };
+
+  const handleRemoveTag = async (tag: string) => {
+    if (!selectedDeal) return;
+    const updatedTags = selectedDeal.tags.filter(t => t !== tag);
+    try {
+      await api.updateDealTags(selectedDeal.id, updatedTags);
+      setSelectedDeal({ ...selectedDeal, tags: updatedTags });
+      setDeals(deals.map(d => d.id === selectedDeal.id ? { ...d, tags: updatedTags } : d));
+    } catch (error) {
+      console.error("Erro ao remover tag", error);
+      toast.error("Não foi possível remover tag");
+    }
+  };
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   };
@@ -302,7 +335,7 @@ const Kanban: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 flex-shrink-0">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Pipeline de Vendas</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Pipeline Comercial</h2>
           <p className="text-sm text-muted-foreground mt-1">Gerencie oportunidades e acompanhe o fluxo de receita.</p>
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
@@ -562,7 +595,37 @@ const Kanban: React.FC = () => {
 
                 {/* 2. Content Area */}
                 <div className="flex-1 overflow-y-auto bg-background custom-scrollbar">
-                    
+
+                    {/* Tags Section */}
+                    <div className="p-4 border-b border-border bg-card/20">
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <Tag className="w-3.5 h-3.5" /> Tags
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                            {selectedDeal.tags.map(tag => (
+                                <span key={tag} className="flex items-center gap-1 text-xs bg-muted text-foreground px-2 py-0.5 rounded-full border border-border">
+                                    {tag}
+                                    <button onClick={() => handleRemoveTag(tag)} className="hover:text-red-400 transition-colors ml-0.5">
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+                                placeholder="Nova tag..."
+                                className="flex-1 text-xs bg-card border border-border rounded-lg px-3 py-1.5 text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring outline-none"
+                            />
+                            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={handleAddTag} disabled={!newTag.trim()}>
+                                Adicionar
+                            </Button>
+                        </div>
+                    </div>
+
                     {/* Action Composer */}
                     <div className="p-6 border-b border-border bg-card/30">
                         <div className="flex gap-4 mb-4">

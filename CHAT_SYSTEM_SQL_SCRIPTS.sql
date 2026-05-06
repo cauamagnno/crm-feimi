@@ -384,7 +384,7 @@ CREATE TABLE public.nina_settings (
     whatsapp_access_token TEXT,
     whatsapp_phone_number_id TEXT,
     whatsapp_business_account_id TEXT,
-    whatsapp_verify_token TEXT DEFAULT 'viver-de-ia-nina-webhook',
+    whatsapp_verify_token TEXT DEFAULT 'orchestra-ai-webhook',
     
     -- Agendamento (nativo via Nina, sem Cal.com)
     
@@ -947,3 +947,342 @@ GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO anon, authenticated;
 --    - cleanup_processed_message_queue(): A cada 30 minutos
 --
 -- ============================================================================
+
+
+-- ============================================================================
+-- PARTE EXTRA: TABELAS FEIMI CRM (CAMPANHAS, JORNADAS, TEMPLATES)
+-- ============================================================================
+
+
+-- ============================================================================
+-- TABELAS CRM (PIPELINE, DEALS, TEAM_MEMBERS, APPOINTMENTS)
+-- ============================================================================
+
+-- Create pipeline_stages table for dynamic Kanban columns
+CREATE TABLE IF NOT EXISTS public.pipeline_stages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  color TEXT NOT NULL DEFAULT 'border-slate-500',
+  position INTEGER NOT NULL DEFAULT 0,
+  is_system BOOLEAN DEFAULT false,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- Enable RLS
+ALTER TABLE public.pipeline_stages ENABLE ROW LEVEL SECURITY;
+
+-- Create RLS policy
+CREATE POLICY "Allow all operations on pipeline_stages"
+ON public.pipeline_stages
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+-- Create indexes for better query performance
+CREATE INDEX idx_pipeline_stages_position ON public.pipeline_stages(position);
+CREATE INDEX idx_pipeline_stages_is_active ON public.pipeline_stages(is_active);
+
+-- Create trigger for updated_at
+CREATE TRIGGER update_pipeline_stages_updated_at
+BEFORE UPDATE ON public.pipeline_stages
+FOR EACH ROW
+EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Insert default stages (migration from constants)
+INSERT INTO public.pipeline_stages (title, color, position, is_system) VALUES
+  ('Novos Leads', 'border-slate-500', 0, false),
+  ('Qualificação', 'border-cyan-500', 1, false),
+  ('Apresentação', 'border-violet-500', 2, false),
+  ('Negociação', 'border-orange-500', 3, false),
+  ('Fechado / Ganho', 'border-emerald-500', 4, true),
+  ('Perdido', 'border-red-500', 5, true);
+
+-- Update deals table to reference pipeline_stages instead of hardcoded stage names
+-- Add a new column for the stage_id
+ALTER TABLE public.deals ADD COLUMN IF NOT EXISTS stage_id UUID REFERENCES public.pipeline_stages(id);
+
+-- Migrate existing stage data to stage_id based on title matching
+UPDATE public.deals d
+SET stage_id = ps.id
+FROM public.pipeline_stages ps
+WHERE 
+  (d.stage = 'new' AND ps.title = 'Novos Leads') OR
+  (d.stage = 'qualified' AND ps.title = 'Qualificação') OR
+  (d.stage = 'proposal' AND ps.title = 'Apresentação') OR
+  (d.stage = 'negotiation' AND ps.title = 'Negociação') OR
+  (d.stage = 'won' AND ps.title = 'Fechado / Ganho') OR
+  (d.stage = 'lost' AND ps.title = 'Perdido');
+
+-- For any deals without a stage_id, set them to the first stage
+UPDATE public.deals
+SET stage_id = (SELECT id FROM public.pipeline_stages ORDER BY position LIMIT 1)
+WHERE stage_id IS NULL;
+
+-- Now make stage_id required
+ALTER TABLE public.deals ALTER COLUMN stage_id SET NOT NULL;
+
+-- Keep the old stage column for backward compatibility during transition
+ALTER TABLE public.deals ALTER COLUMN stage DROP NOT NULL;
+
+-- Create deals table
+CREATE TABLE deals (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  contact_id UUID REFERENCES contacts(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  company TEXT,
+  value NUMERIC DEFAULT 0,
+  stage TEXT NOT NULL DEFAULT 'new',
+  priority TEXT DEFAULT 'medium',
+  tags TEXT[] DEFAULT '{}',
+  due_date DATE,
+  owner_id UUID REFERENCES team_members(id),
+  notes TEXT,
+  lost_reason TEXT,
+  won_at TIMESTAMPTZ,
+  lost_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Trigger para atualizar updated_at
+CREATE TRIGGER update_deals_updated_at
+  BEFORE UPDATE ON deals
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Função para criar deal automaticamente quando contato é criado
+CREATE OR REPLACE FUNCTION create_deal_for_new_contact()
+RETURNS TRIGGER 
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  INSERT INTO deals (contact_id, title, company, stage, priority)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.name, NEW.call_name, 'Novo Lead'),
+    NULL,
+    'new',
+    'medium'
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger para criar deal quando contato é inserido
+CREATE TRIGGER auto_create_deal_on_contact
+  AFTER INSERT ON contacts
+  FOR EACH ROW
+  EXECUTE FUNCTION create_deal_for_new_contact();
+
+-- Habilitar RLS
+ALTER TABLE deals ENABLE ROW LEVEL SECURITY;
+
+-- Política RLS permissiva
+CREATE POLICY "Allow all operations on deals" ON deals
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Criar deals para contatos existentes
+INSERT INTO deals (contact_id, title, company, stage, priority)
+SELECT 
+  id,
+  COALESCE(name, call_name, 'Lead ' || phone_number),
+  NULL,
+  'new',
+  'medium'
+FROM contacts
+WHERE NOT EXISTS (
+  SELECT 1 FROM deals WHERE deals.contact_id = contacts.id
+);
+
+-- Create enum for member roles
+CREATE TYPE public.member_role AS ENUM ('admin', 'manager', 'agent');
+
+-- Create enum for member status
+CREATE TYPE public.member_status AS ENUM ('active', 'invited', 'disabled');
+
+-- Create teams table
+CREATE TABLE public.teams (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  color TEXT DEFAULT '#3b82f6',
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Create team_functions table
+CREATE TABLE public.team_functions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL UNIQUE,
+  description TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Create team_members table
+CREATE TABLE public.team_members (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  role public.member_role NOT NULL DEFAULT 'agent',
+  status public.member_status NOT NULL DEFAULT 'invited',
+  avatar TEXT,
+  team_id UUID REFERENCES public.teams(id) ON DELETE SET NULL,
+  function_id UUID REFERENCES public.team_functions(id) ON DELETE SET NULL,
+  weight INTEGER DEFAULT 1,
+  last_active TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.teams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.team_functions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
+
+-- Create RLS policies (permissive for now)
+CREATE POLICY "Allow all operations on teams" ON public.teams
+  FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow all operations on team_functions" ON public.team_functions
+  FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow all operations on team_members" ON public.team_members
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Create triggers for updated_at
+CREATE TRIGGER update_teams_updated_at
+  BEFORE UPDATE ON public.teams
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE TRIGGER update_team_functions_updated_at
+  BEFORE UPDATE ON public.team_functions
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE TRIGGER update_team_members_updated_at
+  BEFORE UPDATE ON public.team_members
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Insert default teams
+INSERT INTO public.teams (name, description, color) VALUES
+  ('Vendas', 'Equipe de vendas e prospecção', '#3b82f6'),
+  ('Suporte', 'Equipe de atendimento ao cliente', '#10b981'),
+  ('Marketing', 'Equipe de marketing e comunicação', '#f59e0b');
+
+-- Insert default functions
+INSERT INTO public.team_functions (name, description) VALUES
+  ('SDR', 'Sales Development Representative - Prospecção'),
+  ('Closer', 'Fechador de vendas'),
+  ('CS', 'Customer Success - Sucesso do cliente'),
+  ('Suporte Técnico', 'Atendimento técnico especializado'),
+  ('Analista de Marketing', 'Análise e estratégias de marketing');
+
+-- Enable realtime
+ALTER PUBLICATION supabase_realtime ADD TABLE public.teams;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.team_functions;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.team_members;
+
+-- Criar enum para tipos de agendamento
+CREATE TYPE public.appointment_type AS ENUM ('demo', 'meeting', 'support', 'followup');
+
+-- Criar tabela de agendamentos
+CREATE TABLE public.appointments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  date DATE NOT NULL,
+  time TIME NOT NULL,
+  duration INTEGER NOT NULL DEFAULT 60,
+  type appointment_type NOT NULL DEFAULT 'meeting',
+  attendees TEXT[] DEFAULT '{}',
+  contact_id UUID REFERENCES public.contacts(id) ON DELETE SET NULL,
+  meeting_url TEXT,
+  status TEXT DEFAULT 'scheduled',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Habilitar RLS
+ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
+
+-- Política permissiva (para ambiente de desenvolvimento)
+CREATE POLICY "Allow all operations on appointments" ON public.appointments
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Trigger para updated_at
+CREATE TRIGGER update_appointments_updated_at
+  BEFORE UPDATE ON public.appointments
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Habilitar realtime
+ALTER PUBLICATION supabase_realtime ADD TABLE public.appointments;
+
+-- Contacts extensions
+ALTER TABLE contacts ADD COLUMN IF NOT EXISTS status_convite VARCHAR(50);
+ALTER TABLE contacts ADD COLUMN IF NOT EXISTS pipeline_stage_id UUID REFERENCES pipeline_stages(id);
+
+-- Campaigns
+CREATE TABLE IF NOT EXISTS campaigns (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    channel VARCHAR(50) NOT NULL, -- waba, email, both
+    segment_filter VARCHAR(255),
+    template_id VARCHAR(255),
+    email_subject VARCHAR(255),
+    email_body TEXT,
+    scheduled_at TIMESTAMP WITH TIME ZONE,
+    status VARCHAR(50) DEFAULT 'draft',
+    created_by UUID REFERENCES auth.users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Campaign Messages
+CREATE TABLE IF NOT EXISTS campaign_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    campaign_id UUID REFERENCES campaigns(id),
+    contact_id UUID REFERENCES contacts(id),
+    channel VARCHAR(50) NOT NULL,
+    status VARCHAR(50),
+    sent_at TIMESTAMP WITH TIME ZONE,
+    delivered_at TIMESTAMP WITH TIME ZONE,
+    opened_at TIMESTAMP WITH TIME ZONE,
+    clicked_at TIMESTAMP WITH TIME ZONE,
+    error_message TEXT
+);
+
+-- Waba Templates
+CREATE TABLE IF NOT EXISTS waba_templates (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    language VARCHAR(10) NOT NULL,
+    category VARCHAR(50),
+    status VARCHAR(50),
+    components JSONB,
+    fetched_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Journeys
+CREATE TABLE IF NOT EXISTS journeys (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    trigger VARCHAR(100),
+    steps JSONB
+);
+
+-- Journey Enrollments
+CREATE TABLE IF NOT EXISTS journey_enrollments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    contact_id UUID REFERENCES contacts(id),
+    journey_id UUID REFERENCES journeys(id),
+    started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    current_step INTEGER DEFAULT 0,
+    status VARCHAR(50) DEFAULT 'active'
+);

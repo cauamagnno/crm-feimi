@@ -23,7 +23,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    // Save the attempted URL for redirecting after login
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 

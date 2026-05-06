@@ -229,6 +229,61 @@ export interface DBContact {
   last_activity: string;
   created_at: string;
   updated_at: string;
+  status_convite?: 'pending' | 'redeemed' | 'cancelled';
+  pipeline_stage_id?: string;
+}
+
+export interface Campaign {
+  id: string;
+  name: string;
+  channel: 'waba' | 'email' | 'both';
+  segment_filter: string | null;
+  template_id: string | null;
+  email_subject: string | null;
+  email_body: string | null;
+  scheduled_at: string | null;
+  status: 'draft' | 'scheduled' | 'queued' | 'sending' | 'completed' | 'failed';
+  created_by: string;
+  created_at: string;
+}
+
+export interface CampaignMessage {
+  id: string;
+  campaign_id: string;
+  contact_id: string;
+  channel: 'waba' | 'email';
+  status: 'sent' | 'delivered' | 'read' | 'failed' | 'bounced' | 'opened' | 'clicked';
+  sent_at: string | null;
+  delivered_at: string | null;
+  opened_at: string | null;
+  clicked_at: string | null;
+  error_message: string | null;
+}
+
+export interface WabaTemplate {
+  id: string;
+  name: string;
+  language: string;
+  category: string;
+  status: string;
+  components: any;
+  fetched_at: string;
+}
+
+export interface Journey {
+  id: string;
+  name: string;
+  trigger: string;
+  steps: any;
+}
+
+export interface JourneyEnrollment {
+  id: string;
+  contact_id: string;
+  journey_id: string;
+  started_at: string;
+  current_step: number;
+  status: 'active' | 'paused' | 'completed';
 }
 
 export interface DBConversation {

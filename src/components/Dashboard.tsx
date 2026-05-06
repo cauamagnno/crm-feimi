@@ -1,39 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Activity, DollarSign, MessageSquare, Users, Loader2, TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { StatMetric } from '../types';
-import { api } from '../services/api';
-import { OnboardingBanner } from './OnboardingBanner';
-import { SystemHealthCard } from './SystemHealthCard';
-import { useOutletContext } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Send, CheckCircle2, MailOpen, MousePointerClick, AlertCircle, ArrowUpRight, Calendar as CalendarIcon } from 'lucide-react';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis, Legend } from 'recharts';
 import { useTheme } from '@/hooks/useTheme';
+import { supabase } from '@/integrations/supabase/client';
 
-interface OutletContext {
-  showOnboarding: boolean;
-  setShowOnboarding: (show: boolean) => void;
+type PeriodFilter = 'hoje' | '7dias' | '30dias' | 'todos';
+
+interface CampaignData {
+  id: string;
+  name: string;
+  channel: string;
+  date: string;
+  status: string;
+  sent: number;
+  delivered: number;
+  opened: number;
+  clicked: number;
 }
 
-type PeriodFilter = 'today' | '7days' | '30days';
-
-const periodLabels: Record<PeriodFilter, string> = {
-  today: 'Hoje',
-  '7days': '7 Dias',
-  '30days': '30 Dias'
-};
-
-const periodDays: Record<PeriodFilter, number> = {
-  today: 1,
-  '7days': 7,
-  '30days': 30
-};
-
 const Dashboard: React.FC = () => {
-  const [metrics, setMetrics] = useState<StatMetric[]>([]);
-  const [chartData, setChartData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [period, setPeriod] = useState<PeriodFilter>('today');
-  const { setShowOnboarding } = useOutletContext<OutletContext>();
   const { theme } = useTheme();
+  const [period, setPeriod] = useState<PeriodFilter>('7dias');
+  const [loading, setLoading] = useState(true);
+  const [campaignsList, setCampaignsList] = useState<CampaignData[]>([]);
+  const [totalMessages, setTotalMessages] = useState(0);
 
   const gridColor = theme === 'dark' ? '#27272a' : '#e4e4e7';
   const axisColor = theme === 'dark' ? '#71717a' : '#a1a1aa';
@@ -42,209 +32,262 @@ const Dashboard: React.FC = () => {
   const tooltipTextColor = theme === 'dark' ? '#fafafa' : '#18181b';
 
   useEffect(() => {
-    const loadData = async () => {
+    async function fetchDashboardData() {
       setLoading(true);
       try {
-        const days = periodDays[period];
-        const [metricsData, chartDataResponse] = await Promise.all([
-          api.fetchDashboardMetrics(days),
-          api.fetchChartData(days)
-        ]);
-        setMetrics(metricsData);
-        setChartData(chartDataResponse);
-      } catch (error) {
-        console.error("Erro ao carregar dashboard:", error);
+        // Fetch campaigns
+        const { data: camps, error: campError } = await supabase
+          .from('campaigns')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (camps && !campError) {
+          setCampaignsList(camps.map(c => ({
+            id: c.id,
+            name: c.name,
+            channel: c.channel === 'both' ? 'Ambos' : c.channel.toUpperCase(),
+            date: c.created_at,
+            status: c.status === 'draft' ? 'rascunho' : c.status === 'completed' ? 'concluída' : 'em andamento',
+            sent: 0,
+            delivered: 0,
+            opened: 0,
+            clicked: 0,
+          })));
+        }
+
+        // Fetch total messages (example for general metrics)
+        const { count, error: msgError } = await supabase
+          .from('messages')
+          .select('*', { count: 'exact', head: true });
+        
+        if (!msgError && count !== null) {
+          setTotalMessages(count);
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
       } finally {
         setLoading(false);
       }
-    };
+    }
 
-    loadData();
+    fetchDashboardData();
   }, [period]);
 
-  const getIcon = (label: string) => {
-    if (label.includes('Conversões')) return <DollarSign className="h-5 w-5 text-foreground" />;
-    if (label.includes('Atendimentos')) return <MessageSquare className="h-5 w-5 text-foreground" />;
-    if (label.includes('Leads')) return <Users className="h-5 w-5 text-foreground" />;
-    return <Activity className="h-5 w-5 text-foreground" />;
-  };
+  const metrics = [
+    { label: 'Disparos Realizados', value: totalMessages.toLocaleString(), icon: <Send className="w-5 h-5" />, trend: '0%', color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Entregues', value: '0', icon: <CheckCircle2 className="w-5 h-5" />, trend: '0%', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Aberturas (Email)', value: '0', icon: <MailOpen className="w-5 h-5" />, trend: '0%', color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: 'Cliques', value: '0', icon: <MousePointerClick className="w-5 h-5" />, trend: '0%', color: 'text-amber-500', bg: 'bg-amber-500/10' },
+    { label: 'Falhas/Erros', value: '0', icon: <AlertCircle className="w-5 h-5" />, trend: '0%', color: 'text-red-500', bg: 'bg-red-500/10' },
+  ];
 
-  const getGradient = (_label: string) => {
-    return 'from-muted/40 to-muted/10 border-border/50';
-  };
+  const timelineData = [
+    { date: 'Seg', waba: 0, email: 0 },
+    { date: 'Ter', waba: 0, email: 0 },
+    { date: 'Qua', waba: 0, email: 0 },
+    { date: 'Qui', waba: 0, email: 0 },
+    { date: 'Sex', waba: 0, email: 0 },
+    { date: 'Sáb', waba: 0, email: 0 },
+    { date: 'Dom', waba: 0, email: 0 },
+  ];
 
-  const getMetricLabel = (baseLabel: string) => {
-    if (baseLabel.includes('Atendimentos')) {
-      return period === 'today' ? 'Atendimentos Hoje' : `Atendimentos (${periodLabels[period]})`;
-    }
-    if (baseLabel.includes('Leads')) {
-      return period === 'today' ? 'Novos Leads' : `Novos Leads (${periodLabels[period]})`;
-    }
-    return baseLabel;
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-             <div className="absolute inset-0 bg-muted blur-xl rounded-full"></div>
-             <Loader2 className="h-10 w-10 animate-spin text-muted-foreground relative z-10" />
-          </div>
-          <p className="text-sm text-muted-foreground font-medium animate-pulse">Carregando insights...</p>
-        </div>
-      </div>
-    );
-  }
+  const funnelData = [
+    { stage: 'Disparados', value: totalMessages },
+    { stage: 'Entregues', value: 0 },
+    { stage: 'Abertos', value: 0 },
+    { stage: 'Clicados', value: 0 },
+  ];
 
   return (
     <div className="p-6 space-y-8 overflow-y-auto h-full bg-background text-foreground custom-scrollbar">
-      {/* Onboarding Banner */}
-      <OnboardingBanner onOpenWizard={() => setShowOnboarding(true)} />
-
-      {/* System Health Card */}
-      <SystemHealthCard />
-
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
-          <p className="text-muted-foreground mt-1">
-            Visão geral da performance da sua IA {period === 'today' ? 'hoje' : `nos últimos ${periodLabels[period].toLowerCase()}`}.
-          </p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard de Disparos</h2>
+          <p className="text-muted-foreground mt-1">Acompanhe a performance das suas campanhas WABA e Email.</p>
         </div>
         <div className="flex items-center gap-2 bg-card p-1 rounded-lg border border-border">
-          {(['today', '7days', '30days'] as PeriodFilter[]).map((p) => (
+          {(['hoje', '7dias', '30dias', 'todos'] as PeriodFilter[]).map((p) => (
             <button
               key={p}
               onClick={() => setPeriod(p)}
-              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                period === p
-                  ? 'bg-muted text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-muted-foreground'
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                period === p ? 'bg-primary/10 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {periodLabels[p]}
+              {p === 'hoje' ? 'Hoje' : p === '7dias' ? '7 Dias' : p === '30dias' ? '30 Dias' : 'Todos'}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Metric Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((stat, index) => (
-          <div 
-            key={index} 
-            className={`relative overflow-hidden rounded-2xl border bg-card/50 backdrop-blur-sm p-6 shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-card group ${getGradient(stat.label)}`}
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            <div className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <div className="text-sm font-medium text-muted-foreground">{getMetricLabel(stat.label)}</div>
-              <div className="p-2 rounded-lg bg-muted/50 border border-border/50 group-hover:border-slate-600 transition-colors">
-                 {getIcon(stat.label)}
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
+        {metrics.map((metric, idx) => (
+          <div key={idx} className="rounded-xl border border-border bg-card/50 backdrop-blur-sm p-5 shadow-sm hover:shadow-md transition-all">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-muted-foreground">{metric.label}</span>
+              <div className={`p-2 rounded-lg ${metric.bg} ${metric.color}`}>
+                {metric.icon}
               </div>
             </div>
             <div className="flex items-end justify-between">
-                <div className="text-3xl font-bold text-foreground tracking-tight">{stat.value}</div>
-                <div className={`flex items-center text-xs font-medium px-2 py-1 rounded-full ${stat.trendUp ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
-                    {stat.trendUp ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-                    {stat.trend}
-                </div>
+              <h3 className="text-2xl font-bold tracking-tight">{metric.value}</h3>
+              <span className={`text-xs font-semibold ${metric.label === 'Falhas/Erros' ? 'text-red-500' : 'text-emerald-500'}`}>
+                {metric.trend}
+              </span>
             </div>
-            {/* Decorative Glow */}
-            <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-muted/50 blur-2xl rounded-full group-hover:bg-muted/50 transition-all"></div>
           </div>
         ))}
       </div>
 
-      {/* Charts Section */}
-      <div className="grid gap-6 md:grid-cols-7">
-        {/* Main Chart */}
-        <div className="col-span-4 rounded-2xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-lg">
-          <div className="mb-6 flex items-center justify-between">
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="col-span-2 rounded-xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
             <div>
-                <h3 className="text-lg font-semibold text-foreground">Volume de Atendimentos</h3>
-                <p className="text-sm text-muted-foreground">
-                  Interações da IA {period === 'today' ? 'hoje' : `nos últimos ${periodDays[period]} dias`}
-                </p>
+              <h3 className="text-lg font-semibold">Evolução de Disparos</h3>
+              <p className="text-sm text-muted-foreground">WABA vs Email ao longo do tempo</p>
             </div>
-            <button className="text-muted-foreground hover:text-foreground transition-colors p-2 hover:bg-muted rounded-lg">
-                <ArrowUpRight className="w-5 h-5" />
-            </button>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={timelineData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
-                  <linearGradient id="colorChats" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="currentColor" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="currentColor" stopOpacity={0}/>
+                  <linearGradient id="colorWaba" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                  <linearGradient id="colorEmail" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" stroke={gridColor} />
-                <XAxis
-                    dataKey="name"
-                    axisLine={false}
-                    tickLine={false}
-                    tickMargin={10}
-                    fontSize={12}
-                    stroke={axisColor}
-                />
-                <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    fontSize={12}
-                    stroke={axisColor}
-                />
-                <Tooltip
-                  contentStyle={{ backgroundColor: tooltipBg, borderRadius: '10px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor, boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
-                  itemStyle={{ color: "hsl(var(--foreground))" }}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="chats" 
-                  stroke="hsl(var(--foreground))" 
-                  strokeWidth={3}
-                  fillOpacity={1} 
-                  fill="url(#colorChats)" 
-                  activeDot={{ r: 6, strokeWidth: 0, fill: '#fff' }}
-                />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tickMargin={10} fontSize={12} stroke={axisColor} />
+                <YAxis axisLine={false} tickLine={false} fontSize={12} stroke={axisColor} />
+                <RechartsTooltip contentStyle={{ backgroundColor: tooltipBg, borderRadius: '8px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor }} />
+                <Legend />
+                <Area type="monotone" dataKey="waba" name="WABA" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorWaba)" />
+                <Area type="monotone" dataKey="email" name="Email" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorEmail)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Secondary Chart */}
-        <div className="col-span-3 rounded-2xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-lg flex flex-col">
-           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-foreground">Conversões</h3>
-            <p className="text-sm text-muted-foreground">Reuniões, vendas e ações concluídas</p>
+        <div className="col-span-1 rounded-xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-sm flex flex-col">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold">Funil de Conversão</h3>
+            <p className="text-sm text-muted-foreground">Taxa de engajamento geral</p>
           </div>
-          
-          <div className="flex-1 flex flex-col justify-center space-y-5">
-            {chartData.slice(0, 5).map((day, i) => (
-              <div key={i} className="group">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-muted-foreground">{day.name}</span>
-                    <span className="text-sm font-bold text-foreground group-hover:text-foreground transition-colors">{day.sales} conv.</span>
+          <div className="flex-1 flex flex-col justify-center space-y-4">
+            {funnelData.map((stage, idx) => {
+              const max = funnelData[0].value || 1;
+              const percentage = stage.value === 0 ? 0 : (stage.value / max) * 100;
+              const prevValue = idx === 0 ? stage.value : funnelData[idx - 1].value;
+              const dropOff = prevValue === 0 ? 0 : (stage.value / prevValue) * 100;
+              
+              return (
+                <div key={idx} className="group relative">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="font-medium text-foreground">{stage.stage}</span>
+                    <span className="font-bold text-foreground">{stage.value.toLocaleString()}</span>
+                  </div>
+                  <div className="h-8 w-full bg-muted rounded-md overflow-hidden relative">
+                    <div 
+                      className="h-full bg-primary/80 transition-all duration-1000"
+                      style={{ width: `${percentage}%` }}
+                    />
+                    {idx > 0 && stage.value > 0 && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-semibold text-white/90 mix-blend-difference">
+                        {dropOff.toFixed(1)}% do ant.
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="h-2.5 bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-foreground/60 to-foreground/40 rounded-full shadow-none transition-all duration-1000 ease-out " 
-                    style={{ width: `${Math.min((day.sales / Math.max(...chartData.map(d => d.sales), 1)) * 100, 100)}%` }} 
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-          
-          <div className="mt-6 pt-4 border-t border-border">
-             <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Total no período</span>
-                <span className="text-foreground font-bold">
-                  {chartData.reduce((sum, d) => sum + d.sales, 0)} conversões
-                </span>
-             </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card/50 backdrop-blur-sm overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-border flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold">Campanhas Recentes</h3>
+            <p className="text-sm text-muted-foreground">Acompanhamento detalhado por campanha</p>
           </div>
+          <button className="flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+            Ver todas <ArrowUpRight className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="text-xs text-muted-foreground uppercase bg-muted/30">
+              <tr>
+                <th className="px-6 py-4 font-semibold">Campanha</th>
+                <th className="px-6 py-4 font-semibold">Canal</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 font-semibold">Data</th>
+                <th className="px-6 py-4 font-semibold text-right">Enviados</th>
+                <th className="px-6 py-4 font-semibold text-right">Entregues</th>
+                <th className="px-6 py-4 font-semibold text-right">Abertos</th>
+                <th className="px-6 py-4 font-semibold text-right">Clicados</th>
+                <th className="px-6 py-4 font-semibold text-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/50">
+              {campaignsList.length === 0 && !loading && (
+                <tr>
+                  <td colSpan={9} className="px-6 py-8 text-center text-muted-foreground">
+                    Nenhuma campanha registrada no banco de dados.
+                  </td>
+                </tr>
+              )}
+              {loading && (
+                <tr>
+                  <td colSpan={9} className="px-6 py-8 text-center text-muted-foreground">
+                    Carregando dados...
+                  </td>
+                </tr>
+              )}
+              {campaignsList.map((camp) => (
+                <tr key={camp.id} className="hover:bg-muted/20 transition-colors">
+                  <td className="px-6 py-4 font-medium text-foreground">{camp.name}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded-md text-xs font-medium ${
+                      camp.channel === 'WABA' ? 'bg-emerald-500/10 text-emerald-500' :
+                      camp.channel === 'EMAIL' ? 'bg-blue-500/10 text-blue-500' :
+                      'bg-purple-500/10 text-purple-500'
+                    }`}>
+                      {camp.channel}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`flex items-center gap-1.5 text-xs font-medium ${
+                      camp.status === 'concluída' ? 'text-emerald-500' :
+                      camp.status === 'em andamento' ? 'text-blue-500' :
+                      'text-amber-500'
+                    }`}>
+                      <div className={`w-1.5 h-1.5 rounded-full ${
+                        camp.status === 'concluída' ? 'bg-emerald-500' :
+                        camp.status === 'em andamento' ? 'bg-blue-500 animate-pulse' :
+                        'bg-amber-500'
+                      }`} />
+                      {camp.status.charAt(0).toUpperCase() + camp.status.slice(1)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-muted-foreground">{new Date(camp.date).toLocaleDateString('pt-BR')}</td>
+                  <td className="px-6 py-4 text-right font-medium">{camp.sent.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-right">{camp.delivered.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-right">{camp.opened.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-right">{camp.clicked.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-center">
+                    <button className="text-muted-foreground hover:text-primary transition-colors">
+                      Detalhes
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

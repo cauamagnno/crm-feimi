@@ -26,6 +26,8 @@ interface AgentSettings {
   company_name: string | null;
   sdr_name: string | null;
   ai_scheduling_enabled: boolean;
+  n8n_webhook_url: string | null;
+  n8n_secret: string | null;
 }
 
 const DAYS_OF_WEEK = [
@@ -63,6 +65,8 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
     company_name: null,
     sdr_name: null,
     ai_scheduling_enabled: true,
+    n8n_webhook_url: null,
+    n8n_secret: null,
   });
 
   useImperativeHandle(ref, () => ({
@@ -116,6 +120,8 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
         company_name: data.company_name,
         sdr_name: data.sdr_name,
         ai_scheduling_enabled: data.ai_scheduling_enabled ?? true,
+        n8n_webhook_url: data.n8n_webhook_url || null,
+        n8n_secret: data.n8n_secret || null,
       });
     } catch (error) {
       console.error('[AgentSettings] Error loading settings:', error);
@@ -143,6 +149,8 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
           company_name: settings.company_name,
           sdr_name: settings.sdr_name,
           ai_scheduling_enabled: settings.ai_scheduling_enabled,
+          n8n_webhook_url: settings.n8n_webhook_url || null,
+          n8n_secret: settings.n8n_secret || null,
           updated_at: new Date().toISOString(),
         })
         .eq('id', settings.id!);
@@ -505,6 +513,76 @@ const AgentSettings = forwardRef<AgentSettingsRef, {}>((props, ref) => {
                 />
                 <div className="w-9 h-5 bg-accent peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-ring rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
               </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Webhook de Notificação */}
+        <div className="rounded-xl border border-border bg-card/50 p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="p-2 rounded-lg bg-muted">
+              <Wand2 className="w-5 h-5 text-foreground" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground">Agente Externo (n8n / Make / Zapier)</h3>
+              <p className="text-xs text-muted-foreground">Quando o lead enviar uma mensagem, a plataforma notifica o webhook abaixo. O agente processa e envia a resposta de volta.</p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {/* Webhook de entrada */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Webhook de notificação (seu n8n)
+              </label>
+              <input
+                type="url"
+                value={settings.n8n_webhook_url || ''}
+                onChange={(e) => setSettings({ ...settings, n8n_webhook_url: e.target.value || null })}
+                placeholder="https://seu-n8n.com/webhook/seu-path"
+                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring outline-none"
+              />
+              <p className="text-xs text-muted-foreground mt-1">Deixe vazio para usar a IA interna (Gemini).</p>
+            </div>
+
+            {/* URL de retorno */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                URL para enviar a resposta ao usuário
+              </label>
+              <div className="flex gap-2">
+                <input
+                  readOnly
+                  value="https://jxufvtwvxgorvggvyjlz.supabase.co/functions/v1/n8n-response"
+                  className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-xs text-muted-foreground font-mono select-all cursor-pointer"
+                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText('https://jxufvtwvxgorvggvyjlz.supabase.co/functions/v1/n8n-response');
+                    toast.success('URL copiada!');
+                  }}
+                  className="px-3 py-2 bg-muted border border-border rounded-lg text-xs text-foreground hover:bg-accent transition-colors whitespace-nowrap"
+                >
+                  Copiar
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Faça um <strong>POST</strong> para esta URL com: <code className="bg-muted px-1 rounded">conversation_id</code>, <code className="bg-muted px-1 rounded">response</code> e <code className="bg-muted px-1 rounded">secret</code>.
+              </p>
+            </div>
+
+            {/* Secret */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">Secret</label>
+              <input
+                type="text"
+                value={settings.n8n_secret || ''}
+                onChange={(e) => setSettings({ ...settings, n8n_secret: e.target.value || null })}
+                placeholder="crmmodelo2026"
+                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:ring-1 focus:ring-ring outline-none"
+              />
             </div>
           </div>
         </div>

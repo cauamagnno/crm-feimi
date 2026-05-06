@@ -81,7 +81,7 @@ serve(async (req) => {
         // Get owner settings for this phone_number_id
         const { data: ownerSettings } = await supabase
           .from('nina_settings')
-          .select('user_id, whatsapp_access_token')
+          .select('user_id, whatsapp_access_token, n8n_webhook_url, n8n_secret')
           .eq('whatsapp_phone_number_id', phoneNumberId)
           .maybeSingle();
 
@@ -157,9 +157,40 @@ serve(async (req) => {
           console.log(`[MessageGrouper] Updated audio message with transcription`);
         }
 
-        // If conversation is handled by Nina, queue for AI processing
-        if (conversation.status === 'nina') {
-          // Check if already in queue to avoid duplicates
+        // Check if external webhook (n8n) is configured
+        const n8nWebhookUrl = ownerSettings?.n8n_webhook_url || null;
+
+        if (n8nWebhookUrl) {
+          // --- Notify external webhook for every user message ---
+          console.log('[MessageGrouper] Notifying external webhook:', n8nWebhookUrl);
+
+          const { data: recentMessages } = await supabase
+            .from('messages')
+            .select('content, from_type, sent_at')
+            .eq('conversation_id', conversationId)
+            .order('sent_at', { ascending: false })
+            .limit(20);
+
+          const history = (recentMessages || []).reverse().map((m: any) => ({
+            role: m.from_type === 'user' ? 'user' : 'assistant',
+            content: m.content,
+            timestamp: m.sent_at
+          }));
+
+          fetch(n8nWebhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              conversation_id: conversationId,
+              message: combinedContent,
+              contact_name: conversation.contacts?.name || conversation.contacts?.call_name || 'Cliente',
+              phone_number: conversation.contacts?.phone_number,
+              history
+            })
+          }).catch(err => console.error('[MessageGrouper] Error notifying webhook:', err));
+
+        } else if (conversation.status === 'nina') {
+          // --- Route to internal nina-orchestrator ---
           const { data: existingQueue } = await supabase
             .from('nina_processing_queue')
             .select('id')
@@ -187,8 +218,6 @@ serve(async (req) => {
               console.error('[MessageGrouper] Error queuing for Nina:', ninaQueueError);
             } else {
               console.log('[MessageGrouper] Message queued for Nina processing');
-              
-              // Trigger nina-orchestrator
               fetch(`${supabaseUrl}/functions/v1/nina-orchestrator`, {
                 method: 'POST',
                 headers: {

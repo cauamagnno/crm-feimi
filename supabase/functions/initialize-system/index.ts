@@ -8,7 +8,7 @@ const corsHeaders = {
 // Generate a unique verify token
 function generateVerifyToken(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = 'viver-ia-';
+  let result = 'orchestra-ai-';
   for (let i = 0; i < 16; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
@@ -53,7 +53,7 @@ const DEFAULT_TEAM_FUNCTIONS = [
 // Default system prompt for Nina
 const DEFAULT_SYSTEM_PROMPT = `<system_instruction>
 <role>
-Você é a Nina, Assistente de Relacionamento e Vendas do Viver de IA.
+Você é a Nina, Assistente de Relacionamento e Vendas da Orchestra AI.
 Sua persona é: Prestativa, entusiasmada com IA, empática e orientada a resultados. 
 Você fala como uma especialista acessível - técnica quando necessário, mas sempre didática.
 Você age como uma consultora que entende de verdade o negócio do empresário, jamais como um vendedor agressivo ou robótico.
@@ -61,7 +61,7 @@ Data e hora atual: {{ data_hora }} ({{ dia_semana }})
 </role>
 
 <company>
-Nome: Viver de IA
+Nome: Orchestra AI
 Tagline: A plataforma das empresas que crescem com Inteligência Artificial
 Missão: Democratizar o acesso à IA para empresários e gestores brasileiros, com soluções Plug & Play que geram resultados reais e mensuráveis.
 Fundadores: Rafael Milagre (Fundador, Mentor G4, Embaixador Lovable) e Yago Martins (CEO, Prêmio Growth Awards 2024)
@@ -138,7 +138,7 @@ Agendamentos:
 - Após agendar, confirme os detalhes com o lead.
 
 Trigger para oferecer agendamento:
-- Lead demonstrou interesse claro no Viver de IA
+- Lead demonstrou interesse claro na Orchestra AI
 - Lead atende critérios de qualificação
 - Momento natural da conversa (não force)
 </tool_usage_protocol>
@@ -170,7 +170,7 @@ Nina: "Entendi, automação de WhatsApp é um dos nossos carros-chefe! Antes de 
 
 Mau exemplo (muito vendedor):
 Lead: "Oi"
-Nina: "Oi! Bem-vindo ao Viver de IA! Temos 22 soluções incríveis, formações completas, mentoria com especialistas! Quer conhecer nossa plataforma? Posso agendar uma apresentação agora!" ❌
+Nina: "Oi! Bem-vindo à Orchestra AI! Temos 22 soluções incríveis, formações completas, mentoria com especialistas! Quer conhecer nossa plataforma? Posso agendar uma apresentação agora!" ❌
 </examples>
 </system_instruction>`;
 
@@ -190,7 +190,7 @@ const DEFAULT_NINA_SETTINGS = {
   adaptive_response_enabled: true,
   ai_scheduling_enabled: true,
   route_all_to_receiver_enabled: false,
-  company_name: 'Viver de IA',
+  company_name: 'Orchestra AI',
   sdr_name: 'Nina',
   system_prompt_override: DEFAULT_SYSTEM_PROMPT,
 };

@@ -47,7 +47,7 @@ SELECT
   0.80,
   0.30,
   true,
-  'viver-de-ia-nina-webhook'
+  'orchestra-ai-webhook'
 WHERE NOT EXISTS (SELECT 1 FROM nina_settings LIMIT 1);
 
 -- Insere pipeline_stages padrão se não existir

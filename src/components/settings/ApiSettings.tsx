@@ -135,7 +135,7 @@ const ApiSettings = forwardRef<ApiSettingsRef>((props, ref) => {
     }
   };
 
-  const webhookUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/whatsapp-webhook`;
+  const webhookUrl = `${(import.meta.env.VITE_SUPABASE_URL || '').trim()}/functions/v1/whatsapp-webhook`;
 
   useEffect(() => {
     setTestMessage(`Olá! Esta é uma mensagem de teste do sistema ${companyName}. 🚀`);

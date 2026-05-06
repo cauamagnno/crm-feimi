@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, MessageSquare, Users, Settings as SettingsIcon,
-  LogOut, ShieldCheck, Calendar, Kanban, Bot, Sun, Moon, ChevronLeft, ChevronRight
+  LogOut, ShieldCheck, Calendar, Kanban, Bot, Sun, Moon, ChevronLeft, ChevronRight,
+  Megaphone, Route
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
@@ -12,13 +13,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 const menuItems = [
-  { id: 'dashboard',  label: 'Dashboard',      icon: LayoutDashboard },
-  { id: 'pipeline',   label: 'Pipeline',        icon: Kanban },
-  { id: 'chat',       label: 'Chat Ao Vivo',    icon: MessageSquare },
-  { id: 'contacts',   label: 'Contatos',        icon: Users },
-  { id: 'scheduling', label: 'Agendamentos',    icon: Calendar },
-  { id: 'team',       label: 'Equipe',          icon: ShieldCheck },
-  { id: 'settings',   label: 'Configurações',   icon: SettingsIcon },
+  { id: 'dashboard',  label: 'Dashboard de Disparos', icon: LayoutDashboard },
+  { id: 'campaigns',  label: 'Gestão de Campanhas',   icon: Megaphone },
+  { id: 'journeys',   label: 'Jornada Automatizada',  icon: Route },
+  { id: 'chat',       label: 'Inbox (Atendimento)',   icon: MessageSquare },
+  { id: 'pipeline',   label: 'Pipeline Comercial',    icon: Kanban },
+  { id: 'contacts',   label: 'Contatos / Leads',      icon: Users },
+  { id: 'scheduling', label: 'Calendário',            icon: Calendar },
+  { id: 'settings',   label: 'Configurações',         icon: SettingsIcon },
 ];
 
 interface SidebarProps {
@@ -115,7 +117,7 @@ const SidebarContent: React.FC<SidebarProps> = ({ open, setOpen }) => {
                   {companyName || 'Workspace'}
                 </p>
                 <p className="text-[10px] text-primary uppercase tracking-widest font-medium mt-0.5">
-                  CRM
+                  FEIMI CRM
                 </p>
               </motion.div>
             )}

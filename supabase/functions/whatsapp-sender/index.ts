@@ -257,6 +257,15 @@ async function sendMessage(supabase: any, settings: any, queueItem: any) {
         filename: queueItem.content || 'document'
       };
       break;
+
+    case 'template':
+      payload.type = 'template';
+      if (queueItem.metadata && queueItem.metadata.template) {
+        payload.template = queueItem.metadata.template;
+      } else {
+        throw new Error('Template payload is missing in metadata');
+      }
+      break;
     
     default:
       payload.type = 'text';

@@ -34,12 +34,21 @@ const Contacts: React.FC = () => {
     );
   });
 
-  const getStatusColor = (status: string) => {
+  const getConviteColor = (status: string) => {
     switch (status) {
-      case 'customer': return 'bg-muted/60 text-foreground border-border';
-      case 'lead': return 'bg-muted/60 text-foreground border-border';
-      case 'churned': return 'bg-muted text-muted-foreground border-border';
+      case 'customer': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'; // Resgatado
+      case 'lead': return 'bg-amber-500/10 text-amber-500 border-amber-500/20'; // Pendente
+      case 'churned': return 'bg-red-500/10 text-red-500 border-red-500/20'; // Cancelado
       default: return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  const getConviteLabel = (status: string) => {
+    switch (status) {
+      case 'customer': return 'Resgatado';
+      case 'lead': return 'Pendente';
+      case 'churned': return 'Cancelado';
+      default: return 'Desconhecido';
     }
   };
 
@@ -107,9 +116,9 @@ const Contacts: React.FC = () => {
             <table className="w-full text-sm text-left">
               <thead className="bg-card/80 text-muted-foreground border-b border-border font-medium text-xs uppercase tracking-wider">
                 <tr>
-                  <th className="px-6 py-4">Nome / Telefone</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Canais</th>
+                  <th className="px-6 py-4">Nome / Contato</th>
+                  <th className="px-6 py-4">Status Convite</th>
+                  <th className="px-6 py-4">Etapa Pipeline</th>
                   <th className="px-6 py-4">Última Interação</th>
                   <th className="px-6 py-4 text-right">Ações</th>
                 </tr>
@@ -129,25 +138,28 @@ const Contacts: React.FC = () => {
                             <div className="text-xs text-muted-foreground">{contact.phone}</div>
                         </div>
                       </div>
+                        <div className="flex flex-col gap-1 mt-2">
+                          {contact.email && (
+                            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                                <Mail className="w-3.5 h-3.5" />
+                                {contact.email}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+                              <Phone className="w-3.5 h-3.5" />
+                              {contact.phone}
+                          </div>
+                        </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${getStatusColor(contact.status)}`}>
-                        {contact.status === 'customer' ? 'Cliente Ativo' : contact.status === 'lead' ? 'Lead Qualificado' : 'Churned'}
+                      <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${getConviteColor(contact.status)}`}>
+                        {getConviteLabel(contact.status)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1">
-                        {contact.email && (
-                          <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                              <Mail className="w-3.5 h-3.5" />
-                              {contact.email}
-                          </div>
-                        )}
-                        <div className="flex items-center gap-2 text-muted-foreground text-xs">
-                            <Phone className="w-3.5 h-3.5" />
-                            {contact.phone}
-                        </div>
-                      </div>
+                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md">
+                        {contact.status === 'customer' ? 'Confirmado' : 'Qualificação'}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                        <span className="text-muted-foreground">{new Date(contact.lastContact).toLocaleDateString('pt-BR')}</span>
