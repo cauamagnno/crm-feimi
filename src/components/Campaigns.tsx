@@ -132,32 +132,6 @@ const Campaigns: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-      try {
-        const { data, error } = await supabase
-          .from('campaigns')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (data && !error) {
-          setCampaigns(data.map(c => ({
-            id: c.id,
-            name: c.name,
-            channel: c.channel === 'both' ? 'Ambos' : c.channel.toUpperCase(),
-            status: c.status === 'draft' ? 'Rascunho' : c.status === 'completed' ? 'Concluída' : 'Em andamento',
-            date: c.created_at,
-            audience: c.segment_filter || 'Todos',
-            sent: 0,
-          })));
-        }
-      } catch (err) {
-        console.error('Error fetching campaigns:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCampaigns();
-  }, []);
-
   return (
     <div className="h-full flex flex-col bg-background text-foreground p-6 overflow-hidden relative">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4 flex-shrink-0">
