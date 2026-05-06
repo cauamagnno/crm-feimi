@@ -30,6 +30,9 @@ const Campaigns: React.FC = () => {
   const [campaignChannel, setCampaignChannel] = useState('waba');
   const [campaignAudience, setCampaignAudience] = useState('todos');
   const [campaignTemplate, setCampaignTemplate] = useState('');
+  const [scheduleType, setScheduleType] = useState('now');
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleTime, setScheduleTime] = useState('');
 
   const fetchCampaigns = async () => {
     setLoading(true);
@@ -91,14 +94,34 @@ const Campaigns: React.FC = () => {
 
     setIsSubmitting(true);
     try {
+      let finalDate = undefined;
+      let finalTime = undefined;
+      
+      if (scheduleType === 'tomorrow') {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        finalDate = tomorrow.toISOString().split('T')[0];
+        finalTime = '09:00'; // Default time for tomorrow
+      } else if (scheduleType === 'specific') {
+        if (!scheduleDate || !scheduleTime) {
+          toast.error('Preencha a data e horário do agendamento.');
+          setIsSubmitting(false);
+          return;
+        }
+        finalDate = scheduleDate;
+        finalTime = scheduleTime;
+      }
+
       await api.createCampaign({
         name: campaignName,
         channel: campaignChannel,
         audience: campaignAudience,
         templateName: campaignTemplate,
+        date: finalDate,
+        time: finalTime
       });
       
-      toast.success('Campanha criada e disparos iniciados!');
+      toast.success(scheduleType === 'now' ? 'Campanha criada e disparos iniciados!' : 'Campanha agendada com sucesso!');
       setShowCreateModal(false);
       setCampaignName('');
       fetchCampaigns();
@@ -282,21 +305,39 @@ const Campaigns: React.FC = () => {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                 <div className="space-y-2">
-                    <label className="text-sm font-semibold">Data do Disparo</label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input type="date" className="w-full bg-background border border-border rounded-lg p-2.5 pl-10 text-sm" />
-                    </div>
-                 </div>
-                 <div className="space-y-2">
-                    <label className="text-sm font-semibold">Horário</label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input type="time" className="w-full bg-background border border-border rounded-lg p-2.5 pl-10 text-sm" />
-                    </div>
-                 </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold">Quando enviar?</label>
+                  <Select value={scheduleType} onValueChange={setScheduleType}>
+                    <SelectTrigger className="w-full border-border bg-background">
+                      <SelectValue placeholder="Selecione quando enviar" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="now">Enviar agora</SelectItem>
+                      <SelectItem value="tomorrow">Enviar amanhã (09:00)</SelectItem>
+                      <SelectItem value="specific">Selecionar data específica</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {scheduleType === 'specific' && (
+                  <div className="grid grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-2">
+                     <div className="space-y-2">
+                        <label className="text-sm font-semibold">Data do Disparo</label>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <input type="date" value={scheduleDate} onChange={e => setScheduleDate(e.target.value)} className="w-full bg-background border border-border rounded-lg p-2.5 pl-10 text-sm focus:ring-1 focus:ring-primary/50 outline-none" />
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <label className="text-sm font-semibold">Horário</label>
+                        <div className="relative">
+                          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <input type="time" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} className="w-full bg-background border border-border rounded-lg p-2.5 pl-10 text-sm focus:ring-1 focus:ring-primary/50 outline-none" />
+                        </div>
+                     </div>
+                  </div>
+                )}
               </div>
 
               <div className="border-t border-border pt-6 mt-6">

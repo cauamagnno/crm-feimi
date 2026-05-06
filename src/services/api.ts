@@ -1398,13 +1398,21 @@ export const api = {
     if (contactsError) throw contactsError;
     if (!contacts || contacts.length === 0) throw new Error('No contacts found for this audience');
 
+    let scheduledAtStr = undefined;
+    if (campaign.date && campaign.time) {
+      // Assuming date is YYYY-MM-DD and time is HH:mm
+      // Create a local Date object and convert to ISO string
+      const localDate = new Date(`${campaign.date}T${campaign.time}:00`);
+      scheduledAtStr = localDate.toISOString();
+    }
+
     // 2. Create the campaign record
     const { data: campaignRecord, error: campaignError } = await supabase
       .from('campaigns')
       .insert({
         name: campaign.name,
         channel: campaign.channel,
-        status: 'Em andamento',
+        status: scheduledAtStr ? 'Agendada' : 'Em andamento',
         segment_filter: campaign.audience,
         user_id: userId
       })
@@ -1453,6 +1461,7 @@ export const api = {
         message_type: 'template',
         priority: 1, // lower priority than direct human messages
         status: 'pending',
+        scheduled_at: scheduledAtStr,
         metadata: {
           campaign_id: campaignRecord.id,
           template: {
