@@ -47,15 +47,36 @@ const Campaigns: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (data && !error) {
-        setCampaigns(data.map(c => ({
-          id: c.id,
-          name: c.name,
-          channel: c.channel === 'both' ? 'Ambos' : c.channel.toUpperCase(),
-          status: c.status === 'draft' ? 'Rascunho' : c.status === 'completed' ? 'Concluída' : 'Em andamento',
-          date: c.created_at,
-          audience: c.segment_filter || 'Todos',
-          sent: 0,
-        })));
+        const campaignsWithStats = await Promise.all(data.map(async (c) => {
+          const { count: sentCount } = await supabase
+            .from('send_queue')
+            .select('*', { count: 'exact', head: true })
+            .eq('metadata->>campaign_id', c.id)
+            .eq('status', 'completed');
+            
+          const { count: totalCount } = await supabase
+            .from('send_queue')
+            .select('*', { count: 'exact', head: true })
+            .eq('metadata->>campaign_id', c.id);
+
+          let displayStatus = c.status === 'Agendada' ? 'Agendada' : 'Em andamento';
+          if (c.status !== 'Agendada' && totalCount && sentCount === totalCount) {
+            displayStatus = 'Concluída';
+          }
+          
+          return {
+            id: c.id,
+            name: c.name,
+            channel: c.channel === 'both' ? 'Ambos' : c.channel.toUpperCase(),
+            status: displayStatus,
+            date: new Date(c.created_at).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }),
+            audience: c.segment_filter || 'Todos',
+            sent: sentCount || 0,
+            total: totalCount || 0,
+          };
+        }));
+        
+        setCampaigns(campaignsWithStats);
       }
     } catch (err) {
       console.error('Error fetching campaigns:', err);
@@ -206,24 +227,21 @@ const Campaigns: React.FC = () => {
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-bold text-lg text-foreground">{camp.name}</h3>
                     <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded-full ${
-                      camp.status === 'Concluída' ? 'bg-emerald-500/20 text-emerald-500' :
-                      camp.status === 'Em andamento' ? 'bg-blue-500/20 text-blue-500' :
-                      camp.status === 'Agendada' ? 'bg-amber-500/20 text-amber-500' :
-                      'bg-muted text-muted-foreground'
-                    }`}>
-                      {camp.status}
-                    </span>
+                      camp.status === 'Agendada' ? 'bg-amber-500/10 text-amber-500' :
+                      camp.status === 'Concluída' ? 'bg-emerald-500/10 text-emerald-500' :
+                      'bg-blue-500/10 text-blue-500'
+                    }`}>{camp.status}</span>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1.5"><Users className="w-4 h-4" /> {camp.audience}</span>
-                    <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> {camp.date}</span>
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium">
+                    <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {camp.audience}</span>
+                    <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {camp.date}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="text-right hidden sm:block">
-                  <div className="text-sm font-semibold text-foreground">{camp.sent.toLocaleString()}</div>
-                  <div className="text-xs text-muted-foreground uppercase tracking-wider">Disparos</div>
+              <div className="flex items-center gap-6 mt-4 md:mt-0">
+                <div className="text-right">
+                  <div className="text-xl font-bold text-foreground">{camp.sent} / {camp.total || camp.sent}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">DISPAROS</div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="icon" className="hover:text-primary transition-colors">
