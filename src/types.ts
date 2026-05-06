@@ -84,7 +84,9 @@ export interface Contact {
   name: string;
   phone: string;
   email: string;
+  city?: string;
   status: 'lead' | 'customer' | 'churned';
+  status_convite?: string;
   lastContact: string;
 }
 

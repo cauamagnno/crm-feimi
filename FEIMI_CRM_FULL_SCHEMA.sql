@@ -31,6 +31,7 @@ CREATE TABLE public.contacts (
     name TEXT,
     call_name TEXT,
     email TEXT,
+    city VARCHAR(100),
     profile_picture_url TEXT,
     is_business BOOLEAN DEFAULT false,
     is_blocked BOOLEAN DEFAULT false,

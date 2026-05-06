@@ -345,6 +345,8 @@ export const api = {
       name: c.name || c.call_name || c.phone_number,
       phone: c.phone_number,
       email: c.email || '',
+      city: c.city || '',
+      status_convite: c.status_convite || 'Pendente',
       status: 'lead' as const, // Map from tags or client_memory in future
       lastContact: new Date(c.last_activity).toLocaleDateString('pt-BR')
     }));
@@ -1392,9 +1394,14 @@ export const api = {
     const userId = await getCurrentUserId();
     
     // 1. Fetch matching contacts
-    let query = supabase.from('contacts').select('id, name, call_name, phone_number, tags, client_memory');
-    // If we had real filters we would apply them here.
-    // Assuming 'todos' fetches all for now.
+    let query = supabase.from('contacts').select('id, name, call_name, phone_number, tags, client_memory, city');
+    
+    if (campaign.audience.startsWith('cidade:')) {
+      const cityFilter = campaign.audience.split(':')[1];
+      query = query.ilike('city', `%${cityFilter}%`);
+    } else if (campaign.audience === 'vip') {
+      query = query.contains('tags', ['VIP']);
+    }
     
     const { data: contacts, error: contactsError } = await query;
     if (contactsError) throw contactsError;
@@ -1402,10 +1409,13 @@ export const api = {
 
     let scheduledAtStr = undefined;
     if (campaign.date && campaign.time) {
-      // Assuming date is YYYY-MM-DD and time is HH:mm
-      // Create a local Date object and convert to ISO string
       const localDate = new Date(`${campaign.date}T${campaign.time}:00`);
       scheduledAtStr = localDate.toISOString();
+    }
+
+    let displayAudience = campaign.audience;
+    if (campaign.audience.startsWith('cidade:')) {
+      displayAudience = `Cidade: ${campaign.audience.split(':')[1]}`;
     }
 
     // 2. Create the campaign record
@@ -1415,7 +1425,7 @@ export const api = {
         name: campaign.name,
         channel: campaign.channel,
         status: scheduledAtStr ? 'Agendada' : 'Em andamento',
-        segment_filter: campaign.audience,
+        segment_filter: displayAudience,
         created_by: userId
       })
       .select('id')

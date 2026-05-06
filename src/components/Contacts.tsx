@@ -30,26 +30,21 @@ const Contacts: React.FC = () => {
     return (
       (c.name?.toLowerCase() || '').includes(term) ||
       (c.phone || '').includes(term) ||
-      (c.email?.toLowerCase() || '').includes(term)
+      (c.email?.toLowerCase() || '').includes(term) ||
+      (c.city?.toLowerCase() || '').includes(term)
     );
   });
 
-  const getConviteColor = (status: string) => {
+  const getConviteColor = (status?: string) => {
     switch (status) {
-      case 'customer': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'; // Resgatado
-      case 'lead': return 'bg-amber-500/10 text-amber-500 border-amber-500/20'; // Pendente
-      case 'churned': return 'bg-red-500/10 text-red-500 border-red-500/20'; // Cancelado
-      default: return 'bg-muted text-muted-foreground';
+      case 'VIP Enviado': return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+      case 'Pendente': return 'bg-amber-500/10 text-amber-500 border-amber-500/20';
+      default: return 'bg-muted text-muted-foreground border-border';
     }
   };
 
-  const getConviteLabel = (status: string) => {
-    switch (status) {
-      case 'customer': return 'Resgatado';
-      case 'lead': return 'Pendente';
-      case 'churned': return 'Cancelado';
-      default: return 'Desconhecido';
-    }
+  const getConviteLabel = (status?: string) => {
+    return status || 'Pendente';
   };
 
   const handleStartConversation = (contact: Contact) => {
@@ -79,7 +74,7 @@ const Contacts: React.FC = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input 
             type="text" 
-            placeholder="Buscar por nome, email ou telefone"
+            placeholder="Buscar por nome, email, telefone ou cidade"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 rounded-lg bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-border placeholder:text-muted-foreground transition-all"
@@ -149,11 +144,16 @@ const Contacts: React.FC = () => {
                               <Phone className="w-3.5 h-3.5" />
                               {contact.phone}
                           </div>
+                          {contact.city && (
+                            <div className="flex items-center gap-2 text-muted-foreground text-xs font-medium text-emerald-500/80">
+                                📍 {contact.city}
+                            </div>
+                          )}
                         </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${getConviteColor(contact.status)}`}>
-                        {getConviteLabel(contact.status)}
+                      <span className={`px-2.5 py-1 rounded-md text-xs font-semibold border ${getConviteColor(contact.status_convite)}`}>
+                        {getConviteLabel(contact.status_convite)}
                       </span>
                     </td>
                     <td className="px-6 py-4">

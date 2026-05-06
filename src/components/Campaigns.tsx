@@ -30,6 +30,7 @@ const Campaigns: React.FC = () => {
   const [campaignName, setCampaignName] = useState('');
   const [campaignChannel, setCampaignChannel] = useState('waba');
   const [campaignAudience, setCampaignAudience] = useState('todos');
+  const [campaignCity, setCampaignCity] = useState('');
   const [campaignTemplate, setCampaignTemplate] = useState('');
   const [scheduleType, setScheduleType] = useState('now');
   const [scheduleDate, setScheduleDate] = useState('');
@@ -141,10 +142,20 @@ const Campaigns: React.FC = () => {
         finalTime = scheduleTime;
       }
 
+      let finalAudience = campaignAudience;
+      if (campaignAudience === 'cidade') {
+        if (!campaignCity.trim()) {
+          toast.error('Preencha o nome da cidade para segmentar.');
+          setIsSubmitting(false);
+          return;
+        }
+        finalAudience = `cidade:${campaignCity.trim()}`;
+      }
+
       await api.createCampaign({
         name: campaignName,
         channel: campaignChannel,
-        audience: campaignAudience,
+        audience: finalAudience,
         templateName: campaignTemplate,
         date: finalDate,
         time: finalTime,
@@ -304,16 +315,29 @@ const Campaigns: React.FC = () => {
               
               <div className="space-y-2">
                 <label className="text-sm font-semibold">Público / Segmentação</label>
-                <Select value={campaignAudience} onValueChange={setCampaignAudience}>
-                  <SelectTrigger className="w-full border-border bg-background">
-                    <SelectValue placeholder="Selecione o público alvo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos os contatos</SelectItem>
-                    <SelectItem value="vip">Apenas tag: VIP</SelectItem>
-                    <SelectItem value="pipeline_qualificado">Pipeline: Qualificado</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Select value={campaignAudience} onValueChange={setCampaignAudience}>
+                    <SelectTrigger className="w-full border-border bg-background">
+                      <SelectValue placeholder="Selecione o público alvo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="todos">Todos os contatos</SelectItem>
+                      <SelectItem value="vip">Apenas tag: VIP</SelectItem>
+                      <SelectItem value="pipeline_qualificado">Pipeline: Qualificado</SelectItem>
+                      <SelectItem value="cidade">Por Cidade</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  {campaignAudience === 'cidade' && (
+                    <input 
+                      type="text" 
+                      value={campaignCity} 
+                      onChange={e => setCampaignCity(e.target.value)} 
+                      className="w-full sm:w-1/2 bg-background border border-border rounded-lg p-2.5 text-sm" 
+                      placeholder="Qual cidade? (Ex: São Paulo)" 
+                    />
+                  )}
+                </div>
               </div>
 
               <div className="space-y-4">
