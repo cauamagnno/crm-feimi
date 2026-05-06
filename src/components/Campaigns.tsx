@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Calendar, Megaphone, Users, MessageSquare, Mail, Play, Pause, MoreVertical, Settings2, Sparkles, Filter, Edit, Clock, ArrowRight } from 'lucide-react';
+import { Plus, Search, Calendar, Megaphone, Users, MessageSquare, Mail, Play, Pause, MoreVertical, Settings2, Sparkles, Filter, Edit, Clock, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import { Button } from './Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { api } from '@/services/api';
 import { toast } from 'sonner';
+import { MediaGalleryModal } from './MediaGalleryModal';
 
 interface CampaignData {
   id: string;
@@ -33,6 +34,7 @@ const Campaigns: React.FC = () => {
   const [scheduleType, setScheduleType] = useState('now');
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('');
+  const [showMediaGallery, setShowMediaGallery] = useState(false);
   
   // Template Dynamic State
   const [templateVariables, setTemplateVariables] = useState<Record<string, string>>({});
@@ -257,6 +259,15 @@ const Campaigns: React.FC = () => {
         </div>
       </div>
 
+      {/* Media Gallery Modal */}
+      {showMediaGallery && (
+        <MediaGalleryModal 
+          onClose={() => setShowMediaGallery(false)} 
+          onSelect={(url) => setMediaUrl(url)}
+        />
+      )}
+
+      {/* Create Campaign Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-card border border-border rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
@@ -391,7 +402,16 @@ const Campaigns: React.FC = () => {
                                 
                                 {needsMedia && (
                                   <div className="space-y-2">
-                                    <label className="text-sm font-semibold">Link da Mídia ({headerComponent.format})</label>
+                                    <label className="text-sm font-semibold flex items-center justify-between">
+                                      <span>Link da Mídia ({headerComponent.format})</span>
+                                      <button 
+                                        onClick={() => setShowMediaGallery(true)}
+                                        className="text-xs text-primary hover:underline font-bold flex items-center gap-1"
+                                      >
+                                        <ImageIcon className="w-3.5 h-3.5" />
+                                        Galeria de Mídias
+                                      </button>
+                                    </label>
                                     <input 
                                       type="url" 
                                       value={mediaUrl}
