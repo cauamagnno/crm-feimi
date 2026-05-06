@@ -22,12 +22,14 @@ const Campaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [metaTemplates, setMetaTemplates] = useState<any[]>([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
 
   // Form State
   const [campaignName, setCampaignName] = useState('');
   const [campaignChannel, setCampaignChannel] = useState('waba');
   const [campaignAudience, setCampaignAudience] = useState('todos');
-  const [campaignTemplate, setCampaignTemplate] = useState('convite_feira');
+  const [campaignTemplate, setCampaignTemplate] = useState('');
 
   const fetchCampaigns = async () => {
     setLoading(true);
@@ -58,6 +60,28 @@ const Campaigns: React.FC = () => {
   useEffect(() => {
     fetchCampaigns();
   }, []);
+
+  // Fetch templates when modal opens
+  useEffect(() => {
+    if (showCreateModal && metaTemplates.length === 0) {
+      const loadTemplates = async () => {
+        setLoadingTemplates(true);
+        try {
+          const templates = await api.fetchWhatsAppTemplates();
+          setMetaTemplates(templates);
+          if (templates.length > 0) {
+            setCampaignTemplate(templates[0].name);
+          }
+        } catch (error) {
+          console.error('Failed to load templates:', error);
+          toast.error('Erro ao carregar templates do Meta. Verifique a configuração da API.');
+        } finally {
+          setLoadingTemplates(false);
+        }
+      };
+      loadTemplates();
+    }
+  }, [showCreateModal]);
 
   const handleCreateCampaign = async () => {
     if (!campaignName) {
@@ -282,21 +306,32 @@ const Campaigns: React.FC = () => {
                     <label className="text-sm font-semibold">Template Aprovado (Meta)</label>
                     <Select value={campaignTemplate} onValueChange={setCampaignTemplate}>
                       <SelectTrigger className="w-full border-border bg-background">
-                        <SelectValue placeholder="Selecione um template" />
+                        <SelectValue placeholder={loadingTemplates ? "Carregando..." : "Selecione um template"} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="convite_feira">convite_feira_v1 (Aprovado)</SelectItem>
-                        <SelectItem value="lembrete_7_dias">lembrete_7_dias (Aprovado)</SelectItem>
-                        <SelectItem value="pesquisa_satisfacao">pesquisa_satisfacao (Aprovado)</SelectItem>
+                        {metaTemplates.map((t, i) => (
+                          <SelectItem key={`${t.name}-${i}`} value={t.name}>
+                            {t.name} ({t.language})
+                          </SelectItem>
+                        ))}
+                        {metaTemplates.length === 0 && !loadingTemplates && (
+                          <SelectItem value="none" disabled>Nenhum template encontrado</SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="bg-muted/30 border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground relative">
-                    <span className="absolute right-4 top-4 text-[10px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded uppercase font-bold">Preview Template</span>
-                    <p>Olá {"{{1}}"}! Seu convite para a FEIMI já está disponível.</p>
-                    <p className="mt-2">Resgate através do link: {"{{2}}"}</p>
-                    <p className="mt-2">Data: {"{{3}}"}</p>
-                  </div>
+                  
+                  {campaignTemplate && (
+                    <div className="bg-muted/30 border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground relative">
+                      <span className="absolute right-4 top-4 text-[10px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded uppercase font-bold">Preview</span>
+                      {(() => {
+                        const t = metaTemplates.find(x => x.name === campaignTemplate);
+                        if (!t) return <p>Selecione um template...</p>;
+                        const bodyComponent = t.components?.find((c: any) => c.type === 'BODY');
+                        return <p className="whitespace-pre-wrap">{bodyComponent?.text || 'Sem texto no corpo'}</p>;
+                      })()}
+                    </div>
+                  )}
                   
                   <details className="mt-4 border border-border rounded-lg bg-card overflow-hidden">
                     <summary className="p-4 font-semibold text-sm cursor-pointer hover:bg-muted/30 transition-colors flex items-center justify-between">

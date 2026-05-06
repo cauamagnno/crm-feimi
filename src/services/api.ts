@@ -1486,6 +1486,29 @@ export const api = {
   },
 
   /**
+   * Fetch WhatsApp Templates from Meta
+   */
+  fetchWhatsAppTemplates: async (): Promise<any[]> => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('Not authenticated');
+
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/fetch-whatsapp-templates`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to fetch templates');
+    }
+
+    return data.templates || [];
+  },
+
+  /**
    * Update conversation status (nina/human/paused)
    */
   updateConversationStatus: async (
