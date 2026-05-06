@@ -50,8 +50,16 @@ serve(async (req) => {
       finalSettings = globalSettings;
     }
 
-    if (!finalSettings || !finalSettings.whatsapp_waba_id || !finalSettings.whatsapp_access_token) {
-      return new Response(JSON.stringify({ error: 'WhatsApp WABA ID or Access Token not configured' }), { status: 400, headers: corsHeaders });
+    if (!finalSettings) {
+      return new Response(JSON.stringify({ error: 'Configuração da NINA (nina_settings) não encontrada.' }), { status: 400, headers: corsHeaders });
+    }
+    
+    if (!finalSettings.whatsapp_waba_id) {
+      return new Response(JSON.stringify({ error: 'WhatsApp WABA ID não está configurado no painel.' }), { status: 400, headers: corsHeaders });
+    }
+
+    if (!finalSettings.whatsapp_access_token) {
+      return new Response(JSON.stringify({ error: 'WhatsApp Access Token não está configurado no painel.' }), { status: 400, headers: corsHeaders });
     }
 
     // Fetch templates from Meta API

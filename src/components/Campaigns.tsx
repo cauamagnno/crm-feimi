@@ -75,9 +75,9 @@ const Campaigns: React.FC = () => {
           if (templates.length > 0) {
             setCampaignTemplate(templates[0].name);
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Failed to load templates:', error);
-          toast.error('Erro ao carregar templates do Meta. Verifique a configuração da API.');
+          toast.error(`Erro: ${error.message || 'Falha ao carregar templates da Meta'}`);
         } finally {
           setLoadingTemplates(false);
         }
