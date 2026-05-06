@@ -33,18 +33,18 @@ serve(async (req) => {
     // Get user settings
     const { data: settings } = await supabase
       .from('nina_settings')
-      .select('whatsapp_access_token, whatsapp_waba_id, whatsapp_phone_number_id')
+      .select('whatsapp_access_token, whatsapp_business_account_id, whatsapp_phone_number_id')
       .eq('user_id', user.id)
       .maybeSingle();
 
     let finalSettings = settings;
 
     // Fallback to global if needed
-    if (!finalSettings || !finalSettings.whatsapp_waba_id || !finalSettings.whatsapp_access_token) {
+    if (!finalSettings || !finalSettings.whatsapp_business_account_id || !finalSettings.whatsapp_access_token) {
       const { data: globalSettings } = await supabase
         .from('nina_settings')
-        .select('whatsapp_access_token, whatsapp_waba_id, whatsapp_phone_number_id')
-        .not('whatsapp_waba_id', 'is', null)
+        .select('whatsapp_access_token, whatsapp_business_account_id, whatsapp_phone_number_id')
+        .not('whatsapp_business_account_id', 'is', null)
         .limit(1)
         .maybeSingle();
       finalSettings = globalSettings;
@@ -54,7 +54,7 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Configuração da NINA (nina_settings) não encontrada.' }), { status: 400, headers: corsHeaders });
     }
     
-    if (!finalSettings.whatsapp_waba_id) {
+    if (!finalSettings.whatsapp_business_account_id) {
       return new Response(JSON.stringify({ error: 'WhatsApp WABA ID não está configurado no painel.' }), { status: 400, headers: corsHeaders });
     }
 
@@ -63,7 +63,7 @@ serve(async (req) => {
     }
 
     // Fetch templates from Meta API
-    const response = await fetch(`https://graph.facebook.com/v22.0/${finalSettings.whatsapp_waba_id}/message_templates`, {
+    const response = await fetch(`https://graph.facebook.com/v22.0/${finalSettings.whatsapp_business_account_id}/message_templates`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${finalSettings.whatsapp_access_token}`,

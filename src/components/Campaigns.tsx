@@ -33,6 +33,10 @@ const Campaigns: React.FC = () => {
   const [scheduleType, setScheduleType] = useState('now');
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('');
+  
+  // Template Dynamic State
+  const [templateVariables, setTemplateVariables] = useState<Record<string, string>>({});
+  const [mediaUrl, setMediaUrl] = useState('');
 
   const fetchCampaigns = async () => {
     setLoading(true);
@@ -74,6 +78,8 @@ const Campaigns: React.FC = () => {
           setMetaTemplates(templates);
           if (templates.length > 0) {
             setCampaignTemplate(templates[0].name);
+            setTemplateVariables({});
+            setMediaUrl('');
           }
         } catch (error: any) {
           console.error('Failed to load templates:', error);
@@ -118,7 +124,9 @@ const Campaigns: React.FC = () => {
         audience: campaignAudience,
         templateName: campaignTemplate,
         date: finalDate,
-        time: finalTime
+        time: finalTime,
+        mediaUrl: mediaUrl || undefined,
+        variables: templateVariables
       });
       
       toast.success(scheduleType === 'now' ? 'Campanha criada e disparos iniciados!' : 'Campanha agendada com sucesso!');
@@ -337,13 +345,67 @@ const Campaigns: React.FC = () => {
                   </div>
                   
                   {campaignTemplate && (
-                    <div className="bg-muted/30 border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground relative">
-                      <span className="absolute right-4 top-4 text-[10px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded uppercase font-bold">Preview</span>
+                    <div className="space-y-4">
                       {(() => {
                         const t = metaTemplates.find(x => x.name === campaignTemplate);
-                        if (!t) return <p>Selecione um template...</p>;
+                        if (!t) return null;
+                        
+                        const headerComponent = t.components?.find((c: any) => c.type === 'HEADER');
                         const bodyComponent = t.components?.find((c: any) => c.type === 'BODY');
-                        return <p className="whitespace-pre-wrap">{bodyComponent?.text || 'Sem texto no corpo'}</p>;
+                        
+                        // Parse variables like {{1}}, {{2}} from body
+                        const bodyText = bodyComponent?.text || '';
+                        const matches = bodyText.match(/\{\{(\d+)\}\}/g);
+                        const variables = matches ? [...new Set(matches)] : [];
+                        
+                        const needsMedia = headerComponent && ['IMAGE', 'VIDEO', 'DOCUMENT'].includes(headerComponent.format);
+                        
+                        return (
+                          <>
+                            <div className="bg-muted/30 border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground relative">
+                              <span className="absolute right-4 top-4 text-[10px] bg-emerald-500/20 text-emerald-500 px-2 py-0.5 rounded uppercase font-bold">Preview</span>
+                              <p className="whitespace-pre-wrap">{bodyText || 'Sem texto no corpo'}</p>
+                            </div>
+                            
+                            {(needsMedia || variables.length > 0) && (
+                              <div className="p-4 border border-border rounded-lg bg-card space-y-4 animate-in fade-in">
+                                <h4 className="text-sm font-bold text-foreground">Configuração Dinâmica do Template</h4>
+                                
+                                {needsMedia && (
+                                  <div className="space-y-2">
+                                    <label className="text-sm font-semibold">Link da Mídia ({headerComponent.format})</label>
+                                    <input 
+                                      type="url" 
+                                      value={mediaUrl}
+                                      onChange={e => setMediaUrl(e.target.value)}
+                                      placeholder="https://exemplo.com/imagem.jpg" 
+                                      className="w-full bg-background border border-border rounded-lg p-2.5 text-sm" 
+                                    />
+                                    <p className="text-xs text-muted-foreground">O link deve ser público e direto para o arquivo.</p>
+                                  </div>
+                                )}
+                                
+                                {variables.length > 0 && (
+                                  <div className="space-y-3">
+                                    {variables.map((v: string) => (
+                                      <div key={v} className="space-y-2">
+                                        <label className="text-sm font-semibold">Variável {v}</label>
+                                        <input 
+                                          type="text" 
+                                          value={templateVariables[v] || ''}
+                                          onChange={e => setTemplateVariables({...templateVariables, [v]: e.target.value})}
+                                          placeholder="Ex: [nome] ou Texto Fixo" 
+                                          className="w-full bg-background border border-border rounded-lg p-2.5 text-sm" 
+                                        />
+                                        <p className="text-[10px] text-muted-foreground">Dica: Digite <code className="bg-muted px-1 rounded">[nome]</code> para usar o primeiro nome do contato.</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        );
                       })()}
                     </div>
                   )}

@@ -1386,6 +1386,8 @@ export const api = {
     templateName: string;
     date?: string;
     time?: string;
+    mediaUrl?: string;
+    variables?: Record<string, string>;
   }): Promise<void> => {
     const userId = await getCurrentUserId();
     
@@ -1414,7 +1416,7 @@ export const api = {
         channel: campaign.channel,
         status: scheduledAtStr ? 'Agendada' : 'Em andamento',
         segment_filter: campaign.audience,
-        user_id: userId
+        created_by: userId
       })
       .select('id')
       .single();
@@ -1453,6 +1455,38 @@ export const api = {
       const firstName = fullName.split(' ')[0];
       const conversationId = convMap.get(contact.id);
       
+      // Build components array based on user input
+      const components: any[] = [];
+      
+      if (campaign.mediaUrl) {
+        components.push({
+          type: 'header',
+          parameters: [
+            { type: 'image', image: { link: campaign.mediaUrl } }
+          ]
+        });
+      }
+      
+      if (campaign.variables && Object.keys(campaign.variables).length > 0) {
+        // Sort variables keys correctly (e.g. {{1}}, {{2}})
+        const sortedKeys = Object.keys(campaign.variables).sort((a, b) => {
+          const numA = parseInt(a.replace(/[{}]/g, '')) || 0;
+          const numB = parseInt(b.replace(/[{}]/g, '')) || 0;
+          return numA - numB;
+        });
+        
+        const bodyParams = sortedKeys.map(key => {
+          let val = campaign.variables![key];
+          if (val === '[nome]') val = firstName;
+          return { type: 'text', text: val };
+        });
+        
+        components.push({
+          type: 'body',
+          parameters: bodyParams
+        });
+      }
+      
       return {
         conversation_id: conversationId,
         contact_id: contact.id,
@@ -1467,14 +1501,7 @@ export const api = {
           template: {
             name: campaign.templateName,
             language: { code: 'pt_BR' },
-            components: [
-              {
-                type: 'body',
-                parameters: [
-                  { type: 'text', text: firstName } // Maps to {{1}}
-                ]
-              }
-            ]
+            components: components.length > 0 ? components : undefined
           }
         }
       };
