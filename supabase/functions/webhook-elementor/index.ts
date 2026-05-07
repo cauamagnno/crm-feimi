@@ -37,7 +37,19 @@ serve(async (req) => {
     // Extrair apenas o primeiro nome
     const firstName = nome ? nome.split(' ')[0] : 'Convidado';
 
-    // 2. Upsert (Inserir ou Atualizar) o Contato no banco de dados
+    // 2. Fetch existing contact to preserve tags
+    const { data: existingContact } = await supabaseClient
+      .from('contacts')
+      .select('id, tags')
+      .eq('phone_number', formattedPhone)
+      .maybeSingle();
+      
+    let tags = existingContact?.tags || [];
+    if (!tags.includes('convite_vip')) {
+      tags.push('convite_vip');
+    }
+
+    // 3. Upsert (Inserir ou Atualizar) o Contato no banco de dados
     const { data: contact, error: contactError } = await supabaseClient
       .from('contacts')
       .upsert({
@@ -46,7 +58,8 @@ serve(async (req) => {
         name: nome || 'Lead Elementor',
         email: email || null,
         city: cidade || null,
-        status_convite: 'VIP Enviado', // Status de que o convite foi enviado
+        status_convite: 'VIP Enviado',
+        tags: tags
       }, { onConflict: 'phone_number' })
       .select('id')
       .single();
@@ -61,21 +74,21 @@ serve(async (req) => {
       .from('conversations')
       .select('id')
       .eq('contact_id', contact.id)
-      .eq('channel', 'whatsapp')
       .single();
 
     if (existingConv) {
       conversationId = existingConv.id;
     } else {
-      const { data: newConv } = await supabaseClient
+      const { data: newConv, error: convError } = await supabaseClient
         .from('conversations')
         .insert({
           contact_id: contact.id,
-          channel: 'whatsapp',
-          status: 'open'
+          status: 'nina'
         })
         .select('id')
         .single();
+        
+      if (convError) throw new Error(`Erro ao criar conversa: ${convError.message}`);
       if (newConv) conversationId = newConv.id;
     }
 
@@ -120,6 +133,15 @@ serve(async (req) => {
     if (queueError) {
       throw new Error(`Erro ao enfileirar mensagem: ${queueError.message}`);
     }
+
+    // 5. Trigger the whatsapp-sender to process the queue immediately
+    fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/trigger-whatsapp-sender`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
+        'Content-Type': 'application/json' 
+      }
+    }).catch(err => console.error('[Webhook] Failed to trigger whatsapp-sender:', err));
 
     return new Response(
       JSON.stringify({ success: true, message: 'Lead registrado e convite VIP programado para envio.' }),

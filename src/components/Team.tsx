@@ -5,7 +5,12 @@ import { api } from '../services/api';
 import { TeamMember, type Team as TeamType, type TeamFunction } from '../types';
 import { supabase } from '@/integrations/supabase/client';
 import TeamConfigModal from './TeamConfigModal';
+import { api } from '../services/api';
+import { TeamMember, type Team as TeamType, type TeamFunction } from '../types';
+import { supabase } from '@/integrations/supabase/client';
+import TeamConfigModal from './TeamConfigModal';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
 
 const Team: React.FC = () => {
   const [members, setMembers] = useState<TeamMember[]>([]);
@@ -34,6 +39,7 @@ const Team: React.FC = () => {
     function_id: '',
     weight: 1
   });
+  const { userRole } = useAuth();
 
   useEffect(() => {
     loadAllData();
@@ -105,7 +111,15 @@ const Team: React.FC = () => {
     }
   };
 
-  const handleDeleteMember = async (id: string, name: string) => {
+  const handleDeleteMember = async (id: string, name: string, memberRole: string) => {
+    if (userRole === 'atendimento') return toast.error('Você não tem permissão para excluir usuários.');
+    if (userRole === 'admin' && (memberRole === 'admin' || memberRole === 'owner')) {
+      return toast.error('Você não tem permissão para excluir este usuário.');
+    }
+    if (memberRole === 'owner' && userRole !== 'owner') {
+      return toast.error('Você não pode excluir o proprietário.');
+    }
+
     if (!confirm(`Tem certeza que deseja excluir ${name}?`)) return;
     try {
       await api.deleteTeamMember(id);
@@ -197,14 +211,18 @@ const Team: React.FC = () => {
           <p className="text-sm text-muted-foreground mt-1">Gerencie usuários e times da organização</p>
         </div>
         <div className="flex gap-3">
-          <Button onClick={() => setShowConfigModal(true)} variant="outline" className="border-border">
-            <Settings className="w-4 h-4 mr-2" />
-            Configurar
-          </Button>
-          <Button onClick={() => setShowModal(true)} className="shadow-lg bg-muted/60 text-muted-foreground hover:bg-white hover:text-black">
-            <UserPlus className="w-4 h-4 mr-2" />
-            Convidar Usuário
-          </Button>
+          {userRole !== 'atendimento' && (
+            <Button onClick={() => setShowConfigModal(true)} variant="outline" className="border-border">
+              <Settings className="w-4 h-4 mr-2" />
+              Configurar
+            </Button>
+          )}
+          {userRole !== 'atendimento' && (
+            <Button onClick={() => setShowModal(true)} className="shadow-lg bg-muted/60 text-muted-foreground hover:bg-white hover:text-black">
+              <UserPlus className="w-4 h-4 mr-2" />
+              Convidar Usuário
+            </Button>
+          )}
         </div>
       </div>
 
@@ -256,10 +274,12 @@ const Team: React.FC = () => {
             <div className="flex flex-col items-center justify-center p-12">
                 <Users className="w-12 h-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground mb-4">Nenhum membro cadastrado ainda.</p>
-                <Button onClick={() => setShowModal(true)} className="bg-muted/60 text-muted-foreground hover:bg-white">
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Convidar Primeiro Membro
-                </Button>
+                {userRole !== 'atendimento' && (
+                  <Button onClick={() => setShowModal(true)} className="bg-muted/60 text-muted-foreground hover:bg-white">
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Convidar Primeiro Membro
+                  </Button>
+                )}
             </div>
         ) : (
             <div className="overflow-x-auto">
@@ -298,12 +318,13 @@ const Team: React.FC = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <select
                                         value={member.role}
+                                        disabled={userRole === 'atendimento' || (userRole === 'admin' && member.role === 'owner')}
                                         onChange={(e) => handleUpdateMember(member.id, 'role', e.target.value)}
-                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-border transition-colors"
+                                        className="w-32 px-3 py-1.5 bg-background border border-border rounded-md text-sm text-muted-foreground cursor-pointer hover:border-border transition-colors disabled:opacity-50"
                                     >
-                                        <option value="agent">Atendente</option>
-                                        <option value="manager">Gerente</option>
+                                        <option value="atendimento">Atendimento</option>
                                         <option value="admin">Admin</option>
+                                        <option value="owner">Proprietário</option>
                                     </select>
                                 </td>
 
@@ -355,20 +376,26 @@ const Team: React.FC = () => {
                                 {/* Actions */}
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
                                     <div className="flex items-center justify-center gap-1">
-                                        <button 
-                                            onClick={() => handleEditClick(member)}
-                                            className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                                            title="Editar membro"
-                                        >
-                                            <Edit2 className="w-4 h-4" />
-                                        </button>
-                                        <button 
-                                            onClick={() => handleDeleteMember(member.id, member.name)}
-                                            className="p-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-red-400 transition-colors"
-                                            title="Excluir membro"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </button>
+                                        {userRole !== 'atendimento' && (
+                                          <button 
+                                              onClick={() => handleEditClick(member)}
+                                              className="p-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                                              title="Editar membro"
+                                              disabled={userRole === 'admin' && member.role === 'owner'}
+                                          >
+                                              <Edit2 className="w-4 h-4" />
+                                          </button>
+                                        )}
+                                        {userRole !== 'atendimento' && (
+                                          <button 
+                                              onClick={() => handleDeleteMember(member.id, member.name, member.role)}
+                                              className="p-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-red-400 transition-colors"
+                                              title="Excluir membro"
+                                              disabled={userRole === 'admin' && (member.role === 'admin' || member.role === 'owner')}
+                                          >
+                                              <Trash2 className="w-4 h-4" />
+                                          </button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>
@@ -416,7 +443,7 @@ const Team: React.FC = () => {
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-muted-foreground">Nível de Acesso</label>
                         <div className="grid grid-cols-3 gap-2">
-                            {['agent', 'manager', 'admin'].map((role) => (
+                            {['atendimento', 'admin', 'owner'].map((role) => (
                                 <div 
                                     key={role}
                                     onClick={() => setFormData({...formData, role})}
@@ -426,7 +453,7 @@ const Team: React.FC = () => {
                                         : 'bg-background border-border text-muted-foreground hover:border-border'
                                     }`}
                                 >
-                                    <div className="text-xs font-bold uppercase mb-1">{role === 'agent' ? 'Atendente' : role === 'manager' ? 'Gerente' : 'Admin'}</div>
+                                    <div className="text-xs font-bold uppercase mb-1">{role === 'atendimento' ? 'Atendimento' : role === 'admin' ? 'Admin' : 'Proprietário'}</div>
                                     {formData.role === role && <div className="flex justify-center"><Check className="w-3 h-3" /></div>}
                                 </div>
                             ))}
@@ -524,7 +551,7 @@ const Team: React.FC = () => {
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-muted-foreground">Nível de Acesso</label>
                         <div className="grid grid-cols-3 gap-2">
-                            {['agent', 'manager', 'admin'].map((role) => (
+                            {['atendimento', 'admin', 'owner'].map((role) => (
                                 <div 
                                     key={role}
                                     onClick={() => setEditFormData({...editFormData, role})}
@@ -534,7 +561,7 @@ const Team: React.FC = () => {
                                         : 'bg-background border-border text-muted-foreground hover:border-border'
                                     }`}
                                 >
-                                    <div className="text-xs font-bold uppercase mb-1">{role === 'agent' ? 'Atendente' : role === 'manager' ? 'Gerente' : 'Admin'}</div>
+                                    <div className="text-xs font-bold uppercase mb-1">{role === 'atendimento' ? 'Atendimento' : role === 'admin' ? 'Admin' : 'Proprietário'}</div>
                                     {editFormData.role === role && <div className="flex justify-center"><Check className="w-3 h-3" /></div>}
                                 </div>
                             ))}

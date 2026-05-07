@@ -1424,7 +1424,7 @@ ALTER TABLE public.nina_settings DROP COLUMN IF EXISTS openai_assistant_id;
 -- ============================================================================
 
 -- Create enum for user roles
-CREATE TYPE public.app_role AS ENUM ('admin', 'user');
+CREATE TYPE public.app_role AS ENUM ('owner', 'admin', 'atendimento');
 
 -- Create profiles table
 CREATE TABLE public.profiles (
@@ -1440,7 +1440,7 @@ CREATE TABLE public.profiles (
 CREATE TABLE public.user_roles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
-  role app_role NOT NULL DEFAULT 'user',
+  role app_role NOT NULL DEFAULT 'atendimento',
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   UNIQUE (user_id, role)
 );

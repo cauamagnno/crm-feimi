@@ -1262,8 +1262,17 @@ export const api = {
   fetchConversations: async (): Promise<UIConversation[]> => {
     console.log('[API] Fetching conversations from Supabase...');
     
-    // Fetch active conversations with contact data
-    const { data: conversations, error: convError } = await supabase
+    const { data: { user } } = await supabase.auth.getUser();
+    let isAtendimento = false;
+    
+    if (user) {
+      const { data: roleData } = await supabase.from('user_roles').select('role').eq('user_id', user.id).maybeSingle();
+      if (roleData?.role === 'atendimento') {
+        isAtendimento = true;
+      }
+    }
+
+    let query = supabase
       .from('conversations')
       .select(`
         *,
@@ -1272,6 +1281,13 @@ export const api = {
       .eq('is_active', true)
       .order('last_message_at', { ascending: false })
       .limit(50);
+      
+    if (isAtendimento && user) {
+      // Atendimento can only see conversations assigned to them, or unassigned ones.
+      query = query.or(`assigned_user_id.eq.${user.id},assigned_user_id.is.null`);
+    }
+
+    const { data: conversations, error: convError } = await query;
 
     if (convError) {
       console.error('[API] Error fetching conversations:', convError);

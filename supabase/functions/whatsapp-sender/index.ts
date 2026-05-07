@@ -323,7 +323,7 @@ async function sendMessage(supabase: any, settings: any, queueItem: any) {
         conversation_id: queueItem.conversation_id,
         whatsapp_message_id: whatsappMessageId,
         content: queueItem.content,
-        type: queueItem.message_type,
+        type: queueItem.message_type === 'template' ? 'text' : queueItem.message_type,
         from_type: queueItem.from_type,
         status: 'sent',
         media_url: queueItem.media_url || null,

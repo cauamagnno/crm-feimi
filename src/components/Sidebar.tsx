@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
-const menuItems = [
+const ALL_MENU_ITEMS = [
   { id: 'dashboard',  label: 'Dashboard de Disparos', icon: LayoutDashboard },
   { id: 'campaigns',  label: 'Gestão de Campanhas',   icon: Megaphone },
   { id: 'journeys',   label: 'Jornada Automatizada',  icon: Route },
@@ -29,7 +29,7 @@ interface SidebarProps {
 }
 
 const NavItem: React.FC<{
-  item: typeof menuItems[0];
+  item: typeof ALL_MENU_ITEMS[0];
   isActive: boolean;
   open: boolean;
 }> = ({ item, isActive, open }) => {
@@ -71,11 +71,16 @@ const NavItem: React.FC<{
 
 const SidebarContent: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const { companyName } = useCompanySettings();
-  const { user, signOut } = useAuth();
+  const { user, userRole, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname.substring(1) || 'dashboard';
+
+  const menuItems = ALL_MENU_ITEMS.filter(item => {
+    if (item.id === 'settings' && userRole === 'atendimento') return false;
+    return true;
+  });
 
   const handleLogout = async () => {
     try {

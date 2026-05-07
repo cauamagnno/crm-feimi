@@ -14,14 +14,14 @@ export interface User {
   id: string;
   name: string;
   avatar: string;
-  role: 'agent' | 'admin';
+  role: 'owner' | 'admin' | 'atendimento';
 }
 
 export interface TeamMember {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'manager' | 'agent';
+  role: 'owner' | 'admin' | 'atendimento';
   status: 'active' | 'invited' | 'disabled';
   avatar: string;
   lastActive?: string;
