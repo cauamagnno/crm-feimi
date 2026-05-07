@@ -198,7 +198,6 @@ const Contacts: React.FC = () => {
           </div>
         )}
       </div>
-      </div>
 
       {/* Create Contact Modal */}
       {showCreateModal && (
