@@ -20,6 +20,7 @@ const ALL_MENU_ITEMS = [
   { id: 'pipeline',   label: 'Pipeline Comercial',    icon: Kanban },
   { id: 'contacts',   label: 'Contatos / Leads',      icon: Users },
   { id: 'scheduling', label: 'Calendário',            icon: Calendar },
+  { id: 'team',       label: 'Equipe',                icon: ShieldCheck },
   { id: 'settings',   label: 'Configurações',         icon: SettingsIcon },
 ];
 
@@ -78,7 +79,9 @@ const SidebarContent: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const currentPath = location.pathname.substring(1) || 'dashboard';
 
   const menuItems = ALL_MENU_ITEMS.filter(item => {
-    if (item.id === 'settings' && userRole === 'atendimento') return false;
+    if (userRole === 'atendimento') {
+      if (item.id === 'settings' || item.id === 'team') return false;
+    }
     return true;
   });
 

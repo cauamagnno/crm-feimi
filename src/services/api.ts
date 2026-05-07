@@ -353,6 +353,29 @@ export const api = {
   },
 
   /**
+   * Create a new contact
+   */
+  createContact: async (contact: { name: string; phone_number: string; email?: string; city?: string }) => {
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert({
+        name: contact.name,
+        phone_number: contact.phone_number,
+        email: contact.email,
+        city: contact.city,
+        last_activity: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('[API] Error creating contact:', error);
+      throw error;
+    }
+    return data;
+  },
+
+  /**
    * Fetch team members from database
    */
   fetchTeam: async (): Promise<TeamMember[]> => {

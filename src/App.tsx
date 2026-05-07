@@ -10,6 +10,7 @@ import Scheduling from './components/Scheduling';
 import Kanban from './components/Kanban';
 import Campaigns from './components/Campaigns';
 import Journeys from './components/Journeys';
+import Team from './components/Team';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                 <Route path="/scheduling" element={<Scheduling />} />
                 <Route path="/campaigns" element={<Campaigns />} />
                 <Route path="/journeys" element={<Journeys />} />
+                <Route path="/team" element={<Team />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Filter, MoreHorizontal, UserPlus, MessageSquare, Loader2, Mail, Phone, Users } from 'lucide-react';
+import { Search, Filter, MoreHorizontal, UserPlus, MessageSquare, Loader2, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './Button';
 import { api } from '../services/api';
 import { Contact } from '../types';
+import { toast } from 'sonner';
 
 const Contacts: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newContact, setNewContact] = useState({ name: '', phone_number: '', email: '', city: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  const loadContacts = async () => {
+    try {
+      const data = await api.fetchContacts();
+      setContacts(data);
+    } catch (error) {
+      console.error("Erro ao carregar contatos", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadContacts = async () => {
-      try {
-        const data = await api.fetchContacts();
-        setContacts(data);
-      } catch (error) {
-        console.error("Erro ao carregar contatos", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     loadContacts();
   }, []);
 
@@ -59,9 +64,8 @@ const Contacts: React.FC = () => {
           <p className="text-sm text-muted-foreground mt-1">Gerencie sua base de leads e clientes com inteligência.</p>
         </div>
         <Button 
-          className="shadow-lg opacity-50 cursor-not-allowed"
-          disabled
-          title="Em breve: Adicionar contato"
+          className="shadow-lg hover:scale-105 transition-transform"
+          onClick={() => setShowCreateModal(true)}
         >
           <UserPlus className="w-4 h-4 mr-2" />
           Novo Contato
@@ -194,6 +198,88 @@ const Contacts: React.FC = () => {
           </div>
         )}
       </div>
+      </div>
+
+      {/* Create Contact Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-card border border-border rounded-xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 duration-200">
+                <div className="p-6 border-b border-border flex justify-between items-center">
+                    <h3 className="text-lg font-bold text-foreground">Novo Contato</h3>
+                    <button onClick={() => setShowCreateModal(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  setIsSubmitting(true);
+                  try {
+                    await api.createContact(newContact);
+                    toast.success('Contato criado com sucesso!');
+                    setShowCreateModal(false);
+                    setNewContact({ name: '', phone_number: '', email: '', city: '' });
+                    loadContacts();
+                  } catch (err) {
+                    toast.error('Erro ao criar contato');
+                  } finally {
+                    setIsSubmitting(false);
+                  }
+                }} className="p-6 space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Nome Completo *</label>
+                        <input 
+                            required
+                            type="text" 
+                            className="w-full bg-background border border-border rounded-lg p-2.5 text-sm text-foreground focus:ring-1 focus:ring-slate-600 outline-none transition-all"
+                            placeholder="Ex: João da Silva"
+                            value={newContact.name}
+                            onChange={(e) => setNewContact({...newContact, name: e.target.value})}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Telefone (WhatsApp) *</label>
+                        <input 
+                            required
+                            type="text" 
+                            className="w-full bg-background border border-border rounded-lg p-2.5 text-sm text-foreground focus:ring-1 focus:ring-slate-600 outline-none transition-all"
+                            placeholder="Ex: 5511999999999"
+                            value={newContact.phone_number}
+                            onChange={(e) => setNewContact({...newContact, phone_number: e.target.value.replace(/\D/g, '')})}
+                        />
+                        <p className="text-xs text-muted-foreground">Apenas números, com código do país (ex: 55 para Brasil)</p>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Email</label>
+                        <input 
+                            type="email" 
+                            className="w-full bg-background border border-border rounded-lg p-2.5 text-sm text-foreground focus:ring-1 focus:ring-slate-600 outline-none transition-all"
+                            placeholder="joao@empresa.com"
+                            value={newContact.email}
+                            onChange={(e) => setNewContact({...newContact, email: e.target.value})}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground">Cidade</label>
+                        <input 
+                            type="text" 
+                            className="w-full bg-background border border-border rounded-lg p-2.5 text-sm text-foreground focus:ring-1 focus:ring-slate-600 outline-none transition-all"
+                            placeholder="Ex: São Paulo"
+                            value={newContact.city}
+                            onChange={(e) => setNewContact({...newContact, city: e.target.value})}
+                        />
+                    </div>
+
+                    <div className="pt-4 flex gap-3">
+                        <Button type="button" variant="ghost" onClick={() => setShowCreateModal(false)} className="flex-1 border border-border hover:bg-muted" disabled={isSubmitting}>Cancelar</Button>
+                        <Button type="submit" className="flex-1 bg-white text-black hover:bg-muted/60" disabled={isSubmitting}>
+                          {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : 'Salvar Contato'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      )}
     </div>
   );
 };
