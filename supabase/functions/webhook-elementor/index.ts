@@ -17,12 +17,40 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Parse the payload from Elementor
-    const body = await req.json();
-    console.log('Webhook payload recebido:', body);
+    // Parse the payload from Elementor (supports JSON or FormData)
+    let body: any = {};
+    const contentType = req.headers.get('content-type') || '';
+    
+    try {
+      if (contentType.includes('application/json')) {
+        body = await req.json();
+      } else {
+        const formData = await req.formData();
+        body = Object.fromEntries(formData.entries());
+      }
+    } catch (e) {
+      const text = await req.text();
+      try { body = JSON.parse(text); } catch { body = {}; }
+    }
 
-    // Mapeie os nomes dos campos que o Elementor vai enviar (nome, telefone, email, cidade)
-    const { nome, telefone, email, cidade } = body;
+    console.log('Webhook payload recebido bruto:', body);
+
+    // Elementor costuma mandar os campos dentro de "form_fields" ou com nomes específicos.
+    // Vamos buscar os valores independentemente de como vierem:
+    const getValue = (keys: string[]) => {
+      for (const key of keys) {
+        if (body[key]) return body[key];
+        if (body[`form_fields[${key}]`]) return body[`form_fields[${key}]`];
+        // As vezes o Elementor envia o JSON aninhado
+        if (body.form_fields && body.form_fields[key]) return body.form_fields[key];
+      }
+      return null;
+    };
+
+    const nome = getValue(['nome', 'name', 'Nome', 'Name', 'nome_completo']);
+    const telefone = getValue(['telefone', 'phone', 'whatsapp', 'Telefone', 'Phone']);
+    const email = getValue(['email', 'Email', 'e-mail']);
+    const cidade = getValue(['cidade', 'city', 'Cidade']);
 
     if (!telefone) {
       throw new Error('O campo telefone é obrigatório.');
