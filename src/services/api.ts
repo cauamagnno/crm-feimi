@@ -424,38 +424,31 @@ export const api = {
     function_id?: string;
     weight?: number;
   }): Promise<TeamMember> => {
-    const userId = await getCurrentUserId();
-    
-    const { data, error } = await supabase
-      .from('team_members')
-      .insert({
-        name: member.name,
-        email: member.email,
-        role: member.role,
-        team_id: member.team_id,
-        function_id: member.function_id,
-        weight: member.weight || 1,
-        status: 'invited',
-        user_id: null
-      })
-      .select()
-      .single();
+    const { data, error } = await supabase.functions.invoke('invite-user', {
+      body: member
+    });
 
     if (error) {
-      console.error('[API] Error creating team member:', error);
+      console.error('[API] Error calling invite-user function:', error);
       throw error;
     }
+    
+    if (data?.error) {
+       console.error('[API] Error in invite-user function:', data.error);
+       throw new Error(data.error);
+    }
 
+    const tm = data.teamMember;
     return {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      role: data.role as 'admin' | 'manager' | 'agent',
-      status: data.status as 'active' | 'invited' | 'disabled',
-      avatar: data.avatar || `https://ui-avatars.com/api/?name=${data.name.replace(' ', '+')}&background=random`,
-      team_id: data.team_id,
-      function_id: data.function_id,
-      weight: data.weight ?? undefined
+      id: tm.id,
+      name: tm.name,
+      email: tm.email,
+      role: tm.role as 'admin' | 'manager' | 'agent',
+      status: tm.status as 'active' | 'invited' | 'disabled',
+      avatar: tm.avatar || `https://ui-avatars.com/api/?name=${tm.name.replace(' ', '+')}&background=random`,
+      team_id: tm.team_id,
+      function_id: tm.function_id,
+      weight: tm.weight ?? undefined
     };
   },
 
