@@ -13,9 +13,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 const ALL_MENU_ITEMS = [
-  { id: 'dashboard',  label: 'Dashboard de Disparos', icon: LayoutDashboard },
-  { id: 'campaigns',  label: 'Gestão de Campanhas',   icon: Megaphone },
-  { id: 'journeys',   label: 'Jornada Automatizada',  icon: Route },
+  { id: 'dashboard',  label: 'Dashboard',             icon: LayoutDashboard },
+  { id: 'campaigns',  label: 'Campanhas',             icon: Megaphone },
+  { id: 'journeys',   label: 'Jornadas',              icon: Route },
   { id: 'chat',       label: 'Inbox (Atendimento)',   icon: MessageSquare },
   { id: 'pipeline',   label: 'Pipeline Comercial',    icon: Kanban },
   { id: 'contacts',   label: 'Contatos / Leads',      icon: Users },
@@ -105,9 +105,9 @@ const SidebarContent: React.FC<SidebarProps> = ({ open, setOpen }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full pt-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8 px-1">
+      <div className="flex items-center justify-between mb-10 px-1">
         <Link to="/dashboard" className="flex items-center gap-3 min-w-0">
           <div className="relative flex-shrink-0 w-8 h-8 rounded-lg bg-primary flex items-center justify-center glow-primary-sm">
             <Bot className="w-4 h-4 text-primary-foreground" />
