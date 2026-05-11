@@ -23,7 +23,10 @@ const Dashboard: React.FC = () => {
   const [period, setPeriod] = useState<PeriodFilter>('7dias');
   const [loading, setLoading] = useState(true);
   const [campaignsList, setCampaignsList] = useState<CampaignData[]>([]);
+  const [totalLeads, setTotalLeads] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
+  const [queuedMessages, setQueuedMessages] = useState(0);
+  const [failedMessages, setFailedMessages] = useState(0);
 
   const gridColor = theme === 'dark' ? '#27272a' : '#e4e4e7';
   const axisColor = theme === 'dark' ? '#71717a' : '#a1a1aa';
@@ -55,14 +58,32 @@ const Dashboard: React.FC = () => {
           })));
         }
 
-        // Fetch total messages (example for general metrics)
-        const { count, error: msgError } = await supabase
+        // Fetch Total Leads
+        const { count: leadsCount } = await supabase
+          .from('contacts')
+          .select('*', { count: 'exact', head: true });
+        if (leadsCount !== null) setTotalLeads(leadsCount);
+        
+        // Fetch Sent Messages
+        const { count: msgCount } = await supabase
           .from('messages')
           .select('*', { count: 'exact', head: true });
-        
-        if (!msgError && count !== null) {
-          setTotalMessages(count);
-        }
+        if (msgCount !== null) setTotalMessages(msgCount);
+
+        // Fetch Queued Messages
+        const { count: queuedCount } = await supabase
+          .from('send_queue')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending');
+        if (queuedCount !== null) setQueuedMessages(queuedCount);
+
+        // Fetch Failed Messages
+        const { count: failedCount } = await supabase
+          .from('send_queue')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'failed');
+        if (failedCount !== null) setFailedMessages(failedCount);
+
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
       } finally {
@@ -74,11 +95,10 @@ const Dashboard: React.FC = () => {
   }, [period]);
 
   const metrics = [
-    { label: 'Disparos Realizados', value: totalMessages.toLocaleString(), icon: <Send className="w-5 h-5" />, trend: '0%', color: 'text-blue-500', bg: 'bg-blue-500/10' },
-    { label: 'Entregues', value: '0', icon: <CheckCircle2 className="w-5 h-5" />, trend: '0%', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-    { label: 'Aberturas (Email)', value: '0', icon: <MailOpen className="w-5 h-5" />, trend: '0%', color: 'text-purple-500', bg: 'bg-purple-500/10' },
-    { label: 'Cliques', value: '0', icon: <MousePointerClick className="w-5 h-5" />, trend: '0%', color: 'text-amber-500', bg: 'bg-amber-500/10' },
-    { label: 'Falhas/Erros', value: '0', icon: <AlertCircle className="w-5 h-5" />, trend: '0%', color: 'text-red-500', bg: 'bg-red-500/10' },
+    { label: 'Total de Leads', value: totalLeads.toLocaleString(), icon: <CheckCircle2 className="w-5 h-5" />, trend: '', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Disparos Realizados', value: totalMessages.toLocaleString(), icon: <Send className="w-5 h-5" />, trend: '', color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Na Fila (Aguardando)', value: queuedMessages.toLocaleString(), icon: <CalendarIcon className="w-5 h-5" />, trend: '', color: 'text-purple-500', bg: 'bg-purple-500/10' },
+    { label: 'Falhas/Erros', value: failedMessages.toLocaleString(), icon: <AlertCircle className="w-5 h-5" />, trend: '', color: 'text-red-500', bg: 'bg-red-500/10' },
   ];
 
   const timelineData = [
@@ -92,10 +112,10 @@ const Dashboard: React.FC = () => {
   ];
 
   const funnelData = [
+    { stage: 'Total Leads', value: totalLeads },
     { stage: 'Disparados', value: totalMessages },
-    { stage: 'Entregues', value: 0 },
-    { stage: 'Abertos', value: 0 },
-    { stage: 'Clicados', value: 0 },
+    { stage: 'Na Fila', value: queuedMessages },
+    { stage: 'Falhas', value: failedMessages },
   ];
 
   return (
