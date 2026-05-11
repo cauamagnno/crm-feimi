@@ -11,6 +11,7 @@ import Kanban from './components/Kanban';
 import Campaigns from './components/Campaigns';
 import Journeys from './components/Journeys';
 import Team from './components/Team';
+import QueueViewer from './components/QueueViewer';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -76,6 +77,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/pipeline" element={<Kanban />} />
+                <Route path="/queue" element={<QueueViewer />} />
                 <Route path="/chat" element={<ChatInterface />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/scheduling" element={<Scheduling />} />

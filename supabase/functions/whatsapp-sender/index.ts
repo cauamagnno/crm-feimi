@@ -190,13 +190,27 @@ serve(async (req) => {
     const executionTime = Date.now() - startTime;
     console.log(`[Sender] Completed: sent ${totalSent} messages in ${iterations} iterations (${executionTime}ms)`);
 
+    // If we hit the time limit, there might be more messages. Re-trigger!
+    if (executionTime >= MAX_EXECUTION_TIME) {
+      console.log('[Sender] Time limit reached, re-triggering to process remaining queue...');
+      fetch(`${supabaseUrl}/functions/v1/trigger-whatsapp-sender`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseServiceKey}`,
+          'Content-Type': 'application/json'
+        }
+      }).catch(err => console.error('[Sender] Error self-triggering:', err));
+    }
+
     return new Response(JSON.stringify({ 
       sent: totalSent, 
       iterations,
-      executionTime 
+      executionTime,
+      retriggered: executionTime >= MAX_EXECUTION_TIME
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
+
 
   } catch (error) {
     console.error('[Sender] Error:', error);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, MessageSquare, Users, Settings as SettingsIcon,
   LogOut, ShieldCheck, Calendar, Kanban, Bot, Sun, Moon, ChevronLeft, ChevronRight,
-  Megaphone, Route
+  Megaphone, Route, RefreshCw
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCompanySettings } from '@/hooks/useCompanySettings';
@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 
 const ALL_MENU_ITEMS = [
   { id: 'dashboard',  label: 'Dashboard',             icon: LayoutDashboard },
+  { id: 'queue',      label: 'Fila de Envios',        icon: RefreshCw },
   { id: 'campaigns',  label: 'Campanhas',             icon: Megaphone },
   { id: 'journeys',   label: 'Jornadas',              icon: Route },
   { id: 'chat',       label: 'Inbox (Atendimento)',   icon: MessageSquare },

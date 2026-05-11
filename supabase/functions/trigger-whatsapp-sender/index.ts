@@ -12,6 +12,25 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  if (req.method === 'GET') {
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.39.0');
+      const supabaseAdmin = createClient(
+        Deno.env.get('SUPABASE_URL') || '',
+        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+      );
+      
+      const { count } = await supabaseAdmin
+        .from('send_queue')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'pending');
+        
+      return new Response(JSON.stringify({ pending: count }), { headers: corsHeaders });
+    } catch (e: any) {
+      return new Response(e.message, { status: 500 });
+    }
+  }
+
   try {
     console.log('[Trigger] Starting WhatsApp sender trigger...');
 
