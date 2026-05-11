@@ -109,9 +109,6 @@ serve(async (req) => {
       .maybeSingle();
       
     let tags = existingContact?.tags || [];
-    if (!tags.includes('convite_vip')) {
-      tags.push('convite_vip');
-    }
 
     // Capture UTM parameters and save them as tags (e.g. "utm_source:facebook")
     const utms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];

@@ -337,6 +337,27 @@ async function sendMessage(supabase: any, settings: any, queueItem: any) {
     }
   }
 
+  // Add 'convite_vip' tag if it was the VIP template
+  if (queueItem.message_type === 'template' && queueItem.metadata?.template?.name === 'confirma') {
+    console.log('[Sender] Adding convite_vip tag for successfully sent VIP template');
+    const { data: contactData } = await supabase
+      .from('contacts')
+      .select('tags')
+      .eq('id', queueItem.contact_id)
+      .single();
+      
+    if (contactData) {
+      const currentTags = contactData.tags || [];
+      if (!currentTags.includes('convite_vip')) {
+        currentTags.push('convite_vip');
+        await supabase
+          .from('contacts')
+          .update({ tags: currentTags })
+          .eq('id', queueItem.contact_id);
+      }
+    }
+  }
+
   // Update conversation last_message_at
   await supabase
     .from('conversations')
