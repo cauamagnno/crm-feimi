@@ -442,11 +442,26 @@ const Kanban: React.FC = () => {
                       <p className="text-[10px] text-muted-foreground mb-2">{deal.company}</p>
 
                       <div className="flex items-center gap-1.5 mb-2 flex-wrap">
-                         {deal.tags.map(tag => (
-                             <span key={tag} className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <Tag className="w-2.5 h-2.5" /> {tag}
+                         {deal.tags.filter(tag => tag.startsWith('utm_source:')).slice(0, 1).map(tag => (
+                             <span key={tag} className="text-[9px] text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded flex items-center truncate max-w-[80px]" title={tag.split(':')[1]}>
+                                Origem: {tag.split(':')[1]}
                              </span>
                          ))}
+                         {deal.tags.filter(tag => tag.startsWith('utm_campaign:')).slice(0, 1).map(tag => (
+                             <span key={tag} className="text-[9px] text-blue-500 bg-blue-500/10 border border-blue-500/20 px-1.5 py-0.5 rounded flex items-center truncate max-w-[100px]" title={tag.split(':')[1]}>
+                                Campanha: {tag.split(':')[1]}
+                             </span>
+                         ))}
+                         {deal.tags.filter(tag => !tag.startsWith('utm_')).slice(0, 2).map(tag => (
+                             <span key={tag} className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded flex items-center gap-1 truncate max-w-[70px]">
+                                <Tag className="w-2.5 h-2.5 flex-shrink-0" /> <span className="truncate">{tag}</span>
+                             </span>
+                         ))}
+                         {deal.tags.filter(tag => !tag.startsWith('utm_')).length > 2 && (
+                             <span className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                +{deal.tags.filter(tag => !tag.startsWith('utm_')).length - 2}
+                             </span>
+                         )}
                       </div>
 
                       <div className="flex items-center justify-between pt-2 border-t border-border">
@@ -601,15 +616,33 @@ const Kanban: React.FC = () => {
                         <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Tag className="w-3.5 h-3.5" /> Tags
                         </h4>
-                        <div className="flex flex-wrap gap-1.5 mb-2">
-                            {selectedDeal.tags.map(tag => (
-                                <span key={tag} className="flex items-center gap-1 text-xs bg-muted text-foreground px-2 py-0.5 rounded-full border border-border">
-                                    {tag}
-                                    <button onClick={() => handleRemoveTag(tag)} className="hover:text-red-400 transition-colors ml-0.5">
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </span>
-                            ))}
+                        <div className="flex flex-col gap-2 mb-3">
+                            <div className="flex flex-wrap gap-1.5">
+                                {selectedDeal.tags.filter(t => t.startsWith('utm_')).map(tag => {
+                                    const [key, val] = tag.split(':');
+                                    let color = "text-blue-400 bg-blue-500/10 border-blue-500/20";
+                                    if (key === 'utm_source') color = "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+                                    
+                                    return (
+                                        <span key={tag} className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-md border ${color}`}>
+                                            <span className="font-semibold opacity-70">{key}:</span> {val}
+                                            <button onClick={() => handleRemoveTag(tag)} className="hover:text-red-400 transition-colors ml-0.5">
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </span>
+                                    );
+                                })}
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                                {selectedDeal.tags.filter(t => !t.startsWith('utm_')).map(tag => (
+                                    <span key={tag} className="flex items-center gap-1 text-xs bg-muted text-foreground px-2 py-0.5 rounded-full border border-border">
+                                        {tag}
+                                        <button onClick={() => handleRemoveTag(tag)} className="hover:text-red-400 transition-colors ml-0.5">
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                         <div className="flex gap-2">
                             <input

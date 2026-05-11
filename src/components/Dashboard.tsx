@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Send, CheckCircle2, MailOpen, MousePointerClick, AlertCircle, ArrowUpRight, Calendar as CalendarIcon } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis, Legend } from 'recharts';
+import { Send, CheckCircle2, MailOpen, MousePointerClick, AlertCircle, ArrowUpRight, Calendar as CalendarIcon, Tag } from 'lucide-react';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis, Legend, PieChart, Pie, Cell } from 'recharts';
 import { useTheme } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -27,6 +27,7 @@ const Dashboard: React.FC = () => {
   const [totalMessages, setTotalMessages] = useState(0);
   const [queuedMessages, setQueuedMessages] = useState(0);
   const [failedMessages, setFailedMessages] = useState(0);
+  const [utmSources, setUtmSources] = useState<{name: string, value: number}[]>([]);
 
   const gridColor = theme === 'dark' ? '#27272a' : '#e4e4e7';
   const axisColor = theme === 'dark' ? '#71717a' : '#a1a1aa';
@@ -56,6 +57,31 @@ const Dashboard: React.FC = () => {
             opened: 0,
             clicked: 0,
           })));
+        }
+
+        // Fetch Recent Contacts to aggregate UTM Sources
+        const { data: contactsData } = await supabase
+          .from('contacts')
+          .select('tags, created_at')
+          .order('created_at', { ascending: false })
+          .limit(1000);
+          
+        if (contactsData) {
+          const sourcesMap: Record<string, number> = {};
+          contactsData.forEach(c => {
+            const tags = c.tags || [];
+            const sourceTag = tags.find((t: string) => t.startsWith('utm_source:'));
+            if (sourceTag) {
+              const source = sourceTag.split(':')[1] || 'Desconhecido';
+              sourcesMap[source] = (sourcesMap[source] || 0) + 1;
+            } else {
+              sourcesMap['Orgânico/Direto'] = (sourcesMap['Orgânico/Direto'] || 0) + 1;
+            }
+          });
+          const sourcesArray = Object.entries(sourcesMap)
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value);
+          setUtmSources(sourcesArray);
         }
 
         // Fetch Total Leads
@@ -159,7 +185,7 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-4">
         <div className="col-span-2 rounded-xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -224,6 +250,43 @@ const Dashboard: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        <div className="col-span-1 rounded-xl border border-border bg-card/50 backdrop-blur-sm p-6 shadow-sm flex flex-col">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold">Canais de Aquisição</h3>
+            <p className="text-sm text-muted-foreground">Origem (UTM Source) dos Leads</p>
+          </div>
+          <div className="flex-1 flex flex-col justify-center items-center min-h-[250px]">
+            {utmSources.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={utmSources}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {utmSources.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'][index % 5]} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip 
+                    contentStyle={{ backgroundColor: tooltipBg, borderRadius: '8px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="text-sm text-muted-foreground flex flex-col items-center">
+                <Tag className="w-8 h-8 mb-2 opacity-20" />
+                Sem dados de UTM
+              </div>
+            )}
           </div>
         </div>
       </div>
