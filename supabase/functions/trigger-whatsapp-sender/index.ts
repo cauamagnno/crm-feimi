@@ -21,7 +21,7 @@ serve(async (req) => {
     const response = await fetch(`${supabaseUrl}/functions/v1/whatsapp-sender`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+        'Authorization': req.headers.get('Authorization') || '',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({})
