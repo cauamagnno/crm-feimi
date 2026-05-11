@@ -17,22 +17,23 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     
-    // Call the whatsapp-sender function
-    const response = await fetch(`${supabaseUrl}/functions/v1/whatsapp-sender`, {
+    // Call the whatsapp-sender function asynchronously
+    const promise = fetch(`${supabaseUrl}/functions/v1/whatsapp-sender`, {
       method: 'POST',
       headers: {
         'Authorization': req.headers.get('Authorization') || '',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({})
-    });
+    }).catch(console.error);
 
-    const result = await response.json();
-    console.log('[Trigger] WhatsApp sender result:', result);
+    if (typeof EdgeRuntime !== 'undefined' && typeof EdgeRuntime.waitUntil === 'function') {
+      EdgeRuntime.waitUntil(promise);
+    }
 
     return new Response(JSON.stringify({ 
       triggered: true, 
-      result 
+      background: true 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });

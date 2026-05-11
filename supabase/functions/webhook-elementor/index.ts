@@ -210,20 +210,13 @@ serve(async (req) => {
       throw new Error(`Erro ao enfileirar mensagem: ${queueError.message}`);
     }
 
-    const triggerPromise = fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/trigger-whatsapp-sender`, {
+    await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/trigger-whatsapp-sender`, {
       method: 'POST',
       headers: { 
         'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
         'Content-Type': 'application/json' 
       }
     }).catch(err => console.error('[Webhook] Failed to trigger whatsapp-sender:', err));
-
-    // Keep the isolate alive long enough for the fetch to depart
-    if (typeof EdgeRuntime !== 'undefined' && typeof EdgeRuntime.waitUntil === 'function') {
-      EdgeRuntime.waitUntil(triggerPromise);
-    } else {
-      await new Promise(r => setTimeout(r, 150));
-    }
 
     return new Response(
       JSON.stringify({ success: true, message: 'Lead registrado e convite VIP programado para envio.' }),
