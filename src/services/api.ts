@@ -908,7 +908,7 @@ export const api = {
         is_active: true,
         is_ai_managed: stage.isAiManaged || false,
         ai_trigger_criteria: stage.aiTriggerCriteria || null,
-        user_id: null
+        user_id: userId
       })
       .select()
       .single();

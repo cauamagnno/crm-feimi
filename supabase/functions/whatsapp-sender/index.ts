@@ -337,9 +337,11 @@ async function sendMessage(supabase: any, settings: any, queueItem: any) {
     }
   }
 
-  // Add 'convite_vip' tag if it was the VIP template
+  // Add 'convite_vip' tag and move Deal to 'Convite VIP' stage if it was the VIP template
   if (queueItem.message_type === 'template' && queueItem.metadata?.template?.name === 'confirma') {
-    console.log('[Sender] Adding convite_vip tag for successfully sent VIP template');
+    console.log('[Sender] Processing successful VIP template...');
+    
+    // 1. Add tag to contact
     const { data: contactData } = await supabase
       .from('contacts')
       .select('tags')
@@ -355,6 +357,52 @@ async function sendMessage(supabase: any, settings: any, queueItem: any) {
           .update({ tags: currentTags })
           .eq('id', queueItem.contact_id);
       }
+    }
+
+    // 2. Find or Create "Convite Vip" stage
+    let targetStageId = null;
+    const { data: stages } = await supabase
+      .from('pipeline_stages')
+      .select('id, position')
+      .ilike('title', 'Convite VIP%')
+      .limit(1);
+
+    if (stages && stages.length > 0) {
+      targetStageId = stages[0].id;
+    } else {
+      console.log('[Sender] Stage Convite VIP not found, creating it...');
+      // Get highest position or after Novo Lead
+      const { data: novoLeadStage } = await supabase
+        .from('pipeline_stages')
+        .select('position')
+        .ilike('title', 'Novo Lead%')
+        .limit(1);
+        
+      const position = novoLeadStage && novoLeadStage.length > 0 ? novoLeadStage[0].position + 1 : 1;
+      
+      const { data: newStage } = await supabase
+        .from('pipeline_stages')
+        .insert({
+          title: 'Convite VIP',
+          color: 'border-yellow-500',
+          position: position,
+          is_system: false,
+          is_active: true,
+          is_ai_managed: true
+        })
+        .select('id')
+        .single();
+        
+      if (newStage) targetStageId = newStage.id;
+    }
+
+    // 3. Move the Deal to this stage
+    if (targetStageId) {
+      console.log(`[Sender] Moving deal for contact ${queueItem.contact_id} to stage ${targetStageId}`);
+      await supabase
+        .from('deals')
+        .update({ stage_id: targetStageId })
+        .eq('contact_id', queueItem.contact_id);
     }
   }
 
