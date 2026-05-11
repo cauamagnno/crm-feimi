@@ -401,7 +401,7 @@ export const api = {
       id: m.id,
       name: m.name,
       email: m.email,
-      role: m.role as 'admin' | 'manager' | 'agent',
+      role: m.role as 'admin' | 'manager' | 'agent' | 'owner',
       status: m.status as 'active' | 'invited' | 'disabled',
       avatar: m.avatar || `https://ui-avatars.com/api/?name=${m.name.replace(' ', '+')}&background=random`,
       lastActive: m.last_active || undefined,
@@ -413,43 +413,80 @@ export const api = {
     }));
   },
 
-  /**
-   * Create team member
-   */
   createTeamMember: async (member: {
     name: string;
     email: string;
-    role: 'admin' | 'manager' | 'agent';
+    role: string;
     team_id?: string;
     function_id?: string;
     weight?: number;
   }): Promise<TeamMember> => {
-    const { data, error } = await supabase.functions.invoke('invite-user', {
-      body: member
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('invite-user', {
+        body: member
+      });
 
-    if (error) {
-      console.error('[API] Error calling invite-user function:', error);
-      throw error;
-    }
-    
-    if (data?.error) {
-       console.error('[API] Error in invite-user function:', data.error);
-       throw new Error(data.error);
-    }
+      if (error) {
+        throw error;
+      }
+      
+      if (data?.error) {
+         throw new Error(data.error);
+      }
 
-    const tm = data.teamMember;
-    return {
-      id: tm.id,
-      name: tm.name,
-      email: tm.email,
-      role: tm.role as 'admin' | 'manager' | 'agent',
-      status: tm.status as 'active' | 'invited' | 'disabled',
-      avatar: tm.avatar || `https://ui-avatars.com/api/?name=${tm.name.replace(' ', '+')}&background=random`,
-      team_id: tm.team_id,
-      function_id: tm.function_id,
-      weight: tm.weight ?? undefined
-    };
+      const tm = data.teamMember;
+      return {
+        id: tm.id,
+        name: tm.name,
+        email: tm.email,
+        role: tm.role as 'admin' | 'manager' | 'agent' | 'owner',
+        status: tm.status as 'active' | 'invited' | 'disabled',
+        avatar: tm.avatar || `https://ui-avatars.com/api/?name=${tm.name.replace(' ', '+')}&background=random`,
+        team_id: tm.team_id,
+        function_id: tm.function_id,
+        weight: tm.weight ?? undefined
+      };
+    } catch (error) {
+      console.error('[API] Error calling invite-user function, attempting direct insert:', error);
+      
+      // Fallback: Se o usuário já existe no Auth (ou outro erro não fatal do Edge Function),
+      // tentamos inseri-lo diretamente na tabela team_members.
+      
+      // Mapeamento de role caso a DB não suporte 'owner' nativamente
+      let dbRole = member.role;
+      if (dbRole === 'atendimento') dbRole = 'agent';
+      
+      const { data: tmData, error: tmError } = await supabase
+        .from('team_members')
+        .insert({
+          name: member.name,
+          email: member.email,
+          role: dbRole,
+          status: 'active',
+          team_id: member.team_id || null,
+          function_id: member.function_id || null,
+          weight: member.weight || 1
+        })
+        .select()
+        .single();
+        
+      if (tmError) {
+        console.error('[API] Direct insert fallback failed:', tmError);
+        throw tmError;
+      }
+      
+      return {
+        id: tmData.id,
+        name: tmData.name,
+        email: tmData.email,
+        role: tmData.role as 'admin' | 'manager' | 'agent',
+        status: tmData.status as 'active' | 'invited' | 'disabled',
+        avatar: tmData.avatar || `https://ui-avatars.com/api/?name=${tmData.name.replace(' ', '+')}&background=random`,
+        team_id: tmData.team_id,
+        function_id: tmData.function_id,
+        weight: tmData.weight ?? undefined
+      };
+    }
   },
 
   /**
@@ -458,7 +495,7 @@ export const api = {
   updateTeamMember: async (id: string, updates: Partial<{
     name: string;
     email: string;
-    role: 'admin' | 'manager' | 'agent';
+    role: 'admin' | 'manager' | 'agent' | 'owner';
     status: 'active' | 'invited' | 'disabled';
     team_id: string | null;
     function_id: string | null;

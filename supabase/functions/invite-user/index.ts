@@ -57,6 +57,8 @@ serve(async (req) => {
     let appRole = 'atendimento';
     if (role === 'admin' || role === 'manager') {
       appRole = 'admin';
+    } else if (role === 'owner') {
+      appRole = 'owner';
     }
 
     // 1. Create the user in Auth

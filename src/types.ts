@@ -21,7 +21,7 @@ export interface TeamMember {
   id: string;
   name: string;
   email: string;
-  role: 'owner' | 'admin' | 'atendimento';
+  role: 'admin' | 'manager' | 'agent' | 'owner';
   status: 'active' | 'invited' | 'disabled';
   avatar: string;
   lastActive?: string;
