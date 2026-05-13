@@ -67,20 +67,45 @@ const Dashboard: React.FC = () => {
           .limit(1000);
           
         if (contactsData) {
-          const sourcesMap: Record<string, number> = {};
+          const channelsMap: Record<string, number> = {
+            'Meta': 0,
+            'Google': 0,
+            'TikTok': 0,
+            'Outros/Orgânico': 0
+          };
+          
+          const mapSourceToChannel = (source: string): string => {
+            const s = source.toLowerCase();
+            if (s.includes('facebook') || s.includes('ig') || s.includes('instagram') || s.includes('fb') || s.includes('meta')) {
+              return 'Meta';
+            }
+            if (s.includes('google') || s.includes('gads') || s.includes('youtube') || s.includes('yt')) {
+              return 'Google';
+            }
+            if (s.includes('tiktok') || s.includes('tt')) {
+              return 'TikTok';
+            }
+            return 'Outros/Orgânico';
+          };
+          
           contactsData.forEach(c => {
             const tags = c.tags || [];
             const sourceTag = tags.find((t: string) => t.startsWith('utm_source:'));
+            
             if (sourceTag) {
-              const source = sourceTag.split(':')[1] || 'Desconhecido';
-              sourcesMap[source] = (sourcesMap[source] || 0) + 1;
+              const source = sourceTag.split(':')[1] || '';
+              const channel = mapSourceToChannel(source);
+              channelsMap[channel]++;
             } else {
-              sourcesMap['Orgânico/Direto'] = (sourcesMap['Orgânico/Direto'] || 0) + 1;
+              channelsMap['Outros/Orgânico']++;
             }
           });
-          const sourcesArray = Object.entries(sourcesMap)
+          
+          const sourcesArray = Object.entries(channelsMap)
+            .filter(([_, value]) => value > 0)
             .map(([name, value]) => ({ name, value }))
             .sort((a, b) => b.value - a.value);
+            
           setUtmSources(sourcesArray);
         }
 
