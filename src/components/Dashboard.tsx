@@ -283,9 +283,9 @@ const Dashboard: React.FC = () => {
             <h3 className="text-lg font-semibold">Canais de Aquisição</h3>
             <p className="text-sm text-muted-foreground">Origem (UTM Source) dos Leads</p>
           </div>
-          <div className="flex-1 flex flex-col justify-center items-center min-h-[250px]">
+          <div className="flex-1 flex flex-col justify-center items-center min-h-[250px] w-full">
             {utmSources.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
                     data={utmSources}
