@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Send, CheckCircle2, MailOpen, MousePointerClick, AlertCircle, ArrowUpRight, Calendar as CalendarIcon, Tag } from 'lucide-react';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis, Legend, PieChart, Pie, Cell } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis, Legend } from 'recharts';
 import { useTheme } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -285,27 +285,37 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="flex-1 flex flex-col justify-center items-center min-h-[250px] w-full">
             {utmSources.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={utmSources}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {utmSources.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'][index % 5]} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip 
-                    contentStyle={{ backgroundColor: tooltipBg, borderRadius: '8px', border: `1px solid ${tooltipBorder}`, color: tooltipTextColor }}
-                  />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+              <div className="w-full flex flex-col gap-4">
+                {utmSources.map((source, idx) => {
+                  const total = utmSources.reduce((acc, curr) => acc + curr.value, 0) || 1;
+                  const percentage = (source.value / total) * 100;
+                  const colorMap: Record<string, string> = {
+                    'Meta': 'bg-blue-500',
+                    'Google': 'bg-emerald-500',
+                    'TikTok': 'bg-purple-500',
+                    'Outros/Orgânico': 'bg-amber-500'
+                  };
+                  const colorClass = colorMap[source.name] || 'bg-primary/80';
+                  
+                  return (
+                    <div key={idx} className="group relative">
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="font-medium text-foreground">{source.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">{percentage.toFixed(1)}%</span>
+                          <span className="font-bold text-foreground">{source.value.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <div className="h-6 w-full bg-muted rounded-md overflow-hidden relative">
+                        <div 
+                          className={`h-full ${colorClass} transition-all duration-1000 opacity-90`}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             ) : (
               <div className="text-sm text-muted-foreground flex flex-col items-center">
                 <Tag className="w-8 h-8 mb-2 opacity-20" />
