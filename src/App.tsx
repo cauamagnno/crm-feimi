@@ -12,6 +12,7 @@ import Campaigns from './components/Campaigns';
 import Journeys from './components/Journeys';
 import Team from './components/Team';
 import QueueViewer from './components/QueueViewer';
+import BasePage from './pages/BasePage';
 import Auth from './pages/Auth';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                 <Route path="/queue" element={<QueueViewer />} />
                 <Route path="/chat" element={<ChatInterface />} />
                 <Route path="/contacts" element={<Contacts />} />
+                <Route path="/base" element={<BasePage />} />
                 <Route path="/scheduling" element={<Scheduling />} />
                 <Route path="/campaigns" element={<Campaigns />} />
                 <Route path="/journeys" element={<Journeys />} />

@@ -1470,6 +1470,10 @@ export const api = {
       query = query.ilike('city', `%${cityFilter}%`);
     } else if (campaign.audience === 'vip') {
       query = query.contains('tags', ['VIP']);
+    } else if (campaign.audience === 'pasta_base_antiga') {
+      query = query.contains('tags', ['Base Antiga']);
+    } else if (campaign.audience === 'pasta_sao_luiz') {
+      query = query.contains('tags', ['convite_vip']);
     }
     
     const { data: contacts, error: contactsError } = await query;
@@ -1485,6 +1489,14 @@ export const api = {
     let displayAudience = campaign.audience;
     if (campaign.audience.startsWith('cidade:')) {
       displayAudience = `Cidade: ${campaign.audience.split(':')[1]}`;
+    } else if (campaign.audience === 'pasta_base_antiga') {
+      displayAudience = 'Pasta: Base Antiga';
+    } else if (campaign.audience === 'pasta_sao_luiz') {
+      displayAudience = 'Pasta: Lead São Luiz';
+    } else if (campaign.audience === 'todos_pipes') {
+      displayAudience = 'Todos os Pipes';
+    } else if (campaign.audience === 'todos') {
+      displayAudience = 'Todos os contatos';
     }
 
     // 2. Create the campaign record

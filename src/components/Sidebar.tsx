@@ -20,6 +20,7 @@ const ALL_MENU_ITEMS = [
   { id: 'chat',       label: 'Inbox (Atendimento)',   icon: MessageSquare },
   { id: 'pipeline',   label: 'Pipeline Comercial',    icon: Kanban },
   { id: 'contacts',   label: 'Contatos / Leads',      icon: Users },
+  { id: 'base',       label: 'Base (Pastas)',         icon: Users },
   { id: 'scheduling', label: 'Calendário',            icon: Calendar },
   { id: 'team',       label: 'Equipe',                icon: ShieldCheck },
   { id: 'settings',   label: 'Configurações',         icon: SettingsIcon },

@@ -304,10 +304,17 @@ serve(async (req) => {
 
           // 5.5. INTERCEPT SPECIFIC BUTTONS (FAST PATH)
           const textNorm = messageContent.trim().toLowerCase();
-          if (textNorm.includes('retirar') || textNorm.includes('convite vip') || textNorm.includes('bloquear') || textNorm.includes('contato') || textNorm.includes('stop') || textNorm.includes('cancel')) {
-            console.log('[Webhook] Intercepted button reply:', messageContent);
+          
+          // Check for exact VIP invite request
+          const isVipRequest = textNorm === 'retirar meu convite vip' || textNorm === 'retirar convite vip';
+          
+          // Check for block/stop requests
+          const isBlockRequest = textNorm.includes('bloquear') || textNorm.includes('stop') || textNorm.includes('cancel');
+
+          if (isVipRequest || isBlockRequest) {
+            console.log('[Webhook] Intercepted specific action:', messageContent);
             
-            if (textNorm.includes('bloquear') || textNorm.includes('contato') || textNorm.includes('stop')) {
+            if (isBlockRequest) {
               const currentTags = contact.tags || [];
               if (!currentTags.includes('Não Contatar')) {
                 await supabase.from('contacts').update({ tags: [...currentTags, 'Não Contatar'] }).eq('id', contact.id);
@@ -316,12 +323,12 @@ serve(async (req) => {
                 conversation_id: conversation.id,
                 contact_id: contact.id,
                 content: 'Entendido. Removemos o seu número da nossa lista e você não receberá mais comunicações nossas. Caso mude de ideia, basta nos chamar.',
-                from_type: 'system',
+                from_type: 'nina',
                 message_type: 'text',
                 status: 'pending',
                 priority: 1
               });
-            } else if (textNorm.includes('retirar') || textNorm.includes('convite')) {
+            } else if (isVipRequest) {
               const currentTags = contact.tags || [];
               if (!currentTags.includes('convite_vip')) {
                 await supabase.from('contacts').update({ tags: [...currentTags, 'convite_vip'] }).eq('id', contact.id);
@@ -346,7 +353,7 @@ serve(async (req) => {
                 conversation_id: conversation.id,
                 contact_id: contact.id,
                 content: `Incrível${contact.name ? ', ' + contact.name.split(' ')[0] : ''}! 🎉\n\nAqui está o seu convite VIP oficial. Apresente esta imagem na entrada do evento para garantir o seu acesso. Nos vemos lá!`,
-                from_type: 'system',
+                from_type: 'nina',
                 message_type: 'text',
                 status: 'pending',
                 priority: 1
@@ -356,12 +363,23 @@ serve(async (req) => {
                 conversation_id: conversation.id,
                 contact_id: contact.id,
                 content: 'Convite VIP', 
-                from_type: 'system',
+                from_type: 'nina',
                 message_type: 'image',
                 media_url: 'https://zrfdpiuwbbxjtahoxrhd.supabase.co/storage/v1/object/public/imagens/convitevip.png',
                 status: 'pending',
                 priority: 1
               });
+
+              // Ensure whatsapp-sender is triggered immediately since we skipped message-grouper
+              EdgeRuntime.waitUntil(
+                fetch(`${supabaseUrl}/functions/v1/trigger-whatsapp-sender`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${supabaseServiceKey}`
+                  }
+                }).catch(err => console.error('[Webhook] Error triggering whatsapp-sender:', err))
+              );
             }
             
             // Mark as processed by AI so it doesn't trigger the Nina AI

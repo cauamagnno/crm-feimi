@@ -322,6 +322,9 @@ const Campaigns: React.FC = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="todos">Todos os contatos</SelectItem>
+                      <SelectItem value="todos_pipes">Todos os Pipes</SelectItem>
+                      <SelectItem value="pasta_base_antiga">Pasta: Base Antiga</SelectItem>
+                      <SelectItem value="pasta_sao_luiz">Pasta: Lead São Luiz</SelectItem>
                       <SelectItem value="vip">Apenas tag: VIP</SelectItem>
                       <SelectItem value="pipeline_qualificado">Pipeline: Qualificado</SelectItem>
                       <SelectItem value="cidade">Por Cidade</SelectItem>
