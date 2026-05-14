@@ -225,6 +225,20 @@ serve(async (req) => {
               messageContent = message.text?.body || '';
               messageType = 'text';
               break;
+            case 'interactive':
+              if (message.interactive?.type === 'button_reply') {
+                messageContent = message.interactive.button_reply.title || message.interactive.button_reply.id;
+              } else if (message.interactive?.type === 'list_reply') {
+                messageContent = message.interactive.list_reply.title || message.interactive.list_reply.id;
+              } else {
+                messageContent = '[Interação]';
+              }
+              messageType = 'text';
+              break;
+            case 'button':
+              messageContent = message.button?.text || '[Botão]';
+              messageType = 'text';
+              break;
             case 'image':
               messageContent = message.image?.caption || '[imagem recebida]';
               messageType = 'image';
@@ -287,6 +301,61 @@ serve(async (req) => {
             .from('conversations')
             .update({ last_message_at: new Date().toISOString() })
             .eq('id', conversation.id);
+
+          // 5.5. INTERCEPT SPECIFIC BUTTONS (FAST PATH)
+          const textNorm = messageContent.trim().toLowerCase();
+          if (textNorm === 'retirar meu convite vip' || textNorm === 'bloquear contato') {
+            console.log('[Webhook] Intercepted button reply:', messageContent);
+            
+            if (textNorm === 'bloquear contato') {
+              const currentTags = contact.tags || [];
+              if (!currentTags.includes('Não Contatar')) {
+                await supabase.from('contacts').update({ tags: [...currentTags, 'Não Contatar'] }).eq('id', contact.id);
+              }
+              await supabase.from('send_queue').insert({
+                conversation_id: conversation.id,
+                contact_id: contact.id,
+                phone_number: contact.phone_number,
+                content: 'Entendido. Removemos o seu número da nossa lista e você não receberá mais comunicações nossas. Caso mude de ideia, basta nos chamar.',
+                from_type: 'system',
+                message_type: 'text',
+                status: 'pending',
+                priority: 1
+              });
+            } else if (textNorm === 'retirar meu convite vip') {
+              const currentTags = contact.tags || [];
+              if (!currentTags.includes('VIP Confirmado')) {
+                await supabase.from('contacts').update({ tags: [...currentTags, 'VIP Confirmado'] }).eq('id', contact.id);
+              }
+              
+              await supabase.from('send_queue').insert({
+                conversation_id: conversation.id,
+                contact_id: contact.id,
+                phone_number: contact.phone_number,
+                content: `Incrível${contact.name ? ', ' + contact.name.split(' ')[0] : ''}! 🎉\n\nAqui está o seu convite VIP oficial. Apresente esta imagem na entrada do evento para garantir o seu acesso. Nos vemos lá!`,
+                from_type: 'system',
+                message_type: 'text',
+                status: 'pending',
+                priority: 1
+              });
+              
+              await supabase.from('send_queue').insert({
+                conversation_id: conversation.id,
+                contact_id: contact.id,
+                phone_number: contact.phone_number,
+                content: 'Convite VIP', 
+                from_type: 'system',
+                message_type: 'image',
+                media_url: 'https://zrfdpiuwbbxjtahoxrhd.supabase.co/storage/v1/object/public/assets/convite-vip.png',
+                status: 'pending',
+                priority: 1
+              });
+            }
+            
+            // Mark as processed by AI so it doesn't trigger the Nina AI
+            await supabase.from('messages').update({ processed_by_nina: true }).eq('id', dbMessage.id);
+            continue; // Skip queuing for message-grouper entirely
+          }
 
           // 6. FIRST reset timer for all pending messages from same phone, THEN insert new queue entry
           await supabase
