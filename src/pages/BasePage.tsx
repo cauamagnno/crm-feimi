@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function BasePage() {
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [contacts, setContacts] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -17,15 +18,23 @@ export default function BasePage() {
   const fetchContacts = async (tag: string) => {
     setLoading(true);
     try {
+      const { count } = await supabase
+        .from('contacts')
+        .select('*', { count: 'exact', head: true })
+        .contains('tags', [tag])
+        .ilike('name', `%${search}%`);
+
       const { data, error } = await supabase
         .from('contacts')
         .select('*')
         .contains('tags', [tag])
         .ilike('name', `%${search}%`)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(100);
         
       if (error) throw error;
       setContacts(data || []);
+      setTotalCount(count || 0);
     } catch (err) {
       console.error('Error fetching contacts for tag', tag, err);
     } finally {
@@ -98,7 +107,10 @@ export default function BasePage() {
                   </div>
                   <div>
                     <h2 className="font-semibold">{folders.find(f => f.id === activeFolder)?.name}</h2>
-                    <p className="text-xs text-muted-foreground">{contacts.length} contatos encontrados</p>
+                    <p className="text-xs text-muted-foreground">
+                      {totalCount} contatos encontrados
+                      {totalCount > 100 && ' (Exibindo os 100 mais recentes)'}
+                    </p>
                   </div>
                 </div>
                 <div className="relative">
