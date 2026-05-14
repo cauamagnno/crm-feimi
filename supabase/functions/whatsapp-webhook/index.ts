@@ -304,10 +304,10 @@ serve(async (req) => {
 
           // 5.5. INTERCEPT SPECIFIC BUTTONS (FAST PATH)
           const textNorm = messageContent.trim().toLowerCase();
-          if (textNorm === 'retirar meu convite vip' || textNorm === 'bloquear contato') {
+          if (textNorm.includes('retirar') || textNorm.includes('convite vip') || textNorm.includes('bloquear') || textNorm.includes('contato') || textNorm.includes('stop') || textNorm.includes('cancel')) {
             console.log('[Webhook] Intercepted button reply:', messageContent);
             
-            if (textNorm === 'bloquear contato') {
+            if (textNorm.includes('bloquear') || textNorm.includes('contato') || textNorm.includes('stop')) {
               const currentTags = contact.tags || [];
               if (!currentTags.includes('Não Contatar')) {
                 await supabase.from('contacts').update({ tags: [...currentTags, 'Não Contatar'] }).eq('id', contact.id);
@@ -315,14 +315,13 @@ serve(async (req) => {
               await supabase.from('send_queue').insert({
                 conversation_id: conversation.id,
                 contact_id: contact.id,
-                phone_number: contact.phone_number,
                 content: 'Entendido. Removemos o seu número da nossa lista e você não receberá mais comunicações nossas. Caso mude de ideia, basta nos chamar.',
                 from_type: 'system',
                 message_type: 'text',
                 status: 'pending',
                 priority: 1
               });
-            } else if (textNorm === 'retirar meu convite vip') {
+            } else if (textNorm.includes('retirar') || textNorm.includes('convite')) {
               const currentTags = contact.tags || [];
               if (!currentTags.includes('convite_vip')) {
                 await supabase.from('contacts').update({ tags: [...currentTags, 'convite_vip'] }).eq('id', contact.id);
@@ -346,7 +345,6 @@ serve(async (req) => {
               await supabase.from('send_queue').insert({
                 conversation_id: conversation.id,
                 contact_id: contact.id,
-                phone_number: contact.phone_number,
                 content: `Incrível${contact.name ? ', ' + contact.name.split(' ')[0] : ''}! 🎉\n\nAqui está o seu convite VIP oficial. Apresente esta imagem na entrada do evento para garantir o seu acesso. Nos vemos lá!`,
                 from_type: 'system',
                 message_type: 'text',
@@ -357,7 +355,6 @@ serve(async (req) => {
               await supabase.from('send_queue').insert({
                 conversation_id: conversation.id,
                 contact_id: contact.id,
-                phone_number: contact.phone_number,
                 content: 'Convite VIP', 
                 from_type: 'system',
                 message_type: 'image',
