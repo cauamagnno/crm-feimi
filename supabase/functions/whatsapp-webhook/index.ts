@@ -324,8 +324,23 @@ serve(async (req) => {
               });
             } else if (textNorm === 'retirar meu convite vip') {
               const currentTags = contact.tags || [];
-              if (!currentTags.includes('VIP Confirmado')) {
-                await supabase.from('contacts').update({ tags: [...currentTags, 'VIP Confirmado'] }).eq('id', contact.id);
+              if (!currentTags.includes('convite_vip')) {
+                await supabase.from('contacts').update({ tags: [...currentTags, 'convite_vip'] }).eq('id', contact.id);
+              }
+              
+              // Move deal to "Convite VIP" stage
+              let targetStageId = null;
+              const { data: stages } = await supabase.from('pipeline_stages').select('id').ilike('title', 'Convite VIP%').limit(1);
+              if (stages && stages.length > 0) {
+                targetStageId = stages[0].id;
+              } else {
+                const { data: newStage } = await supabase.from('pipeline_stages').insert({
+                  title: 'Convite VIP', color: 'border-yellow-500', position: 2, is_system: false, is_active: true, is_ai_managed: true
+                }).select('id').single();
+                if (newStage) targetStageId = newStage.id;
+              }
+              if (targetStageId) {
+                await supabase.from('deals').update({ stage_id: targetStageId }).eq('contact_id', contact.id);
               }
               
               await supabase.from('send_queue').insert({
@@ -346,7 +361,7 @@ serve(async (req) => {
                 content: 'Convite VIP', 
                 from_type: 'system',
                 message_type: 'image',
-                media_url: 'https://zrfdpiuwbbxjtahoxrhd.supabase.co/storage/v1/object/public/assets/convite-vip.png',
+                media_url: 'https://zrfdpiuwbbxjtahoxrhd.supabase.co/storage/v1/object/public/imagens/convitevip.png',
                 status: 'pending',
                 priority: 1
               });
