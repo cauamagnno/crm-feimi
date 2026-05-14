@@ -59,54 +59,25 @@ const Dashboard: React.FC = () => {
           })));
         }
 
-        // Fetch Recent Contacts to aggregate UTM Sources
-        const { data: contactsData } = await supabase
-          .from('contacts')
-          .select('tags, created_at')
-          .order('created_at', { ascending: false })
-          .limit(1000);
-          
-        if (contactsData) {
-          const channelsMap: Record<string, number> = {
-            'Meta': 0,
-            'Google': 0,
-            'TikTok': 0,
-            'Outros/Orgânico': 0
-          };
-          
-          const mapSourceToChannel = (source: string): string => {
-            const s = source.toLowerCase();
-            if (s.includes('facebook') || s.includes('ig') || s.includes('instagram') || s.includes('fb') || s.includes('meta')) {
-              return 'Meta';
+        // Fetch Recent Contacts to aggregate UTM Sources using Edge Function
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/temp-insert-queue`, {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+              },
+              body: JSON.stringify({ action: 'get_utm_stats' })
+            });
+            const result = await response.json();
+            if (result.data) {
+              setUtmSources(result.data);
             }
-            if (s.includes('google') || s.includes('gads') || s.includes('youtube') || s.includes('yt')) {
-              return 'Google';
-            }
-            if (s.includes('tiktok') || s.includes('tt')) {
-              return 'TikTok';
-            }
-            return 'Outros/Orgânico';
-          };
-          
-          contactsData.forEach(c => {
-            const tags = c.tags || [];
-            const sourceTag = tags.find((t: string) => t.startsWith('utm_source:'));
-            
-            if (sourceTag) {
-              const source = sourceTag.split(':')[1] || '';
-              const channel = mapSourceToChannel(source);
-              channelsMap[channel]++;
-            } else {
-              channelsMap['Outros/Orgânico']++;
-            }
-          });
-          
-          const sourcesArray = Object.entries(channelsMap)
-            .filter(([_, value]) => value > 0)
-            .map(([name, value]) => ({ name, value }))
-            .sort((a, b) => b.value - a.value);
-            
-          setUtmSources(sourcesArray);
+          }
+        } catch (e) {
+          console.error('Error fetching UTM stats:', e);
         }
 
         // Fetch Total Leads

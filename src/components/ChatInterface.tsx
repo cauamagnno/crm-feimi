@@ -602,9 +602,9 @@ const ChatInterface: React.FC = () => {
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-1">{activeChat.contactName}</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    {activeChat.clientMemory.lead_profile.lead_stage === 'new' ? 'Novo Lead' : 
-                     activeChat.clientMemory.lead_profile.lead_stage === 'qualified' ? 'Lead Qualificado' :
-                     activeChat.clientMemory.lead_profile.lead_stage}
+                    {activeChat.clientMemory?.lead_profile?.lead_stage === 'new' ? 'Novo Lead' : 
+                     activeChat.clientMemory?.lead_profile?.lead_stage === 'qualified' ? 'Lead Qualificado' :
+                     activeChat.clientMemory?.lead_profile?.lead_stage || 'Lead'}
                   </p>
                 </div>
 
@@ -644,7 +644,7 @@ const ChatInterface: React.FC = () => {
                     Memória do(a) {sdrName}
                   </h4>
                   
-                  {activeChat.clientMemory.lead_profile.interests.length > 0 && (
+                  {activeChat.clientMemory?.lead_profile?.interests?.length > 0 && (
                     <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
                       <span className="text-xs text-muted-foreground">Interesses</span>
                       <p className="text-sm text-foreground mt-1">
@@ -653,7 +653,7 @@ const ChatInterface: React.FC = () => {
                     </div>
                   )}
 
-                  {activeChat.clientMemory.sales_intelligence.pain_points.length > 0 && (
+                  {activeChat.clientMemory?.sales_intelligence?.pain_points?.length > 0 && (
                     <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
                       <span className="text-xs text-muted-foreground">Dores Identificadas</span>
                       <p className="text-sm text-foreground mt-1">
@@ -665,14 +665,14 @@ const ChatInterface: React.FC = () => {
                   <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
                     <span className="text-xs text-muted-foreground">Próxima Ação Sugerida</span>
                     <p className="text-sm text-foreground mt-1">
-                      {activeChat.clientMemory.sales_intelligence.next_best_action === 'qualify' ? 'Qualificar lead' :
-                       activeChat.clientMemory.sales_intelligence.next_best_action === 'demo' ? 'Agendar demonstração' :
-                       activeChat.clientMemory.sales_intelligence.next_best_action}
+                      {activeChat.clientMemory?.sales_intelligence?.next_best_action === 'qualify' ? 'Qualificar lead' :
+                       activeChat.clientMemory?.sales_intelligence?.next_best_action === 'demo' ? 'Agendar demonstração' :
+                       activeChat.clientMemory?.sales_intelligence?.next_best_action || 'Nenhuma'}
                     </p>
                   </div>
 
                   <div className="text-xs text-muted-foreground text-center">
-                    Total de conversas: {activeChat.clientMemory.interaction_summary.total_conversations}
+                    Total de conversas: {activeChat.clientMemory?.interaction_summary?.total_conversations || 0}
                   </div>
                 </div>
 
